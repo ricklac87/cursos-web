@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Georama:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georama', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        body {
+            background-color: #00ff55;
+        }
+
+        .container {
+            background-color: red;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+        }
+
+        .header {
+            background-color: yellow;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+
+        .menu1 {
+            background-color: blue;
+            display: none;
+            flex-direction: column;
+            text-align: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            cursor: pointer;
+        }
+
+
+        .options1 {
+            background-color: pink;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem;
+        }
+
+        .options1:hover {
+            background-color: orange;
+        }
+
+
+        .show1 {
+            display: block;  
+            animation: fadeIn 0.2s;
+        } 
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .menu2 {
+            background-color: aqua;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            top: 0;
+            left: -50vw;
+            width: 40vw;
+            height: 100vh;
+            position: absolute;
+            color: black;
+            box-shadow: 0px 5px 12px rgb(29, 29, 29); 
+            transition: transform 0.4s ease;
+        }
+
+        .show2 {
+            transform: translateX(50vw);
+        }
+
+        .btn1 {
+            background-color: pink;
+            border-radius: 33px;
+            padding: 0.3rem;
+            cursor: pointer;;
+        }
+
+        .btn2 {
+            background-color: pink;
+            border-radius: 33px;
+            padding: 0.3rem;
+        }
+
+
+
+        .options2 {
+            background-color: yellow;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .options2:hover {
+            background-color: palevioletred;
+        }
+
+
+
+    </style>
+
+
+</head>
+<body>
+    
+
+    <div class="container">
+
+        <div class="header">
+
+            <button id="btn1" class="btn1">DROPDOWN</button>
+            <button id="btn2" class="btn2">BARRA LATERAL</button>
+            
+
+        </div>
+
+    </div>
+
+    <div id="menu1" class="menu1">
+        <a class="options1">OPÇÃO 1</a>
+        <a class="options1">OPÇÃO 2</a>
+        <a class="options1">OPÇÃO 3</a>
+    </div>
+
+    <div id="menu2" class="menu2">
+        <a class="options2">OPÇÃO 1</a>
+        <a class="options2">OPÇÃO 2</a>
+        <a class="options2">OPÇÃO 3</a>
+    </div>
+
+
+
+
+
+
+
+    <script>
+        document.getElementById("btn1").addEventListener("click" , () => {
+            document.getElementById("menu1").classList.toggle("show1")
+        })
+
+        document.getElementById("btn2").addEventListener("click" , () => {
+            document.getElementById("menu2").classList.toggle("show2")
+        })
+
+        // Fecha o dropdown1 se clicar fora dele
+        window.onclick = function(event1) {
+            if (!event1.target.matches('#btn1')) {
+                var dropdowns1 = document.getElementsByClassName("menu1");
+                for (var i = 0; i < dropdowns1.length; i++) {
+                    var openDropdown1 = dropdowns1[i];
+                    if (openDropdown1.classList.contains('show1')) {
+                        openDropdown1.classList.remove('show1');
+                    }
+                }
+            }
+        }
+
+        // Fecha o dropdown2 se clicar fora dele
+        // window.onclick = function(event2) {
+        //     if (!event2.target.matches('.btn2')) {
+        //         var dropdowns2 = document.getElementsByClassName("menu2");
+        //         for (var x = 0; x < dropdowns2.length; x++) {
+        //             var openDropdown2 = dropdowns2[x];
+        //             if (openDropdown2.classList.contains('show2')) {
+        //                 openDropdown2.classList.remove('show2');
+        //             }
+        //         }
+        //     }
+        // }
+
+
+    </script>
+</body>
+
+</html>

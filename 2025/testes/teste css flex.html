@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>teste</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style type="text/css">
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Oswald";
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  font-size: 1.3rem;
+}
+
+li {
+  list-style: none;
+}
+
+
+.navbar {
+  background-color: purple;
+  height: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px 15px 15px;
+}
+
+.logo {
+  /* background-color: orange; */
+  width: 30%;
+}
+
+.links {
+  /* background-color: green; */
+  width: 65%;
+}
+
+.links ul {
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.links ul li {
+  padding-right: 30px;
+}
+
+
+.hamburger {
+  /* background-color: brown; */
+  width: 5%;
+  color: white;
+  text-align: left;
+  font-size: 1.3rem;
+  display: none;
+}
+
+.lupa {
+  /* background-color: blue; */
+  width: 5%;
+  color: white;
+  text-align: right;
+  font-size: 1.3rem;
+}
+
+
+@media screen and (max-width: 500px) {
+  .links {
+    display: none;
+  }
+
+  .logo {
+    width: 95%;
+    text-align: center;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}
+
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <main>
+
+        <nav class="navbar">
+
+          <div class="hamburger">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+
+           <a href="#" class="logo">LOGOTIPO</a>
+
+          <div class="links">
+            <ul>
+              <li><a href="#">HOME</a></li>
+              <li><a href="#">LOJA</a></li>
+              <li><a href="#">CONTATO</a></li>
+            </ul>
+          </div>
+
+          <div class="lupa">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+
+
+        </nav>
+
+    </main>
+
+
+
+
+
+    
+    
+
+  </body>
+</html>

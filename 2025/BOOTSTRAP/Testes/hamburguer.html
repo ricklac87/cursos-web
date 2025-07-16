@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        .center {
+            margin: 0 auto;
+            padding: 0 2%;
+            max-width: 1170px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+
+        /*background cabeçalho*/
+        .header-content {
+            background-color: seagreen;
+            flex-wrap: wrap;
+            padding: 5px 0;
+        }
+
+
+        /*hamburguer*/
+        .hamburguer {
+            display: none;
+        }
+
+        /*Menu que aparece ao clicar no hamburguer*/
+        .menu-itens {
+            background-color: rgb(243, 243, 243);
+            width: 100%;
+            border-bottom: 1px solid gray;
+            position: absolute;
+            left: 0;
+            top: 30px;
+            padding: 2px;
+            opacity: 0; /*opcional*/
+            transition: 0.3s; /*opcional*/
+        }
+        .menu-itens a {
+            display: block;
+            text-decoration: none;
+            color: seagreen;
+            text-align: center;
+            font-family: "Verdana";
+            margin: 1px;
+        }
+        .menu-itens.show {
+            opacity: 1; /*opcional*/
+        }
+        .menu-itens.hidde {
+            opacity: 0; /*opcional*/
+        }        
+
+
+        /*CONTEÚDO SEM SER MOBILE */
+        .logo {
+            text-align: right;
+            width: 100%;
+        }
+        .logo h3{
+            color: white;
+        }
+
+
+
+        @media screen and (max-width: 768px) {
+
+            .hamburguer {
+                display: block;
+                text-align: right;
+                width: 100%;  /* está 100% pois não tem mais nenhum elemento*/
+            }
+            .hamburguer i {
+                font-size: 15px;   
+                color: white;       
+            }
+
+            /*CONTEÚDO SEM SER MOBILE*/
+            .logo {
+                display: none;
+            }
+
+        }   
+
+    </style>
+
+</head>
+<body>
+
+    <section class="header-content">
+
+        <div class="center">
+            <div class="hamburguer">
+                <i class="fa-solid fa-bars hamburguer-icone"></i>
+            </div>
+        </div>
+
+        <div class="center">
+            <div class="menu-itens">
+                <a href='#'>Opção 1</a>
+                <a href='#'>Opção 2</a>
+                <a href='#'>Opção 3</a>
+            </div>
+        </div>
+
+
+        <!--CONTEÚDO SEM SER MOBILE-->
+        <div class="center">
+            <div class="logo">
+                <h3>LOGOTIPO</h3>
+            </div>
+        </div>
+
+    </section>
+
+    
+</body>
+
+    <!--ICONE HAMBURGUER DO FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/1d82588ad9.js" crossorigin="anonymous"></script>
+
+    <!--SCRIPT HAMBURGUER-->
+    <script>
+		var el = document.querySelector('.hamburguer-icone');
+
+		el.addEventListener('click', () => {
+			//alert('Clicado');
+
+			var menuitens = document.querySelector('.menu-itens');
+
+			if(menuitens.classList.contains('show')){
+				menuitens.classList.add('hide');
+				menuitens.classList.remove('show');
+			}
+			else {
+				menuitens.classList.add('show');
+				menuitens.classList.remove('hide');
+			}		
+		});
+	</script>
+
+
+
+</html>

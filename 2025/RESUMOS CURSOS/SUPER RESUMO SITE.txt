@@ -1,0 +1,286 @@
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////// &&&
+*CSS*
+
+Pastas:
+src
+  styles
+    globals.css
+    reset.css
+  components
+    contatos
+      contatos.jsx                  //ou index.jsx
+      contatos.css                  //ou styles.css
+
+
+Arquivo globals.css:      //Ou vars.css
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
+@font-face {
+    font-family: 'Bebas';
+    src: url('../fontes/Bebas_Neue.otf') format('opentype');
+    font-weight: normal;
+}
+
+:root {
+    --cor_principal: red;
+    --cor_secundaria: orange;
+    --cor_texto: dark-gray;
+    --cor_link: purple;
+    --cor_fundo1: white;
+    --cor_fundo2: yellow;
+
+    --fonte_principal: Arial, Verdana, Helvetica, sans-serif;
+    --fonte_destaque: 'Bebas Neue', cursive;
+    --fonte_oswald: 'Oswald', sans-serif;
+}
+
+---------------
+
+Criar um arquivo chamado reset.css e importá-lo dentro da tag head:
+<head>
+    <title>TITULO</title>
+    <link rel="stylesheet" href="reset.css">   *tem que vir antes do estilo CSS
+    <link rel="stylesheet" href="globals.css">
+    <link rel="stylesheet" href="estilo.css">
+</head>
+
+Dentro do arquivo reset.css:
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+li,
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+------- ADICIONAIS
+
+*{
+  box-sizing: border-box;
+  font-family: var(--font_principal);
+}
+
+body{
+  background: #000;
+}
+
+a {
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+:hover {                           //Para subir ao passar o mouse por cima
+    transform: translateY(-2px);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.active {
+    border-bottom: 3px solid red;          //ou border: 3px solid red
+}
+
+-----------------
+
+-CSS para um container e uma section:
+
+
+.container {
+    max-width: 80vw;        *largura ocupa 80% da tela
+    height: 60vh;           *altura ocupa 60% da tela
+}
+
+.section {
+    width: 40vw;             //Ou 40%
+
+    display: flex;                           //Ou block
+    flex-wrap: wrap;                         //opcional
+    flex-direction: column;                  //opcional
+    align-items: center;
+    justify-content: space-between;           //ou space-around
+
+    background-color: white;
+    border-radius: 8px;                      //opcional
+    padding: 4px 8px;
+    margin-top: 10px;
+
+    gap: 14px;
+
+    color: #b3b3b3;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+----------
+
+Media queries:
+
+@media screen and (max-width: 767px) {
+...
+}
+
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+...
+}
+
+-É possível colocal os media-queries em um arquivo separado
+O arquivo media-queries.css precisa ser incorporado no final, após os outros arquivos css:
+
+<head>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="globals.css">
+    <link rel="stylesheet" href="main-content.css">
+    <link rel="stylesheet" href="media-queries.css">
+</head>

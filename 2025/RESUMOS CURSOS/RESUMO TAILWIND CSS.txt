@@ -1,0 +1,1425 @@
+
+INSTALAÇÃO:
+
+-Via CDN:
+
+<head>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+This method allows you to use Tailwind without installing it on your server. However, there are some limitations when using the CDN version:
+
+Customization: You cannot customize Tailwind's default theme.
+Directives: You cannot use directives like @apply and @variants.
+Plugins: Third-party plugins cannot be installed.
+
+-------
+
+Versão 4.1 (mais atual)
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>  
+</head>
+
+--------
+
+-Via NPM:
+
+Method 1: Install Tailwind CSS via npm
+npm create vite@latest my-project
+cd my-project
+
+npm install tailwindcss
+ou
+npm install tailwindcss @tailwindcss/vite   (usando o vite)
+
+Configure the Vite plugin:
+No arquivo vite.config.ts:
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+export default defineConfig({
+  plugins: [
+    tailwindcss(),
+  ],
+})
+
+Para importar o tailwind em um arquivo style.css:
+@import "tailwindcss";
+
+
+Exemplo no html:
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/src/style.css" rel="stylesheet">
+</head>
+<body>
+  <h1 class="text-3xl font-bold">
+    Hello world!
+  </h1>
+</body>
+</html>
+
+----------
+
+Usando CDN direto no html ao invés de instalar:
+
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>  
+    </head>
+    <body>
+        <div class="container mx-auto px-4">
+            <h1 class="text-2xl font-bold">Welcome to Tailwind CSS</h1>
+        </div>
+    </body>
+</html>
+
+//////////////////////////////////////////////&&&
+*CONTAINER*
+
+container              //adiciona um container
+
+Centers Content            //Automatically centers content horizontally within the viewport.
+Responsive Widths          //Sets maximum widths at different breakpoints for a consistent design across devices.
+Prevents Overstretching    //Limits content width on large screens to maintain readability and visual balance.
+
+mx-auto                //centraliza o conteudo      
+mx-5                         //margem lateral em 5                   
+my-5                         //margem vertical em 5     
+
+Best Practices for Using Tailwind CSS Container:
+-Center Containers by Default: Configure the container to center content automatically by setting center: true in your Tailwind configuration.
+-Add Horizontal Padding: Ensure consistent spacing by specifying default horizontal padding in the container configuration, e.g., padding: '2rem'.
+-Customize Breakpoint Widths: Define custom maximum widths for different breakpoints to achieve the desired layout across various screen sizes.
+
+//////////////////////////////////////////////&&&
+*RESPONSIVIDADE*
+
+Breakpoint	min-width
+sm	        640px
+md	        768px
+lg	        1024px
+xl	        1280px
+2xl	        1536px
+
+Exemplo de tamanho de borda em diferentes breakpoints:
+sm:border-4
+md:border-4         //only in medium screen sizes and above
+lg:border-4
+xl:border-4
+2xl:border-4
+
+No exemplo abaixo, o texto tem cor azul em telas a partir de 768px e cor vermelha abaixo disso:
+<h1 class="md:text-blue-500 sm:text-red-500">TEXTO</h1>
+
+
+//////////////////////////////////////////////&&&
+*BOX*
+
+box box-border         //inclui as margens e padding no tamanho total
+box box-content        //não inclui as margens e padding no tamanho total
+
+
+//////////////////////////////////////////////&&&
+*GRID*
+
+grid              // adiciona o modo grid
+
+gap-1               //espaçamento de 1
+gap-x-1             //espaçamento lateral de 1
+gap-y-1             //espaçamento vertical de 1
+
+Quantidade de colunas:
+grid-cols-1:  Each row concedes only one column.
+grid-cols-2:  Each row concedes only two columns.
+grid-cols-3:  Each row concedes only three columns.
+...
+grid-cols-12: Each row concedes twelve columns.
+grid-cols-none: Does not follow the grid-column property.
+
+col-auto
+col-span-1
+col-span-2
+col-span-3        //ocupa o espaço de 3 colunas
+...
+col-span-12
+col-span-full 
+
+col-start-1
+col-start-2       //começa na 2a coluna
+col-start-3
+...
+col-start-13
+col-start-auto
+
+col-end-1
+col-end-2        
+col-end-3         //termina na 3a coluna
+...
+col-end-13
+col-end-auto
+
+
+Quantidade de fileiras:
+grid-rows-1: Each row concedes only one row.
+grid-rows-2: Each row concedes only two rows.
+...
+grid-rows-6: Each row concedes six rows.
+grid-rows-none: Does not follow the grid-row property.
+
+row-auto
+row-span-1            
+row-span-2           //ocupa o espaço de 2 fileiras
+row-span-3
+...
+row-span-12
+row-span-full
+
+row-start-1
+row-start-2          //começa na 2a fileira
+...
+row-start-13
+row-start-auto
+
+row-end-1
+row-end-2           //termina na 2a fileira
+...
+row-end-13
+row-end-auto
+
+
+grid-flow-row           //ocupa automaticamente o espaço até p final lateralmente
+grid-flow-col          //ocupa automaticamente o espaço até o final verticalmente
+
+Specifying that the auto-placement algorithm uses a “dense” packing algorithm for rows and cols:
+grid-flow-row-dense
+grid-flow-col-dense
+
+
+auto-cols-auto 
+auto-cols-min 
+auto-cols-max 
+auto-cols-fr 
+
+auto-rows-auto
+auto-rows-min
+auto-rows-max
+auto-rows-fr
+
+
+//////////////////////////////////////////////&&&
+*FLEX*
+
+flex                    //adiciona o flex
+
+flex-row                //dispostos lateralmente
+flex-row-reverse        //reverte a ordem dos elementos
+flex-col                //dispostos verticalmente
+flex-col-reverse        //reverte a ordem dos elementos
+
+flex-wrap               //elemento vai pra proxima linha casa acabe o espaço
+flex-nowrap
+flex-wrap-reverse       //reverte a ordem dos elementos
+
+flex-1                  //estica até o final, ignorando a largura
+flex-initial            //estica apenas até o final do conteudo
+flex-auto               //estica até chegar no proximo conteudo
+flex-none
+
+flex-grow-0             //restringe o crescimento
+flex-grow               //não restringe
+
+flex-shrink-0           //restringe o encolhimento
+flex-shrink             //não restringe
+
+justify-evenly
+
+Para mudar a ordem dos elementos em um container flex:
+order-1
+order-2
+order-3
+...
+order-12
+order-first
+order-last
+order-none
+
+////////////////////////////////////&&&
+*ESPAÇAMENTO* / *JUSTIFY* / *ALIGN*
+
+space-y-4         //espaçamento vertical de 4
+space-x-2         //espaçamento lateral de 2
+
+space-y-reverse   //espaçamento lateral reverso
+space-x-reverse   //espaçamento vertical reverso
+
+-space-x-2        //espaçamento negativo
+-space-y-4
+
+FLEX (Container)
+items-start          //No topo
+items-end            //Na base
+items-center         //No centro
+items-baseline       //parecido com o center
+items-stretch        //estica ate o final
+Ex: flex justify-around items-start
+
+FLEX ou GRID (Coluna ou fileira)
+self-auto            
+self-start 
+self-end 
+self-center 
+self-stretch 
+Ex: flex justify-around items-stretch  (container)
+    self-end   (fileira ou coluna)
+
+FLEX (container)
+justify-start        //no começo
+justify-end          //no final
+justify-center       //no centro
+justify-between      //1o item no começo e ultimo item no final
+justify-around       //itens separados igualmente e mais proximos das bordas laterais
+justify-evenly       //itens separados igualmente e mais proximos do centro
+Ex: flex justify-around flex-row
+
+FLEX (container com flex-wrap: wrap): 
+content-center 
+content-start 
+content-end 
+content-between      // separados igualmente e colados no nas bordas
+content-around       // separados igualmente e mais proximos das bordas
+content-evenly       // separados igualmente e mais proximos do centro
+Ex: flex flex-wrap content-center
+
+GRID (container):
+justify-items-auto      //muito parecido com o stretch
+justify-items-start     //alinhado a esquerda da fileira ou no topo da coluna
+justify-items-end       //alinhado a direira da fileira ou na base da coluna
+justify-items-center    //alinhado no centro da fileira ou coluna
+justify-items-stretch   //fileira e colunas esticam ate ocupar tudo
+Ex: grid justify-items-auto grid-cols-2
+
+GRID (fileira ou coluna):
+justify-self-auto 
+justify-self-start 
+justify-self-end 
+justify-self-center 
+justify-self-stretch 
+
+GRID ou FLEX (Container)  
+-Hold the value of the align-content and justify-content:
+place-content-center 
+place-content-start 
+place-content-end 
+place-content-between 
+place-content-around 
+place-content-evenly 
+place-content-stretch 
+Ex: grid grid-cols-3 place-content-center
+
+GRID ou FLEX (Container)  
+-Hold the value of the align-content and justify-content:
+place-items-auto 
+place-items-start 
+place-items-end 
+place-items-center 
+place-items-stretch 
+Ex: grid grid-cols-3 place-items-start 
+
+GRID ou FLEX (Fileira ou coluna):
+Used for controlling how an individual item is justified and aligned at the same time.
+place-self-auto 
+place-self-start 
+place-self-end 
+place-self-center 
+place-self-stretch 
+Ex: grid grid-cols-3 place-items-stretch   (container)
+    place-self-auto  (fileira ou coluna)
+    
+
+//////////////////////////////////////////////&&&
+*TAMANHO*
+
+h-20            // altura de 20
+w-20            // largura de 20
+
+*-[3rem]        //exemplo: text-[3rem]
+*-[3em]         //exemplo: text-[3em]
+*-[3vw]         //exemplo: border-[3vw]
+*-[40vh]         //exemplo: text-[40vh] (ocupará 40% da tela)
+
+h-auto          //height is set according to the content
+w-auto          //width is set according to the content
+
+h-px            // altura de 1px
+
+h-2/3           //largura ocupa 2 terços
+y-2/5           //altura ocupa 2 terços (40%)
+
+h-full          //ocupa toda a altura
+w-full          //ocupa toda a largura
+
+h-screen: This class means the height is set to the screen size.
+w-screen: This class means the width is set to the screen size.
+w-min:  This class is used to define the min-width.
+w-max: This class is used to define the max-width.
+
+min-w-0: This class is used to set the length of min-width.
+min-w-full: This class is used to set the length of min-width at full capacity.
+min-w-min: This class is used to set the length of min-width at minimum capacity.
+min-w-max: This class is used to set the length of min-width at maximum capacity.
+
+min-h-0
+min-h-full
+min-h-screen
+
+max-w-0: This class is used to set the screen width as max-width: 0rem.
+max-w-none: This class is used to set the screen width as max-width: none.
+max-w-xs: This class is used to set the screen width as max-width: 20rem.
+max-w-sm: This class is used to set the screen width as max-width: 24rem.
+max-w-md: This class is used to set the screen width as max-width: 28rem.
+max-w-lg: This class is used to set the screen width as max-width: 32rem.
+max-w-xl: This class is used to set the screen width as max-width: 36rem.
+max-w-2xl: This class is used to set the screen width as max-width: 42rem;
+max-w-3xl: This class is used to set the screen width as max-width: 48rem.
+max-w-4xl: This class is used to set the screen width as max-width: 56rem.
+max-w-5xl: This class is used to set the screen width as max-width: 64rem.
+max-w-6xl: This class is used to set the screen width as max-width: 72rem.
+max-w-7xl: This class is used to set the screen width as max-width: 80rem.
+max-w-full: This class is used to set the screen width as max-width: 100%.
+max-w-min: This class is used to set the screen width as max-width: min-content.
+max-w-max: This class is used to set the screen width as max-width: max-content.
+max-w-prose: This class is used to set the screen width as max-width: 65ch.
+max-w-screen-sm: This class is used to set the screen width as max-width: 640px.
+max-w-screen-md: This class is used to set the screen width as max-width: 768px.
+max-w-screen-lg: This class is used to set the screen width as max-width: 1024px.
+max-w-screen-xl:  This class is used to set the screen width as max-width: 1280px.
+max-w-screen-2xl: This class is used to set the screen width as max-width: 1536px.
+
+max-h-0
+max-h-px
+max-h-full
+max-h-screen
+
+//////////////////////////////////////////////&&&
+*POSIÇÃO*
+
+static
+fixed
+absolute
+relative
+sticky
+
+inset-0
+inset-y-0
+inset-x-0
+top-0
+right-0
+bottom-0
+left-0
+
+Exemplo:
+<div class="relative h-28 w-28 bg-green-400 m-4">
+    <div class="absolute inset-y-0 w-16 bg-green-800"></div>
+</div>
+
+//////////////////////////////////////////////&&&
+*CORES*
+
+Cores disponiveis:
+red
+orange
+amber
+yellow
+lime
+green
+emerald
+teal
+cyan
+sky
+blue
+indigo
+violet
+purple
+fuchsia
+pink
+rose
+slate
+gray
+zinc
+neutral
+stone
+
+As cores vão do 50 ao 950
+
+Exemplo:
+text-green-500
+
+Opacidade:
+bg-blue-500/10          //10% visivel
+...
+bg-blue-500/100         //100% visivel
+
+Cores podem ser usadas em:
+text-*	             Sets the text color of an element
+decoration-*	     Sets the text decoration color of an element
+border-*	         Sets the border color of an element
+outline-*	         Sets the outline color of an element
+shadow-*	         Sets the color of box shadows
+inset-shadow-*	     Sets the color of inset box shadows
+ring-*	             Sets the color of ring shadows
+inset-ring-*	     Sets the color of inset ring shadows
+accent-*	         Sets the accent color of form controls
+caret-*	             Sets the caret color in form controls
+fill-*	             Sets the fill color of SVG elements
+stroke-*	         Sets the stroke color of SVG elements
+
+usando rgb:
+*-[#243c5a]
+
+Exemplos:
+text-[#243c5a]
+border-[#243c5a]
+
+-------
+
+Cores e fontes personalizadas:
+
+-No arquivo estilo.css:
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
+@font-face {
+    font-family: 'Bebas';
+    src: url('../fontes/Bebas_Neue.otf') format('opentype');
+    font-weight: normal;
+}
+
+:root {
+    --cor_principal: red;
+    --cor_secundaria: orange;
+    --cor_texto: black;
+    --cor_link: purple;
+
+    --fonte_padrao: Arial, Verdana, Helvetica, sans-serif;
+    --fonte_destaque: 'Bebas Neue', cursive;
+    --fonte_oswald: 'Oswald', sans-serif;
+}
+
+.txt {
+  color: var(--cor_principal);
+  font-family: var(--fonte_oswald);
+}
+
+-No arquivo html:
+
+<!doctype html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="estilo.css">
+  </head>
+  <body>
+    <h1 class="txt text-bold text-3xl">TEXTO</h1>
+  </body>
+</html>
+
+
+--------
+
+-Arquivo cores.css:       //precisa ter instalado o tailwind no projeto
+
+@import "tailwindcss";               
+
+@theme {
+  --color-cor1: #121063;
+  --color-cor2: #3ab7bf;
+  --color-outracor: #78dcca;
+}
+
+-Arquivo html ou react:
+
+<p class="text-cor1">TEXTO</p>
+
+
+-----
+
+Caso queira usar CDN direto no html:
+
+<!doctype html>
+<html>
+  <head>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style type="text/tailwindcss">
+      @theme {
+        --color-cor1: red;
+      }
+    </style>
+
+  </head>
+  <body>
+    <h1 class="text-3xl font-bold text-cor1">TEXTO</h1>
+  </body>
+</html>
+
+
+
+//////////////////////////////////////////////&&&
+*BORDA*
+
+border           //borda simples fina
+border-4         //borda de 4
+
+border-r         //borda simples na direita
+border-r-3       //borda na direita de 3
+border-t-3       //borda no topo de 3
+border-l-3       //borda na esquerda de 3
+border-b-3       //borda na base de 3
+
+border-x-4       //borda na esquerda e direita 
+border-y-4       //borda no tope e embaixo 
+
+divide-x-4       //borda lateral entre elementos filho de um grid
+divide-y-4       //borda vertical elementos filho de um grid
+
+border-solid      //borda solida
+border-dashed     //pontilhado
+border-dotted     //pontilhado com bolinhas
+border-double     //borda dupla fina
+border-none       //sem borda
+
+outline           //borda externa fina
+outline-4         //borda externa de tamanho 4
+
+outline-offset-4      //espaço entre a borda e a borda externa de tamanho 4
+
+outline-blue-500     //borda externa na cor azul
+
+outline-solid
+outline-dashed       //borda externa pontilhada
+outline-dotted
+outline-double
+
+focus:outline-2     //ao clicar em algo (ex: botão) o foco aplica a borda
+ 
+<input class="focus:border-indigo-600 focus:outline-hidden ..." type="text" />    //ao clicar em algo o foco aplica cor 
+outline-hidden       //to hide the default browser outline on focused elements
+
+<div class="focus-within:outline-2 focus-within:outline-indigo-600 ...">
+  <textarea class="outline-none ..." placeholder="Leave a comment..." />
+  <button class="..." type="button">Post</button>
+</div>
+
+rounded-none
+rounded-sm       //pouco arredondado
+rounded-md      
+rounded-lg      
+rounded-xl      
+rounded-4xl      //muito arredondado
+rounded-full     //arredondado em formato de pilula
+
+rounded-t-lg     //arredondado somente no topo
+rounded-r-lg
+rounded-l-lg
+rounded-b-lg
+
+rounded-tl-lg      //quina superior esquerda arredondada
+rounded-tr-lg
+rounded-br-lg
+rounded-bl-lg
+
+border-white
+border-black
+border-green-500    // borda verde    
+border-red-100 
+border-transparent
+OBS: Cores vão de 50 a 950
+
+border-red-500/10        //borda 10% visivel
+border-red-500/100       //borda 100% visivel
+
+border-x-red-100        //bordas laterais (esquerda e direita)
+border-y-red-100        //bordas verticais (topo e base)
+
+border-l-red-100        //borda da esquerda
+border-t-red-100        //borda do topo
+border-r-red-100        //borda da direita
+border-b-red-100        //borda da base
+
+//////////////////////////////////////////////&&&
+*BACKGROUND*
+
+
+bg-black
+bg-white
+bg-green-100          //verde super claro
+bg-green-500          //verde medio
+bg-green-900          //verde escuro
+bg-gray-500
+bg-red-500
+bg-blue-500
+bg-indigo-500
+bg-purple-500
+bg-yellow-500
+bg-pink-500
+bg-transparent       //The background color will be transparent.
+bg-current           //The background will color depend on the parent element color.
+Note: The color's values can be changeable according to your need from 50-900, the span should be 100, after the 100.
+
+bg-opacity-50          //opacidade de 0 a 100
+
+bg-none                //sem linear-gradient.
+bg-gradient-to-t       //linear-gradient to the top.
+bg-gradient-to-tr      //linear-gradient to the top right.
+bg-gradient-to-r       //linear-gradient to right.
+bg-gradient-to-br      //linear-gradient to the bottom right.
+bg-gradient-to-b       //linear-gradient to the bottom.
+bg-gradient-to-bl      //linear-gradient to the bottom left.
+bg-gradient-to-l       //linear-gradient to left.
+bg-gradient-to-tl      //linear-gradient to the top left.
+
+bg-gray-400 bg-gradient-to-r from-green-500                      //gradiente do verde pra cor de fundo (cinza)
+bg-gradient-to-r from-green-500 to-blue-500                      //gradiente do verde pro azul
+bg-gradient-to-r from-blue-400 via-yellow-500 to-green-500       //gradiente do azul, passando pelo amarelo até o o verde
+Note: All the color can be used (9 Colors), here the number start from 50, 100, 200, and so on up to 900.
+
+bg-clip-border	       //set the background color spread over the whole division.
+bg-clip-padding	       //set the background inside the border.
+bg-clip-content	       //set the background color to the content only.
+bg-clip-text	       //to crop an element's background to match the shape of the text. Useful for effects where you want a background image to be visible through the text.
+OBS: Mais visivel quando usado justo com borda pontilhada:   border-dashed
+
+bg-left-top
+bg-top                //elemento (ex: imagem) posicionado no topo do background (container)
+bg-right-top
+bg-left
+bg-center
+bg-right
+bg-left-bottom
+bg-bottom
+bg-right-bottom
+
+bg-repeat               //imagem repetida dentro do background (container)
+bg-no-repeat            //imagem não repete
+bg-repeat-x             //repete a imagem horizontalmente
+bg-repeat-y             //repete a imagem verticalmente
+bg-repeat-round         //repeat the image in a manner that will fit the container without any extra space between images.
+bg-repeat-space         //repeat the image in a manner that will fit the container with the required extra space between images.
+
+bg-auto                 //Padrão. Imagem no tamanho original
+bg-cover                //Cobre até chegar no limite da altura
+bg-contain              //Cobre até chegar no limite da largura
+
+//////////////////////////////////////////////&&&
+*OPACIDADE*
+
+opacity-25              //elemento visivel em 25%
+opacity-100             //elemento totalmente visivel
+opacity-[.67]           //valor personalizado
+
+disabled:opacity-75      //se o elemento estiver disabilitado, estará 75% visivel
+
+mix-blend-normal
+mix-blend-multiply
+mix-blend-screen
+mix-blend-overlay        //mistura de elementos e cores sobrepostos com opacidade
+mix-blend-darken
+mix-blend-lighten
+mix-blend-color-dodge
+mix-blend-color-burn
+mix-blend-hard-light
+mix-blend-soft-light
+mix-blend-difference
+mix-blend-exclusion
+mix-blend-hue
+mix-blend-saturation
+mix-blend-color
+mix-blend-luminosity
+mix-blend-plus-darker
+mix-blend-plus-lighter
+
+bg-blend-normal
+bg-blend-multiply
+bg-blend-screen
+bg-blend-overlay        //mistura de background  com opacidade sobreposto com o fundo
+bg-blend-darken
+bg-blend-lighten
+...
+
+//////////////////////////////////////////////&&&
+*SOMBRA*
+
+shadow-2xs
+shadow-xs
+shadow-sm
+shadow-md
+shadow-lg
+shadow-xl
+shadow-2xl
+shadow-none
+
+shadow-xl/20     //opacidade   20% visivel
+
+shadow-red-500             //sombra de cor vermelha
+shadow-indigo-500/30       //sombra de cor vermelha com opacidade
+
+inset-shadow-2xs
+inset-shadow-xs
+inset-shadow-sm
+inset-shadow-md      //sombra interna media
+inset-shadow-lg
+inset-shadow-xl
+inset-shadow-2xl
+
+inset-shadow-red-500
+inset-shadow-red-500/40
+
+ring             //sombra solida fina (bem parecido com uma borda)
+ring-4           //sombra solida de tamanho 4
+
+ring-red-500
+ring-red-500/30
+ 
+inset-ring         //sombra interna solida (bem parecido com uma borda)
+inset-ring-3
+
+inset-ring-blue-500
+inset-ring-blue-500/30
+
+shadow-[0_35px_35px_rgba(0,0,0,0.25)]       //valor customizavel 
+
+text-shadow-2xs
+text-shadow-xs
+text-shadow-sm                 //sombra no texto
+text-shadow-md
+text-shadow-lg
+text-shadow-none
+text-shadow-lg/20              //opacidade da sombra visivel 20%
+text-shadow-red-500            //cor da sombra
+text-shadow-red-500/30         //opacidade da cor da sombra
+
+
+//////////////////////////////////////////////&&&
+*TEXTO*
+
+text-white            //texto branco
+text-white-500        //ERRADO
+text-black
+text-green-100        //texto verde clarinho
+text-green-500        //texto verde
+text-green-900        //texto verde escuro
+text-gray-500
+text-red-500
+text-blue-500
+text-indigo-500
+text-purple-500
+text-yellow-500
+text-pink-500
+text-transparent            
+text-current                //The text color will depend on the parent element color.
+Note: The color's values can be changeable according to your need from 50-900, the span should be 100, after the 100.
+
+text-opacity-50         //opacidade de 0 a 100
+
+text-center           //texto centralizado
+text-left
+text-right
+text-justify
+
+text-xs              //texto muito pequeno
+text-sm              //texto pequeno
+text-base            // This class defines the text size as base size.
+text-lg              //texto grande
+text-xl              //texto muito grande
+text-2xl             //texto muito grande 2x
+text-9xl             //texto muito grande 9x
+
+underline            //sublinhado
+line-through         //cortado
+no-underline         //sem nada
+
+font-sans
+This class is used to apply a websafe sans-serif font family, like ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", etc.
+
+font-serif
+This class is used to apply a websafe serif font-family like ui-serif, Georgia, Cambria, "Times New Roman", Times, serif, etc.
+
+font-mono
+This class is used to apply a websafe monospaced font-family like ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace, etc.
+
+italic
+non-italic
+
+uppercase                      //maiusculas
+lowercase                      //minusculas
+capitalize                     //Primeira letra maiuscula
+normal-case                    //normal
+
+font-thin                            //This class sets the font-weight to 100.
+font-extralight                      //This class sets the font-weight to 200.
+font-light                           //This class sets the font-weight to 300.
+font-normal                          //This class sets the font-weight to 400.
+font-medium                          //This class sets the font-weight to 500.
+font-semibold                        //This class sets the font-weight to 600.
+font-bold                            //This class sets the font-weight to 700.
+font-extrabold                       //This class sets the font-weight to 800.
+font-black                           //This class sets the font-weight to 900.
+
+leading-3                            //This class set the line-height at .75rem.
+leading-4                            //This class set the line-height at 1rem.
+...
+leading-10                           //This class set the line-height at 2.5rem.
+leading-none                         //This class set the line-height at 1.
+leading-tight                        //This class set the line-height at 1.25.
+leading-snug                         //This class set the line-height at 1.375.
+leading-normal                       //This class set the line-height at 1.5.
+leading-relaxed                      //This class set the line-height at 1.625.
+leading-loose                        //This class set the line-height at 2.
+
+text-shadow-2xs
+text-shadow-xs
+text-shadow-sm                 //sombra no texto
+text-shadow-md
+text-shadow-lg
+text-shadow-none
+text-shadow-lg/20              //opacidade da sombra visivel 20%
+text-shadow-red-500            //cor da sombra
+text-shadow-red-500/30         //opacidade da cor da sombra
+
+align-baseline                    //padrão
+align-top
+align-middle
+align-bottom
+align-text-top                   // It aligns the element top corresponding to the top of the parent’s font.
+align-text-bottom                // Align the element’s bottom corresponding to the bottom of the parent’s font.
+
+break-normal                     //used for the default line break rules.     (Tem overflow)
+break-words                      //It is used to break the words at arbitrary points to prevent overflow.
+break-all                        //It is used to break the words at any character to prevent overflow. (quebra a palavra no meio)
+
+whitespace-normal                //padrão
+whitespace-nowrap                //every sequence of two or more whitespaces will appear as a single whitespace
+whitespace-pre                   //parecido com <pre>
+whitespace-pre-line              //every sequence of two or more whitespaces will appear as a single whitespace
+whitespace-pre-wrap              //every sequence of whitespaces will appear as it is
+
+antialiased                       //This utility is to render text using grayscale antialiasing.
+subpixel-antialiased              // This utility is to render text using subpixel antialiasing.
+
+lining-nums                        //numeros com a mesma altura
+oldstyle-nums                      //alguns numeros em cima e outros embaixo
+proportional-nums                  //numeros com a mesma altura (proporcionais)
+tabular-nums                       ????
+diagonal-fractions                 //para frações
+
+//////////////////////////////////////////////&&&
+*LISTAS*
+
+list-none                          //No marker is shown in this mode.
+list-disc                          //This is the default value. The marker is a filled circle.
+list-decimal                       //A marker is a decimal number, beginning with 1.
+
+//////////////////////////////////////////////&&&
+*INPUT*
+
+placeholder-transparent             //The placeholder text color will be transparent.
+placeholder-current                 //The placeholder text will color depend on the parent element color.
+placeholder-black                   //The placeholder text color will be black.
+placeholder-white                   //The placeholder text color will be white.
+placeholder-gray-500                //The placeholder text color will be gray.
+placeholder-red-500                 //The placeholder text color will be red.
+placeholder-blue-500                //The placeholder text color will be blue.
+placeholder-indigo-500              //The placeholder text color will be indigo.
+placeholder-purple-500              //The placeholder text color will be purple.
+placeholder-green-500               //The placeholder text color will be green.
+placeholder-yellow-500              //The placeholder text color will be yellow.
+placeholder-pink-500                //The placeholder text color will be pink.
+Note: The color's values can be changeable according to your need from 50-900, the span should be 100, after 100.
+
+placeholder-opacity-0:              //Control the opacity of an element's placeholder color 
+Note: The number of the opacity can be changeable from 0 to 100 with the span of 5.
+
+rounded-lg                //arredondado
+border-2                  //borda
+border-green-400          //cor da borda
+bg-green-100              //cor de fundo
+
+//////////////////////////////////////////////&&&
+*OVERFLOW* / *OVERSCROLL*
+
+overflow-auto          //adiciona uma barra lateral
+overflow-hidden        //oculta o conteudo sobrando
+overflow-visible 
+overflow-scroll 
+overflow-x-auto 
+overflow-y-auto 
+overflow-x-hidden 
+overflow-y-hidden 
+overflow-x-visible 
+overflow-y-visible 
+overflow-x-scroll 
+overflow-y-scroll 
+
+overscroll-auto         //Padrão
+overscroll-contain
+overscroll-none
+overscroll-y-auto
+overscroll-y-contain
+overscroll-y-none
+overscroll-x-auto
+overscroll-x-contain
+overscroll-x-none
+
+//////////////////////////////////////////////&&&
+*PADDING*
+
+p-5                    //padding lateral e vertical em 5                   
+px-5                   //padding lateral em 5 (esquerda e direita)                   
+py-5                   //padding vertical em 5 (topo e base)
+
+px-20                  //padding horizontal de 5rem (80px) na esquerda e direita
+
+pt-2	//padding no topo
+pr-2	//padding na direita
+pb-2	//padding na base
+pl-2	//padding na esquerda	
+
+//////////////////////////////////////////////&&&
+*MARGEM*
+
+m-5                    //margem lateral e vertical em 5                   
+mx-5                   //margem lateral em 5                   
+my-5                   //margem vertical em 5 
+
+m-auto                 //centraliza
+mx-auto                //centraliza
+
+-m-3                   //margem negativa em todos os lados
+
+mt-2	//margem no topo
+mr-2	//margem na direita
+mb-2	//margem na base
+ml-2	//margem na esquerda	
+
+//////////////////////////////////////////////&&&
+*DISPLAY*
+
+contents             //Apaga o container, mas o conteúdo dentro ainda aparece
+hidden               //Remove o elemento (não ocupa mais o espaço)
+
+Invisible            //esconde o elemento, mas ainda ocupa espaço
+Visible              //Padrão
+
+block                //um embaixo do outro
+inline-block         //um do lado do outro
+inline               //um do lado do outro (ignora altura e largura)
+flex                 //estica ou encolhe
+inline-flex
+
+grid
+inline-grid
+
+flow-root            //Set the default value.
+
+/////////////////////////////////////&&&
+*TABELA*
+
+table                //Set the behavior as <table> for all elements.
+table-caption        //Set the behavior as <caption> for all elements.
+table-cell           //Set the behavior as <td> for all elements.
+table-column         //Set the behavior as <col> for all elements.
+table-column-group   //Set the behavior as <column> for all elements.
+table-footer-group   //Set the behavior as <footer> for all elements.
+table-header-group   //Set the behavior as <header> for all elements.
+table-row-group      //Set the behavior as <row> for all elements.
+table-row            //Set the behavior as <tr> for all elements.
+
+/////////////////////////////////////&&&
+*FLOAT*
+
+float-right          
+float-left 
+float-none 
+clear-left 
+clear-right 
+clear-both 
+clear-none 
+
+/////////////////////////////////////&&& 
+*IMAGEM*
+
+object-contain 
+object-cover 
+object-fill 
+object-none 
+object-scale-down
+
+<div class="bg-green-300 w-full h-full">
+    <img class="object-contain h-48 w-full" src=
+"https://imagem.png">
+</div>
+
+Posição:
+object-left-top
+object-top
+object-right-top
+object-left
+object-center
+object-right
+object-left-bottom
+object-bottom
+object-right-bottom
+
+bg-left-top
+bg-top                //elemento (ex: imagem) posicionado no topo do background (container)
+bg-right-top
+bg-left
+bg-center
+bg-right
+bg-left-bottom
+bg-bottom
+bg-right-bottom
+
+bg-repeat               //imagem repetida dentro do background (container)
+bg-no-repeat            //imagem não repete
+bg-repeat-x             //repete a imagem horizontalmente
+bg-repeat-y             //repete a imagem verticalmente
+bg-repeat-round         //repeat the image in a manner that will fit the container without any extra space between images.
+bg-repeat-space         //repeat the image in a manner that will fit the container with the required extra space between images.
+
+bg-auto                 //Padrão. Imagem no tamanho original
+bg-cover                //Cobre até chegar no limite da altura
+bg-contain              //Cobre até chegar no limite da largura
+
+///////////////////////////////////&&&
+*INDEX*
+
+z-0              // equivalente a z-index:0
+z-10
+z-20
+z-30
+z-40
+z-50
+z-auto
+
+///////////////////////////////////&&&
+*MASCARA*
+
+mask-clip-border         //formato circular
+mask-clip-padding
+mask-clip-content
+mask-clip-fill
+mask-clip-stroke
+mask-clip-view
+mask-no-clip
+
+mask-add             //junção
+mask-subtract
+mask-intersect       //interseção
+mask-exclude
+
+Usando mascaras de formatos diversos:
+https://tailwindcss.com/docs/mask-image
+
+///////////////////////////////////&&&
+*FILTROS*
+
+blur-xs
+blur-sm
+blur-md
+blur-lg
+blur-2xl
+blur-none
+blur-[2px]
+
+brightness-50
+brightness-100
+brightness-150
+brightness-200
+brightness-[1.75]
+
+contrast-50
+contrast-100
+contrast-150
+contrast-200
+contrast-[.25]
+
+drop-shadow-xs
+drop-shadow-sm
+drop-shadow-md
+drop-shadow-lg
+drop-shadow-xl
+drop-shadow-2xl
+drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)]
+drop-shadow-none
+drop-shadow-red-500
+drop-shadow-red-500/30
+
+grayscale-0
+grayscale-25
+grayscale-50
+grayscale              //100%
+grayscale-[0.5]
+
+hue-rotate-15
+hue-rotate-90
+hue-rotate-180
+hue-rotate-360
+
+invert-0
+invert-50
+invert          //100%
+
+saturate-50
+saturate-100
+saturate-150
+saturate-200
+saturate-[.25]
+
+sepia-0
+sepia-50
+sepia          //100%
+sepia-[.25]
+
+Para elementos sobrepostos em cima de outro:
+You can combine the following backdrop filter utilities: blur, brightness, contrast, grayscale, hue-rotate, invert, opacity, saturate, and sepia.
+backdrop-blur-xs
+backdrop-grayscale
+backdrop-filter-none
+
+///////////////////////////////////&&&
+*INTERATIVIDADE*
+
+hover:bg-red-700         //elemento ficará vermelho ao passar o mouse por cima
+focus:border-2           //elemento ficará com borda ao clicar
+active:bg-red-500        //elemento ficará vermelho ao ficar ativo
+checked:border-indigo-500
+
+not-focus: with hover: to only apply hover styles when an element is not focused:
+https://tailwindcss.com/docs/hover-focus-and-other-states
+
+first:pt-0               //primeiro elemento filho recebe padding no topo
+last:pb-0                //ultimo elemento filho recebe padding na base
+
+Para listagens de elementos filho:
+odd:bg-white              
+even:bg-gray-50
+
+invalid:text-pink-600   
+disabled:border-gray-200
+required:border-red-200
+
+accent-black
+accent-white
+accent-red-300
+accent-red-300/40
+hover:accent-pink-500
+OBS: accent is helpful for styling elements like checkboxes and radio groups by overriding the browser's default color.
+
+appearance-none            // to reset any browser specific styling on an element
+appearance-auto            // to restore the default browser specific styling on an element
+
+caret-pink-500             // to change the color of the text input cursor
+
+scheme-normal
+scheme-dark               //elemento seguirá o dark mode
+scheme-light
+scheme-light-dark
+scheme-only-dark
+scheme-only-light
+
+cursor-none
+cursor-auto
+cursor-pointer            //aparece uma mãozinha
+cursor-progress           //aparece uma seta com loading
+cursor-wait               //aparece um loading
+cursor-not-allowed        //aparece um proibido
+cursor-zoom-in            //aparece uma lupa com +
+cursor-zoom-out           //aparece uma lupa com -
+cursor-text               //aparece um cursor de texto
+cursor-move               //aparece uma cruz de mover
+cursor-all-scroll              //aparece uma cruz de mover
+cursor-help              //aparece uma seta com interrogação
+cursor-no-drop               //aparece um sinal de proibido
+cursor-grab              //aparece uma mão
+cursor-grabbing              //aparece uma mão fechada
+
+Cursores de redimensionar:
+cursor-col-resize              //aparece um sinal de redimensional lateralmente
+cursor-row-resize              //aparece um sinal de redimensional verticalmente
+cursor-n-resize
+cursor-e-resize
+cursor-s-resize
+cursor-w-resize
+cursor-ne-resize
+cursor-nw-resize
+cursor-se-resize
+cursor-sw-resize
+cursor-ew-resize
+cursor-ns-resize
+cursor-nesw-resize
+cursor-nwse-resize
+
+Para textarea:
+field-sizing-content              //to allow a form control to adjust it's size based on the content
+field-sizing-fixed                //to make a form control use a fixed size
+resize-none
+resize
+resize-y
+resize-x
+
+pointer-events-auto
+pointer-events-none               //to make an element ignore pointer events, like :hover and click events:
+
+scroll-auto
+scroll-none
+
+scroll margin e scroll padding
+https://tailwindcss.com/docs/scroll-margin
+https://tailwindcss.com/docs/scroll-padding
+
+snap-none
+snap-x
+snap-y
+snap-both
+snap-mandatory
+snap-proximity
+https://tailwindcss.com/docs/scroll-snap-type
+
+snap-start            //scroll é fixado no começo do elemento 
+snap-end
+snap-center
+snap-align-none
+
+snap-mandatory
+snap-always
+https://tailwindcss.com/docs/scroll-snap-stop
+
+touch-auto
+touch-none
+touch-pan-x
+touch-pan-left
+touch-pan-right
+touch-pan-y
+touch-pan-up
+touch-pan-down
+touch-pinch-zoom
+touch-manipulation
+OBS: to control how an element can be scrolled (panned) and zoomed (pinched) on touchscreens
+https://tailwindcss.com/docs/touch-action
+
+select-none       //não permite selecionar o texto
+select-text       //permite selecionar o texto
+select-all        //Selecting all text in one click
+select-auto       //Padrão. Igual ao select-text
+
+///////////////////////////////////&&&
+*DARK MODE*
+
+<div class="bg-white dark:bg-gray-800">
+  <h3 class="text-gray-900 dark:text-white">Titulo</h3>
+  <p class="text-gray-500 dark:text-gray-400">Paragrafo</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////&&&
+EXEMPLOS DE COMPONENTES
+
+
+https://flowbite.com/docs/components/
+
+Istalação do CDN no html:
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+</head>
+<body>
+  ....
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+</body>
+
+---------
+DROPDOWN usando função JS:
+
+Dropdown 1:
+<button onClick="toggleDropdown()" id="dropdownDefaultButton" class="...">Dropdown button</button>
+
+<div id="dropdown" class="hidden ...">
+    <ul>
+      <li>
+        <a>Dashboard</a>
+      </li>
+      <li>
+        <a>Settings</a>
+      </li>
+      <li>
+        <a>Earnings</a>
+      </li>
+      <li>
+        <a>Sign out</a>
+      </li>
+    </ul>
+</div>
+
+
+<script>
+	function toggleDropdown() {
+		let dropdown = document.querySelector('#dropdown');
+    dropdown.classList.toggle('hidden');
+	}
+</script>
+
+-----
+
+Dropdown 2:
+<div class="container">
+  <div class="relative">
+    <button class="flex items-center" onClick="toggleDropdown()">DROPDOWN</button>
+    <div class="absolute hidden" id="dropdown">
+      <a class="block">LINK 1</a>
+      <a class="block">LINK 2</a>
+      <a class="block">LINK 3</a>
+    </div>
+  </div>
+</div>
+
+
+<script>
+	function toggleDropdown() {
+		let dropdown = document.querySelector('#dropdown');
+    dropdown.classList.toggle('hidden');
+	}
+</script>
+
+---------
+

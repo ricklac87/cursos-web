@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 1</title>
+
+    <!--link BOOTSTRAP 4.5.0-->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .center {
+            margin: 0 auto;
+            padding: 0 2%;
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+        }
+
+        .cabeca {
+            background-color: rgb(226, 226, 226);
+            flex-wrap: wrap;
+            padding: 5px 0;
+            max-height: 50px;
+        }
+
+        .logo {
+            /*background-color: yellow;*/
+            padding-top: 2px;
+        }
+
+        .menu {
+            /*background-color: green;*/
+            padding-top: 8px;
+        }
+
+        .menu p {
+            display: inline-block;
+            margin-left: 15px;
+            font-weight: 500;
+        }
+
+        .logo-mobile1 {
+            /*background-color: aqua;*/
+            display: none;
+        }
+
+        .logo-mobile2 {
+            /*background-color: aqua;*/
+            display: none;
+        }
+
+
+        @media screen and (max-width: 359px) {
+            .menu {
+
+                display: none;
+            }
+            .logo {
+                display: none;
+            }
+            .logo-mobile1 {
+                display: block;
+            }
+        }
+
+        @media screen and (max-width: 767px) and (min-width: 360px) {
+            .menu {
+
+                display: none;
+            }
+            .logo {
+                display: none;
+            }
+            .logo-mobile2 {
+                display: block;
+            }
+        }
+            
+
+    </style>
+</head>
+<body>
+    <section class="cabeca"> 
+        <div class="center">
+
+            <div class="container">	
+
+                <div class="row">
+
+                    <div class="col-2 text-left logo">
+                        <img src="./logo-santander3.png" />
+                    </div>	
+
+                    <div class="col-10 text-right menu">
+                        <p style="color: red;">Para você</p>
+                        <p style="color: gray;">Para sua empresa</p>
+                        <p style="color: gray;">O que você procura ?</p>
+                    </div>
+
+                    <div class="col-12 text-center logo-mobile1">
+                        <img src="./logo-santander3.png" />
+                    </div>	
+
+                    <div class="col-12 text-right logo-mobile2">
+                        <img src="./logo-santander3.png" />
+                    </div>	
+
+                </div>
+            </div>
+        </div>
+    </section> 
+
+
+    
+</body>
+</html>

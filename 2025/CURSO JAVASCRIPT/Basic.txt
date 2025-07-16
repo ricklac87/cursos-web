@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Javascript</title>
+
+</head>
+
+<body>
+
+    <div id="ID">
+        
+    </div>
+    
+    
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</body>
+    
+</html>
+
+
+////////////////////////////
+
+
+CSS:
+        #ID {
+            background-color: yellowgreen;
+            height: 200px;
+            width: 200px;
+            color: black;
+            text-align: center;
+            line-height: 200px;
+        }
+
+//////////////////////////
+
+
+JS:
+	document.addEventListener("click" , Função)
+
+        function Função() {
+            document.getElementById("ID").style.background = "red"
+        }
+
+
+
+iife
+javascript funcional
+objetos
+regex
+ajax
+xmlhttprequest
+fetch
+jquery

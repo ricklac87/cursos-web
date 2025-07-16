@@ -1,0 +1,77 @@
+<!Doctype html>
+<html lang="pt-BR">
+	<head>
+		<title>Titulo</title>
+		
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" type="text/css" href="./css/main1.css"> 
+		
+	</head>
+	
+	<body>
+		
+		<header class="pt1-header">
+			<div class="center">
+
+				<div class="imagem1">
+					<img src="img/logo-santander2.png" />
+				</div>
+				
+				<div class="links-header">
+						<a href="#">
+							Home
+						</a>
+						<a href="#">
+							Sobre nós
+						</a>
+						<a href="#">
+							Contato							
+						</a>
+				</div>
+
+				<div class="menu-hamburguer">
+					<i class="fa-solid fa-bars menu-mobile-icon" style="color: white;"></i>
+				</div>
+
+			</div> <!--center-->
+		</header> <!--pt1-header-->
+
+		<div class="center">
+			<div class="menu-itens">
+				<a href="#">Home</a>
+				<a href="#">Sobre nós</a>
+				<a href="#">Contato</a>
+			</div>
+		</div>
+		
+	
+	
+	</body>
+	
+	<script src="https://kit.fontawesome.com/1d82588ad9.js" crossorigin="anonymous"></script>
+
+	<script>
+
+		var el = document.querySelector('.menu-mobile-icon');
+
+		el.addEventListener('click', () => {
+			//alert('Clicado');
+
+			var menuitens = document.querySelector('.menu-itens');
+
+			if(menuitens.classList.contains('show')){
+				menuitens.classList.add('hide');
+				menuitens.classList.remove('show');
+			}
+			else {
+				menuitens.classList.add('show');
+				menuitens.classList.remove('hide');
+			}		
+		});
+	</script>
+
+</html>
+  

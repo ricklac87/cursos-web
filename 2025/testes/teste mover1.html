@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Georama:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georama', sans-serif;
+        }
+
+        .caixa {
+            background-color: red;
+            width: 300px;
+            height: 300px;
+            margin: 100px;
+            transition: transform 1s ease , background-color 1s ease , width 1s ease; 
+        }
+
+        .mover {
+            transform: translateX(400px);
+        }
+
+        .cor {
+            background-color: blue;
+        }
+
+
+        .esticar {
+            width: 700px;
+        }
+
+        .girar {
+            transform: rotate(150deg);
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+
+    <button class="btn" onclick="mover()">MOVER</button>
+    <button class="btn" onclick="cor()">MUDAR COR</button>
+    <button class="btn" onclick="esticar()">ESTICAR</button>
+    <button class="btn" onclick="girar()">GIRAR</button>
+    <div id="caixa" class="caixa"></div>
+    
+<script>
+
+    function mover() {
+        document.getElementById("caixa").classList.toggle("mover")
+    }
+
+    function cor() {
+        document.getElementById("caixa").classList.toggle("cor")
+    }
+
+    function esticar() {
+        document.getElementById("caixa").classList.toggle("esticar")
+    }
+
+    function girar() {
+        document.getElementById("caixa").classList.toggle("girar")
+    }
+
+</script>
+
+</body>
+</html>

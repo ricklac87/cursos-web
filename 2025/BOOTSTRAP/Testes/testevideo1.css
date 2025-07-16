@@ -1,0 +1,122 @@
+/*  Video: https://www.youtube.com/watch?v=TdpmCHcM-S4  */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap');
+/* para zerar as configurações do chrome*/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Oswald";
+}
+/*ou adicionar a fonte no html em <head> e depois <link...>*/
+
+
+/* classe usada em todo as divs*/
+.center {
+    max-width: 1100px; /*ou 1280px*/
+    margin: 0 auto;
+    padding: 0 2%;
+    display: flex;
+    flex-wrap: wrap;   /*para adequar ao celular em pé???  29:00 do video e 40:00 do video*/
+}
+
+
+
+/*tempo de transição em um botão*/
+.menu a {
+    color: blue;
+    font-size: 14px;
+    text-decoration: none;
+    margin-right: 20px;
+    transition: 0.4s;   /*tempo de transição*/
+}
+.menu:hover {
+    color: aqua;
+}
+.menu .btn-menu {
+    background-color: aqua;
+    display: inline-block;
+    padding: 8px 16px;  /*altura e largura*/
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    border: 0;
+    cursor: pointer;
+}
+
+
+
+/* para adicionar ícones do "fonts awesome"
+adicione no html a tag i com a classe do ícone (só pegar o código no site do font awesome); 
+Exemplo:
+<i class="fa-solid fa-camera-retro"></i>
+adicione no html o script do seu kit de icons do font awesome
+Exemplo:
+<script src="https://kit.fontawesome.com/17635378383.js" crossorigin="anonymous"></script>
+*/
+
+
+/*Efeito paralax de uma imagem de background:
+No html:
+<div style="height:9000px;"></div>
+No css é preciso adicionar background-attachment: fixed
+Exemplo:
+section.main {
+    background-image: url("img/...jpg");
+    min-height: 500px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+*/
+
+
+/* para dividir a largura usando calc:
+.classe {
+    width: calc (100% / 4);
+}
+Mas é melhor dividir e remover um pouco:
+.class {
+    width: 24%;
+    margin-right: 1%;
+}
+*/
+
+
+/*
+Para deixar responsivo: 40:00 do video
+@media screen and (max-width: 768px) {
+    .classe {
+        width: 100%;
+    }
+}
+e adicionar o flex-wrap: wrap; na classe 
+
+*/
+
+
+
+
+/* video 2 = https://www.youtube.com/watch?v=AA6h4Og2dao */
+
+/*MENU HAMBURGUER
+começo do video 2 = https://www.youtube.com/watch?v=AA6h4Og2dao
+*/
+
+/* ADICIONANDO IMAGEM em design responsivo
+17:50 do video 2
+*/
+
+/* DEIXAR IMAGEM PRETO E BRANCO 
+24:00 do video 2
+*/
+
+/* Para aumentar uma imagem ao passar o mouse
+26:00 do video 2
+*/
+
+/*para deixar uma imagem no formato de um circulo
+52:45 do video 2
+*/

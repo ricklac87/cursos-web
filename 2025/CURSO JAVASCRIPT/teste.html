@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso Javascript</title>
+
+       
+    <!-- PARA INCLUIR O BOOTSTRAP 5.3 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+        <style type="text/css">
+
+            /* border: none;
+              */
+         
+         *{
+            /*padding: 0px;*/
+            /*margin: 0px;*/
+            box-sizing: border-box;
+        }  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+   
+
+    
+
+</head>
+
+
+
+<body>
+<!--
+    <form action="teste.php" method="get">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email">
+          <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+-->
+
+
+
+    <form>
+        <label for="nome">Nome: </label>
+        <input type="text" id="idnome" name="nome" required><br>
+        <label for="sobrenome">Sobrenome: </label>
+        <input type="text" id="idsobrenome" name="sobrenome" required><br>
+        <label for="email">Nome: </label>
+        <input type="email" id="idemail" name="email" required><br>
+        <button id="btn" onclick="criarCookie()">CRIAR</button>
+        <button id="btn" onclick="limparCookie()">LIMPAR</button>
+    </form>
+
+    <div id="cookies">Todos os cookies: </div>
+    <div id="nome">Nome: </div>
+    <div id="sobrenome">Sobrenome: </div>
+    <div id="email">Email: </div>
+
+    
+
+        
+
+ 
+
+    
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+    <!-- <script src="testejavascript.js" type="module"></script>  -->
+
+    <script>
+                
+                document.querySelector("#cookies").innerHTML += document.cookie;
+
+                let[...texto] = document.cookie.split(";")   
+
+                let[titulonome, nomevalor] = texto[0].split("=")
+                let[titulosobrenome, sobrenomevalor] = texto[1].split("=")
+                let[tituloemail, emailvalor] = texto[2].split("=") 
+                
+                document.querySelector("#nome").innerHTML += nomevalor;
+                document.querySelector("#sobrenome").innerHTML += sobrenomevalor;
+                document.querySelector("#email").innerHTML += emailvalor;
+          
+                function criarCookie() {
+                    var dtExpira = "expires= Tue, 01 Jan 2115 12:00:00 UTC ";
+                    var nome = document.getElementById("idnome").value;
+                    var sobrenome = document.getElementById("idsobrenome").value
+                    var email = document.getElementById("idemail").value
+                    document.cookie = "nome" + "=" + nome + "; " + dtExpira;    
+                    document.cookie = "sobrenome" + "=" + sobrenome + "; " + dtExpira;   
+                    document.cookie = "email" + "=" + email + "; " + dtExpira;   
+                    window.location.reload()       //*Opcional para atualizar a página
+                }
+
+                function limparCookie() {
+                    document.cookie = "nome" + "=; expires= Thu, 01 Jan 1970 00:00:01 GMT;"; 
+                    document.cookie = "sobrenome" + "=; expires= Thu, 01 Jan 1970 00:00:01 GMT;"; 
+                    document.cookie = "email" + "=; expires= Thu, 01 Jan 1970 00:00:01 GMT;"; 
+                    window.location.reload()       //*Opcional para atualizar a página
+                }
+
+                
+
+
+
+
+
+        
+        
+
+
+
+
+
+
+        
+    
+        
+    </script>
+    
+
+</body>
+    
+</html>

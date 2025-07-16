@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <form action="pdoteste.php" method="post" id="formulario"> -->
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" id="formulario">
+        <label for="produto">Produto: </label>
+        <input type="text" id="idproduto" name="produto" size="60" maxlength="50" required>
+        <br>
+        <label for="preco">Preço: </label>    
+        <input type="text" id="idpreco" name="preco" size="10" required>
+        <br>
+        <label for="quantidade">Quantidade: </label>
+        <input type="text" id="idquantidade" name="quantidade" size="10" required>
+        <br>
+        <label for="categoria">Categoria: </label>
+        <input type="text" id="idcategoria" name="categoria" size="20" maxlength="10" required>
+        <br>
+        <button type="submit" id="btn">CADASTRAR</button>
+    </form>
+</body>
+</html>

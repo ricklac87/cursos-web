@@ -1,0 +1,1 @@
+const cor1 = "text-red-500"

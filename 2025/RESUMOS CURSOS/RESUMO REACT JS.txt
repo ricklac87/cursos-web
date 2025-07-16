@@ -1,0 +1,5730 @@
+
+
+INICIANDO NO REACT JS
+
+No terminal:
+
+Para escolher uma pasta:
+cd nomedapasta
+
+Para voltar:
+cd..
+
+------
+
+Para criar dentro da pasta os arquivos necessarios para o programa:
+npx create-react-app nomedapasta -y    (MODO ANTIGO E DESATUALIZADO)
+
+Usando o Vite:  
+VIDEO: https://www.youtube.com/embed/3OqiKTyH4r0?autoplay=1
+
+npx create-vite 
+Escolha o nome do projeto
+Escolha o framework React
+Escolha Javascript
+
+Para instalar os pacotes, digite:
+cd nomedoprojeto
+npm install 
+
+Para iniciar o Aplicativo (App.jsx) digite no terminal:
+cd nomedapasta                 (local onde está o arquivo app.jsx)
+npm run dev
+
+Ele rodará na url: http://localhost:5173/
+
+--------
+
+Para instalar dependencias/bibliotecas:
+npm add nomedabiblioteca
+
+Exemplos:
+npm add axios          (para arquivo na parte client)
+
+npm add mysql2         (para arquivo na parte server)
+npm add express        (para arquivo na parte server)
+npm add cors           (para arquivo na parte server)
+npm add nodemon        (para arquivo na parte server)
+OU
+npm add mysql2 express cors nodemon
+
+------
+
+Para iniciar o servidor, digite:
+cd nomedapasta
+npm start
+
+
+------
+
+Para usar o nodemon para dar refresh automatico na tela a cada mudança, digite o codigo:
+nodemon app.js
+
+
+-Para usar o nodemon com um comando personalizado, no arquivo package.json altere a seguinte parte do codigo:
+
+...
+"scripts": {
+  "start": "node index.js",
+  "dev": "nodemon index.js",
+  "test": "echo \"Error: no test specified\" && exit 1"
+}
+...
+
+-Com isso, para iniciar o servidor e ele ser atualizado automaticamente por causa do nodemon, pode-se usar no terminal os comandos:
+yarn dev           (caso esteja usando o yarn)
+OU
+npm run dev        (caso esteja usando o npm)
+
+
+Caso queira que o nodemon apenas faça refresh em um arquivo especifico:
+{
+  "watch": ["src", "config"]
+}
+
+Caso queira ignorar algum arquivo especifico:
+{
+  "ignore": ["logs", "public"]
+}
+
+///////////////////////////////////////////////////////////////////////////////////////&&&
+REACT icons
+
+instalação:
+npm install react-icons --save
+
+Exemplo de uso:
+
+import React from 'react'
+import { FaHome } from "react-icons/fa";
+
+export default function App() {
+  return (
+    <div>
+      <FaHome />
+    </div>
+  );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////&&&
+React font
+
+Importando fontes da web:
+(exemplo: googlefonts)
+
+No arquivo estilo.css:
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap');
+
+*{
+  font-family: "Oswald", sans-serif;
+}
+
+OBS: * significa que será aplicado em todas as tags de texto
+
+No arquivo App.jsx:
+
+import React from 'react'
+import './estilo.css'
+
+export default function App() {
+  return (
+    <div>
+      <p>Texto</p>
+    </div>
+  );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+CORES, TAMANHOS E TEMAS PERSONALIZADOS
+
+-No arquivo Theme.css:          (ou globals.css)
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'Bebas';
+  src: url('../fontes/Bebas_Neue.otf') format('opentype');
+  font-weight: normal;
+}
+
+:root {
+  --cor_principal: red;
+  --cor_secundaria: orange;
+  --cor_texto: dark-gray;
+  --cor_link: purple;
+
+  --fonte_padrao: Arial, Verdana, Helvetica, sans-serif;
+  --fonte_destaque: 'Bebas Neue', cursive;
+  --fonte_oswald: 'Oswald', sans-serif;
+}
+
+.txt {
+  font-family: var(--fonte_padrao);
+  color: var(--cor_principal);
+}
+
+-No arquivo App.jsx:
+
+import React from 'react'
+import './Theme.css'
+
+export default function App() {
+  return (
+    <div>
+      <h1 className="txt">Texto vermelho</h1>
+      <p style={{color: "var(--cor_secundaria)"}}>Texto laranja</p>
+    </div>
+  );
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+CURSO REACT JS
+
+https://www.youtube.com/embed/xsR894YLShs?autoplay=1
+https://www.youtube.com/embed/Pl_aGMWTk4g?autoplay=1
+
+-no prompt de comando ou windows terminal
+cd C:\Prog\Bacup3\WEB\CURSO REACT JS\aplicativo01
+npx create-react-app app01      (FORMA ANTIGA)
+
+-após instalar: 
+
+--para abrir o arquivo no visual studio
+cd C:\Prog\Bacup3\WEB\CURSO REACT JS\aplicativo01
+cd app01
+code .
+
+--para rodar o aplicativo no navegador
+cd C:\Prog\Bacup3\WEB\CURSO REACT JS\aplicativo01
+cd app01
+npm start 
+
+--------------------
+
+Os únicos arquivos que serão necessários dentro da pasta src serão:
+App.js
+App.css           (Pode remover todo o conteúdo que já vem dentro do arquivo)
+index.js
+
+Pode deletar os arquivos dentro da pasta src:
+reportWebVitals.js                   (e excluir o import dentro do arquivo App.js)
+setupTests.js e App.test.js          (caso não precise realizar testes)
+logo.svg                             (e excluir o import dentro do arquivo App.js)
+index.css                            (e excluir o import dentro do arquivo App.js)
+
+
+------------
+
+Nome de pastas:
+assets 
+  img
+    imagemfundo.jpg
+  icons
+    logo.svg
+componenents  (para cada seção do site)
+  home
+    home.jsx
+    home.css
+    navbar
+      navbar.jsx
+      navbar.css
+    footer
+      footer.jsx
+      footer.css
+  contatos
+  sobre
+  produtos
+
+Os estilos CSS também poderiam estar uma pasta chamada styles dentro de src
+
+---------------
+
+Plugin opcional para atalhos no React:
+
+ES7 React
+
+
+--------------
+
+Exemplo de css no arquivo App.css:
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Oswald", sans-serif;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.App {
+  min-height: 100vh;
+  width: 85vw;
+  max-width: 1900px;          //geralmente 1120px ou 1200px para um container
+  margin: 0rem auto;
+}
+
+body{
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: white;
+}
+
+----------------------------------------------------------------&&&
+ESTRUTURA Básica
+https://www.youtube.com/embed/Pl_aGMWTk4g?autoplay=1
+
+No arquivo App.js:
+
+import React from 'react'
+
+function App(){
+  return(
+    <tag html>               // Pode adicionar o nome da class na tag. Ex: <div className="App">
+    ...
+    </tag html>
+  )
+}
+
+export default App()
+
+OU
+
+import React from 'react'
+
+export default function App(){
+  return(
+    <>  
+      <tag html>
+      ...
+      </tag html>
+    </>
+  )
+}
+
+OBS: Só pode retornar (dentro de return) apenas 1 componente (tag html).
+OBS 2: É obrigatório fechar as tags: Ex: <p>...</p> ou <br/> ou <img/> e etc...
+OBS 3: Pode-se usar <>...</> ou alguma outra tag para cada componente (<section>...</section>)
+
+--------------------------------------------------------&&&
+ATENÇÃO!!!
+
+Atualmente com o React 17 em diante não é necessário usar em todo arquivo o import React from 'react'
+Since React 17 and the introduction of the New JSX Transform, explicitly importing React is no longer strictly necessary for JSX to work. The build tool automatically injects the necessary runtime code for JSX without you needing to import React at the top of every file.
+
+Só é obrigatório quando:
+
+-É necessário usar quando for usado algum hook, como por exemplo:
+import React, { useState, useEffect } from 'react';
+Using React Hooks: If you are using Hooks like useState, useEffect, useContext, etc., you need to import them directly from 'react' or import the entire React object and access them as React.useState, etc. 
+
+-Referencing the React object directly:
+If you need to access other properties or methods directly from the React object, such as React.Component for class components or React.Fragment, you will still need to import it.
+
+-Working with older React projects:
+If you are working on a project that uses a React version older than 17, you will still need to import React in any file containing JSX.
+
+--------------------------------------------------------&&&
+INSERINDO COISAS
+https://www.youtube.com/embed/um9WkmclLFs?autoplay=1
+
+export default function App(){
+  const canal = 'CFB cursos'
+  return(
+    <section>  
+      <p>
+        {canal}
+      </p>
+    </section>
+  )
+}
+
+>>> CFB cursos
+
+OBS: No React, coloca-se entre chaves.
+
+----
+
+EXEMPLO 2:
+
+export default function App(){
+  const cfb = 'CFB cursos'
+  return(
+    <section>  
+      <p>
+        Canal: {cfb}
+      </p>
+    </section>
+  )
+}
+
+>>> Canal: CFB cursos
+
+----
+
+EXEMPLO 3:
+
+export default function App(){
+  const cfb = 'CFB cursos'
+  return(
+    <section>  
+      <p>
+        {`Canal: ` + cfb}          *Utiliza-se a crase dentro das chaves ao invés das aspas
+      </p>
+    </section>
+  )
+}
+
+>>> Canal: CFB cursos
+
+----
+
+EXEMPLO 4:  Retornando uma função
+
+export default function App(){
+  const cfb = () => {
+    return( 
+    'CFB cursos'
+    )
+  }
+  return(
+    <section>  
+      <p>
+        {`Canal: ` + cfb()}
+      </p>
+    </section>
+  )
+}
+
+>>> Canal: CFB cursos
+
+--------------------------------------------------------&&&
+IMPORTANDO IMAGENS
+https://www.youtube.com/embed/um9WkmclLFs?autoplay=1
+
+Crie uma nova pasta dentro da pasta src ou public. Coloque as imagens dentro dessa pasta. 
+No exercicio foi criada a pasta 'componentes' e dentro dela a pasta chamada 'imgs'.
+
+-Para importar uma imagem dentro da pasta src (que está no servidor):
+
+import Logo from './componentes/imgs/logo.png'
+
+export default function App(){
+  return(
+    <section>  
+      <img src = {Logo} />
+    </section>
+  )
+}
+
+-Para importar uma imagem dentro da pasta public: 
+(Não é preciso usar o import)
+
+export default function App(){
+  return(
+    <section>  
+      <img src = '/componentes/imgs/logo.png' />
+    </section>
+  )
+}
+
+------------------------------------------------------------&&&
+CRIANDO E IMPORTANDO COMPONENTES
+https://www.youtube.com/embed/875omMYCjA0?autoplay=1
+
+Crie um arquivo novo na pasta src e dê um nome para esse componente. 
+
+No exemplo foi criada a pasta componentes em src e dentro dela o arquivo 'corpo.js'
+
+-Dentro do arquivo corpo.js:
+
+import React from 'react'
+
+export default function Corpo() {
+  return(
+    <section>
+      <p>TEXTO DE EXEMPLO</p>
+    </section>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.js'         *no video foi usado o caminho './componentes/Corpo'
+
+export default function App() {
+  return(
+    <>
+      <Corpo/>
+    </>
+  )
+}
+
+>>> TEXTO DE EXEMPLO
+
+------
+
+OUTRO EXEMPLO:
+
+No exemplo foi criada a pasta componentes em src e dentro dela o arquivo 'header.js'
+
+-Dentro do arquivo header.js:
+
+import React from 'react'
+import Logo from './imgs/logo.png'
+
+export default function Header() {
+  return(
+    <header>
+      <img src = {Logo} />
+    </header>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Header from './componentes/header.js'        *no video foi usado o caminho './componentes/Header'
+
+export default function App() {
+  return(
+    <>
+      <Header/>
+    </>
+  )
+}
+
+------------------------------------------------------------&&&
+COMO ENVIAR ALGO (PROPS) PARA UM COMPONENTE
+VIDEO: https://www.youtube.com/embed/CsCP8ZFySg4?autoplay=1
+
+----------
+
+-Criar um componente chamado corpo.js
+-Dentro do arquivo corpo.js:
+
+import React from 'react'
+
+export default function Corpo(props) {
+  return(
+    <section>
+      <p>Nome: {props.nome} </p>
+    </section>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.js'         
+
+export default function App(){
+
+  return(
+    <section>  
+      <Corpo
+        nome = 'Thiago'
+      />
+    </section>
+  )
+}
+
+>>> Nome: Thiago
+
+-----------
+
+-Criar um componente chamado dados.js
+-Dentro do arquivo dados.js:
+
+import React from 'react'
+
+export default function Dados(props) {
+  return(
+    <section>
+      <p>Nome: {props.nome} </p>
+      <p>Sobrenome: {props.sobrenome} </p>
+      <p>Idade: {props.idade} </p>
+    </section>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Dados from './componentes/dados.js'           *no video foi usado o caminho './componentes/Dados'
+
+export default function App() {
+  return(
+    <>
+      <Dados 
+        nome = 'Thiago'
+        sobrenome = 'Alves'
+        idade = '30'
+      />
+    </>
+  )
+}
+
+>>> Nome: Thiago
+>>> Sobrenome: Alves
+>>> Idade: 30
+
+-Outra forma sem importar os props:
+
+import React from 'react'
+import Dados from './componentes/dados.js'           *no video foi usado o caminho './componentes/Dados'
+
+export default function App() {
+  const name = 'Thiago'
+  const lastname = 'Alves'
+  const age = '30'
+  return(
+    <>
+      <Dados 
+        nome = {name}
+        sobrenome = {lastname}
+        idade = {age}
+      />
+    </>
+  )
+}
+
+--------------------
+
+-Usando 3 arquivos (2 props):
+
+-Dentro do arquivo texto.js:
+
+import React from 'react'
+
+export default function Texto(props) {
+  return(
+    <>
+      {props.txt}
+    </>
+  )
+}
+
+
+-Dentro do arquivo exemplo.js:
+
+import React from 'react'     
+
+export default function Exemplo(props) {
+  return(
+    <>
+      {props.exmpl}
+    </>
+  )
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+
+import Corpo from './componentes/texto.js' 
+import Dados from './componentes/exemplo.js'   
+
+export default function App() {
+  return(
+    <>
+      <p>
+        <Texto
+          txt = 'Texto' 
+        />
+        <Exemplo
+          exmpl = ' de Exemplo'
+        />
+      </p>
+    </>
+  )
+}
+
+>>> Texto de Exemplo
+
+------------------------------------------------------------&&&
+ENVIAR FUNÇÕES PARA COMPONENTES
+VIDEO: https://www.youtube.com/embed/6T6AM9VbLMY?autoplay=1
+
+-Usando funções no React:
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+
+export default function App() {
+  const canal = () => {
+    return 'CFB Cursos'
+  }
+  return(
+    <>
+      <p>
+        {canal()}
+      </p>
+    </>
+  )
+}
+
+>>> CFB Cursos
+
+
+------------
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+
+export default function App() {
+  const soma = (x) => {
+    return x + 3
+  }
+  return(
+    <>
+      <p>
+        {`Soma: ` + soma(10)}
+      </p>
+    </>
+  )
+}
+
+>>> Soma: 13
+
+------------
+PARA IMPORTAR UMA FUNÇÃO DE UM COMPONENTE
+
+-Criar um componente chamado dados.js
+-Dentro do arquivo dados.js:
+
+import React from 'react'
+
+export default function Dados() {
+  const canal = () => {
+    return 'CFB Cursos'
+  }
+  return(
+    <section>
+      <p>Canal: {canal()}</p>
+    </section>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Dados from './componentes/dados.js'         
+
+export default function App() {
+  return(
+    <>
+      <Dados/>
+    </>
+  )
+}
+
+---------
+
+-Outra forma utilizando props:
+
+-Dentro do arquivo dados.js:
+
+import React from 'react'
+
+export default function Dados(props) {
+  return(
+    <section>
+      <p>Canal: {props.canal}</p>
+    </section>
+  )
+}
+
+
+-Dentro do arquivo app.js:
+
+import Dados from './componentes/dados.js'         
+
+export default function App() {
+  const cnl = () => {
+    return 'CFB Cursos'
+  }
+  return(
+    <>
+      <Dados
+        canal = {cnl()}
+      />
+    </>
+  )
+}
+
+
+-------
+
+-Dentro do arquivo corpo.js:
+
+import React from 'react'
+
+export default function Corpo(props) {
+  const v1 = (x) => {
+    return x
+  }
+  const v2 = (y) => {
+    return y
+  }
+  return(
+    <section>
+      <p>{props.v1 + props.v2} </p>
+    </section>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.js'         
+
+export default function App() {
+  let n1 = 10
+  let n2 = 20
+  return(
+    <>
+      <Corpo
+        v1 = {n1}
+        v2 = {n2}
+      />
+    </>
+  )
+}
+
+>>> 30
+
+
+
+-------------------------------------
+
+-Dentro do arquivo corpo.js:
+
+import React from 'react'        
+
+export default function Corpo() {
+  const soma = (x) => {
+    return x + 3
+  }
+  return(
+    <>
+      <p>
+        {soma(10)}
+      </p>
+    </>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.js'         
+
+export default function App() {
+
+  return(
+    <>
+      <Corpo/>
+    </>
+  )
+}
+
+>>> 13
+
+-------------------
+
+-Dentro do arquivo corpo.js:
+
+import React from 'react'        
+
+export default function Corpo() {
+  const soma = (x) => {
+    return x + 3
+  }
+  return(
+    <>
+      <p>
+        {`Soma: ` + soma(10)}
+      </p>
+    </>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.jsx'         
+
+export default function App() {
+
+  return(
+    <>
+      <Corpo/>
+    </>
+  )
+}
+
+>>> Soma: 13
+
+
+-------------------------------------
+
+-Dentro do arquivo corpo.js:
+
+import React from 'react'        
+
+export default function Corpo() {
+  const somar = (v1 , v2) => {
+    return v1 + v2
+  }
+  return(
+    <>
+      {somar(10,20)}
+    </>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.js'         
+
+export default function App() {
+  return(
+    <>
+      <Corpo/>
+    </>
+  )
+}
+
+>>> 30
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------
+ERRADO
+EXEMPLO 1 DO VIDEO
+
+-Dentro do arquivo dados.js:
+
+export default function Dados(props) {
+  return(
+    <section>
+      <p>{props.canal()}</p>
+    </section>
+  )
+}
+
+
+-Dentro do arquivo corpo.js:
+
+import Dados from './componentes/dados.js'         
+
+export default function Corpo() {
+  const cnl = () => {
+    return 'CFB Cursos'
+  }
+  return(
+    <>
+      <Dados
+        canal = {cnl}
+      />
+    </>
+  )
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.js'         
+
+export default function App() {
+  return(
+    <>
+      <Corpo/>
+    </>
+  )
+}
+
+-------------------------------------
+ERRADO
+EXEMPLO 2 DO VIDEO
+
+
+-Dentro do arquivo dados.js:
+
+import React from 'react'
+
+export default function Dados(props) {
+  const n1 = 10
+  const n2 = 20
+  return(
+    <section>
+      <p>{props.somar(n1,n2)}</p>
+    </section>
+  )
+}
+
+
+-Dentro do arquivo corpo.js:
+
+import React from 'react'
+import Dados from './componentes/dados.jsx'         
+
+export default function Corpo() {
+  const somar = (v1 , v2) => {
+    return v1 + v2
+  }
+  return(
+    <>
+      <Dados
+        somar = {somar}
+      />
+    </>
+  )
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react'
+import Corpo from './componentes/corpo.js'         
+
+export default function App() {
+  return(
+    <>
+      <Corpo/>
+    </>
+  )
+}
+
+
+
+
+
+------------------------------------------------------------&&&
+USANDO CSS NO REACT
+VIDEO: https://www.youtube.com/embed/zhP0EoBbfuc?autoplay=1
+
+-Utilizando CSS INLINE:
+
+import React from 'react'  
+
+export default function App() {
+  return(
+    <>
+      <p style={{color:'red'}}>            *São usadas 2 chaves
+        Texto em vermelho
+      </p>
+    </>
+  )
+}
+
+
+-Usando 2 formatações do CSS:
+
+import React from 'react'  
+
+export default function App() {
+  return(
+    <>
+      <p style={{color:'red' , background:'yellow'}}>
+        Texto em vermelho e fundo amarelo
+      </p>
+    </>
+  )
+}
+
+OBS: Para estilizações no CSS que utilizem traço (hifen) entre as palavras, é necessário usar o modo Camel, removendo o hifen e iniciando a proxima palavra com letra maiúscula:
+
+(Em CSS)  =>   (Em React)
+background-color: red;    =>    backgroundColor: 'red'
+font-family: Arial;       =>    fontFamily: 'Arial'
+font-size: 20px;          =>    fontSize: '20px'
+text-align: center;       =>    textAlign: 'center'
+
+Exemplo:
+
+import React from 'react'  
+
+export default function App() {
+  return(
+    <>
+      <p style={{fontSize: '20px' , fontFamily: 'Arial'}}>
+        Texto em fonte Arial com 20px
+      </p>
+    </>
+  )
+}
+
+--------------------------
+
+-Utilizando CSS INTERNO:
+
+-Criando variaveis para receber os estilos CSS: 
+
+import React from 'react'  
+
+export default function App() {
+  var estilo = {
+    color: 'blue',
+    backgroundColor: 'pink',
+  }
+  return(
+    <>
+      <p style={estilo}>
+        Texto em azul com fundo rosa
+      </p>
+    </>
+  )
+}
+
+---------------------------
+
+-Utilizando CSS EXTERNO:
+
+-Crie um arquivo CSS.
+No exemplo abaixo foi criado o arquivo app.css
+
+-Dentro do arquivo App.css:
+
+.estilo {
+  text-align: right;
+  color: orange;
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react';
+
+import './App.css';
+
+export default function App() {
+  return(
+    <>
+      <p className='estilo'>
+        Texto laranja alinhado a direita
+      </p>
+    </>
+  )
+}
+
+OBS: É possível também incluir o estilo CSS alterando o arquivo index.html, por exemplo:
+... 
+  <body style='background-color: red;'>
+    ...
+  </body>
+...
+
+--------
+
+-Dentro do arquivo App.css:
+
+.estilo h2{
+  text-align: center;
+  color: green;
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react';
+
+import './App.css';
+
+export default function App() {
+  return(
+    <>
+      <section className='estilo'>
+        <h1>Texto 1</h1>
+        <h2>Texto 2</h2>
+        <p>Texto 3</p>
+      </section>
+    </>
+  )
+}
+
+Nesse exemplo, apenas a tag h2 recebeu a estilizaçao do CSS.
+
+--------
+
+-Dentro do arquivo App.css:
+
+.coluna {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react';
+
+import './App.css';
+
+export default function App() {
+  return(
+    <>
+      <section className='coluna'>
+        <p>TEXTO 1</p>
+        <p>TEXTO 2</p>
+        <p>TEXTO 3</p>
+      </section>
+    </>
+  )
+}
+
+----------------------------------------------------------------------------&&&
+COMO FUNCIONA A RENDERIZAÇÃO DOS COMPONENTES NO REACT:
+VIDEO: https://www.youtube.com/embed/rg3QOhzii_w?autoplay=1
+
+Sempre que ocorrer uma alteração em um componente, ao invés de atualizar a página inteira, no React é possível renderizar apenas o componente que sofreu mudança. 
+
+Exemplo:
+
+-Dentro de um arquivo chamado relogio.js:
+
+import React from 'react';
+
+export default function Relogio() {
+  return (
+    <p> 
+      {new Date().toLocaleTimeString()}
+    </p>
+  )
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react';
+import './relogio.js';
+
+export default function App() {
+  return(
+    <>
+      <Relogio/>
+    </>
+  )
+}
+
+Se fizermos isso, para vermos a hora passando em tempo real precisaríamos ficar manualmente atualizando a página e renderizando TODA a página. Com o React é possível que apenas o componente Relogio seja renderizado, não precisando atualizar a página inteira.
+
+-Dentro do arquivo index.js:
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+function FUNÇÃO() {              *Coloque esse trecho dentro de uma função
+  ReactDOM.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+}
+
+setInterval(FUNÇÃO,1000)                *Chame a Função dentro de um set interval 
+
+reportWebVitals();
+
+Dessa forma apenas o componente relogio será atualizado e renderizado a cada segundo
+
+----------------------------------------------------------------------------&&&
+ALTERANDO STATE NO REACT:
+VIDEO: https://www.youtube.com/embed/ZokLiEbKiiU?autoplay=1
+
+State é o que armazena valores de propriedades que pertencem ao componente. E quando mudam o valor do estado, estes componentes são renderizados novamente.
+
+-Dentro do arquivo app.js:
+
+import React,{useState} from 'react';                *adicionamos useState no import
+
+export default function App() {
+  const [estado, função] = useState()                *criamos uma variavel com um State e uma função para alterar esse State
+
+  return(
+    <>
+      <p>Valor do State: {estado}</p>
+    </>
+  )
+}
+
+>>> Valor do State: 
+
+Caso coloque um valor na função useState():
+
+import React,{useState} from 'react'; 
+
+export default function App() {
+  const [estado, função] = useState(42)                *criamos uma variavel com um State e uma função para alterar esse State
+
+  return(
+    <>
+      <p>Valor do State: {estado}</p>
+    </>
+  )
+}
+
+>>> Valor do State: 42
+
+------------
+EXEMPLO 2:
+
+import React,{useState} from 'react'; 
+
+export default function App() {
+  const [valorState, funçãoState] = useState(0)                
+
+  return(
+    <>
+      <p>Valor do State: {valorState}</p>
+      <button onClick = { () => funçãoState(valorState + 10) }> 
+        Soma 10
+      </button>
+    </>
+  )
+}
+
+Nesse exemplo, a cada vez que clicar no botão, o valor do State será alterado e renderizado apenas ele, adicionando + 10 ao total
+
+-------------
+EXEMPLO 3: 
+
+-Utlizando props:
+
+-Dentro de um arquivo chamado numero.js:
+
+import React from 'react'; 
+
+export default function Numero(props){
+  return (
+      <>
+      <p>Valor do State em NUMERO: {props.num1}</p>
+        <button onClick = { () => props.fNum1(props.num1+10) }>
+            SOMAR
+        </button>
+      </>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React,{useState} from 'react'; 
+import Numero from './numero.js'
+
+export default function App() {
+  const [num2, fNum2] = useState(10)                
+
+  return(
+    <>
+      <p>Valor do State em APP: {num2}</p>
+      <Numero
+        num1 = {num2}
+        fNum1 = {fNum2}
+      />
+    </>
+  )
+}
+
+Ao clicar no botão, será alterado os 2 valores
+
+-------------------
+EXEMPLO 4:
+
+-Dentro do arquivo app.js:
+
+import React,{useState} from 'react'; 
+
+export default function App() {
+  var [name, setName] = useState('Renato')                     
+
+  return(
+    <>
+      <p>Nome: {name}</p>
+      <button onClick = { () => setName(name = 'Thiago') }>
+        MUDAR NOME
+      </button>
+    </>
+  )
+}
+
+>>> Nome: Renato
+
+Ao clicar no botão, o nome seria alterado.
+
+OBS: Caso a variavel tivesse sido criada com const ao invés de var ou let, não seria possível fazer a alteração do valor da variavel.
+
+Para poder alterar uma variavel const seria feito da seguinte forma:
+
+import React,{useState} from 'react'; 
+
+export default function App() {
+  const [name, setName] = useState('Renato')                     
+
+  return(
+    <>
+      <p>Nome: {name}</p>
+      <button onClick = { () => setName('Thiago') }>        *Não é preciso indicar de qual variavel estamos querendo alterar
+        MUDAR NOME
+      </button>
+    </>
+  )
+}
+
+----------------------------------------------------------------------------&&&
+EVENTOS NO REACT:
+VIDEO: https://www.youtube.com/embed/UVJfll2KefM?autoplay=1
+
+Dentro do arquivo app.js:
+
+import React,{useState} from 'react'; 
+import LedVerde from './componentes/led_verde.png'
+import LedVermelho from './componentes/led_vermelho.png'
+
+export default function App() {
+  const [ligado, setLigado] = useState(false)                   *a variavel ligado possui o valor false
+
+  return(
+    <>
+      <img src = { ligado ? LedVerde : LedVermelho } />
+      <button onClick = { () => setLigado(!ligado) }>            *criou-se um toogle colocando o inverso de ligado (no caso true)
+        LIGAR / DESLIGAR
+      </button>
+    </>
+  )
+}
+
+---------------------
+
+import React,{useState} from 'react'; 
+
+export default function App() {
+  const [name, setName] = useState(true)                
+
+  return(
+    <>
+      <p>Nome: {name ? 'Renato' : 'Thiago'}</p>           *Cria-se uma condição de true e false
+      <button onClick = { () => setName(!name) }>         *Cria-se um toggle invertendo o valor ao clicar no botão
+        MUDAR NOME
+      </button>
+    </>
+  )
+}
+
+Ao clicar no botão, ele alterará o nome (se for true será Renato e se for falso será Thiago)
+
+-Caso queira que o texto do botão mude também:
+
+import React,{useState} from 'react'; 
+
+export default function App() {
+  const [name, setName] = useState(true)                
+
+  return(
+    <>
+      <p>Nome: {name ? 'Renato' : 'Thiago'}</p>           
+      <button onClick = { () => setName(!name) }>         
+        { name ? 'Mudar para Thiago' : 'Mudar para Renato' }           *Crie uma condição de true e false
+      </button>
+    </>
+  )
+}
+
+----------------------
+
+Importando componentes:
+
+-Dentro de um arquivo chamado corpo.js:
+
+import React,{useState} from 'react'; 
+
+export default function Texto() {   
+  const [txt, setTexto] = useState('TEXTO DE EXEMPLO')    
+
+  return(
+    <>
+      <p>
+        {txt}
+      </p>           
+    </>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React from 'react'; 
+import Texto from './componentes/corpo.js'
+
+export default function App() {              
+  return(
+    <>
+      <Texto/>
+    </>
+  )
+}
+
+>>> TEXTO DE EXEMPLO
+
+
+----------
+
+-Dentro de um arquivo chamado nomes.js:
+
+import React,{useState} from 'react'; 
+
+export default function Nomes() {   
+  const [name, setName] = useState(true)    
+
+  return(
+    <>
+      <p>Nome: {name ? 'Renato' : 'Thiago'}</p>           
+      <button onClick = { () => setName(!name) }>         
+        MUDAR NOME
+      </button>
+    </>
+  )
+}
+
+
+-Dentro do arquivo app.js:
+
+import React from 'react'; 
+import Nomes from './componentes/nomes.js'
+
+export default function App() {              
+  return(
+    <>
+      <Nomes/>
+    </>
+  )
+}
+
+------------------
+
+-Usando props e state:
+
+-Dentro de um arquivo chamado nomes.js:
+
+import React from 'react'; 
+
+export default function Nomes(props) {   
+  return(
+    <>
+      <p>Nome: {props.name1}</p>         
+    </>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React, {useState} from 'react';  
+import Nomes from './componentes/nomes.js'
+
+export default function App() {   
+  const [name2, setName2] = useState('CARLOS')    
+
+  return(
+    <>
+      <Nomes
+        name1 = {name2}
+      />
+    </>
+  )
+}
+
+--------------
+
+-Dentro de um arquivo chamado nomes.js:
+
+import React from 'react'; 
+
+export default function Nomes(props) {   
+
+  return(
+    <>
+        <p>Nome: {props.name}</p>      
+        <p>Sobrenome: {props.lastname}</p>   
+    </>
+  )
+}
+
+-Dentro do arquivo app.js:
+
+import React, {useState} from 'react';  
+import Nomes from './componentes/nomes.js'
+
+export default function App() {   
+  const [nome, setName] = useState('CARLOS')  
+  const [sobrenome, setLastName] = useState('ALBERTO') 
+
+  return(
+    <>
+      <Nomes
+        name = {nome}
+        lastname = {sobrenome}
+      />
+    </>
+  )
+}
+
+
+----
+
+-Dentro de um arquivo chamado nomes.js:
+
+import React from 'react'; 
+
+export default function Nomes(props) {   
+
+  return(
+    <>
+      <p>Nome: {props.name1 ? 'Renato' : 'Thiago'}</p>           
+      <button onClick = { () => props.setName1(!props.name1) }>         
+        MUDAR NOME
+      </button>
+    </>
+  )
+}
+
+
+-Dentro do arquivo app.js:
+
+import React, {useState} from 'react'; 
+import Nomes from './componentes/nomes.js'
+
+export default function App() {   
+  const [name2, setName2] = useState(true)    
+
+  return(
+    <>
+      <Nomes
+        name1 = {name2}
+        setName1 = {setName2}
+      />
+    </>
+  )
+}
+
+--------------------
+
+PARA CANCELAR UM EVENTO NO REACT:
+
+import React from 'react';  
+
+export default function App() {   
+  const Cancelar = (obj) => {
+    return obj.preventDefault()                           *No JS normal era só colocar: return false
+  }
+
+  return(
+    <>
+      <a
+        href = 'https://google.com'
+        target = '_blank'
+        onClick = { (e) => Cancelar(e) }                  *evento chama a função Cancelar com o preventDefault
+      >
+        LINK PARA ABRIR O GOOGLE EM OUTRA ABA
+      </a>
+    </>
+  )
+}
+
+Desta forma, ao clicar no link o evento não será iniciado.
+
+----------------------------------------------------------------------------&&&
+RENDERIZAÇÃO CONDICIONAL NO REACT:
+VIDEO: https://www.youtube.com/embed/lanKyPZQG_4?autoplay=1
+
+
+Exemplo 1:
+
+import React from 'react'
+
+export default function App() {
+
+	const cumprimento = () => {
+		const hora = new Date().getHours()
+		if(hora >= 0 &&hora < 13) {
+			return <p>Bom dia</p>
+		}
+		else if(hora >=13 && hora < 18){
+			return <p>Boa tarde</p>
+		}
+		else{
+			return <p>Boa noite</p>
+		}
+	}
+
+	return (
+		<>
+			{cumprimento()}
+		</>
+	);
+}
+
+Com isso, dependendo da hora do sistema ele apresentaráum texto diferente.
+
+--------------
+
+Exemplo 2:
+
+import React,{useState} from 'react'
+
+export default function App() {
+
+	const [log , setLog] = useState(false)
+	
+	const msglogin = () => {
+		return 'Usuário Logado'
+	}
+
+	const msglogoff = () => {
+		return 'Faça o login'
+	}
+
+	return (
+		<>
+			<p>{log ? msglogin() : msglogoff()}</p>
+
+			<button onClick = { () => setLog(!log)}> 
+				{ log ? 'Logoff' : 'Login' } 
+			</button> 
+		</>
+	);
+}
+
+----------------
+
+Exemplo 3:
+
+import React,{useState} from 'react'
+
+export default function App() {
+
+	const [cor, setCor] = useState(1)
+	
+	const vermelho = {color: 'red'}
+	const verde = {color: 'green'}
+	const azul = {color: 'blue'}
+	
+	const voltaCor = (c) =>{
+		if(c == 1) {
+			return vermelho
+		}
+		else if (c == 2){
+			return verde
+		}
+		else{
+			return azul
+		}
+	}
+	
+	const mudaCor = () => {
+		setCor(cor+1)
+		if(cor > 2) {
+			setCor(1)
+		}
+	}
+
+	return (
+		<>
+			<h1 style = {voltaCor(cor)}>TEXTO</h1>
+			<button onClick={() => mudaCor()}>Muda Cor</button>
+		</>
+	);
+}
+
+Com isso ao clicar no botão a cordo texto muda.
+
+Caso queira que a cor seja mudada automaticamente com o passar dos segundos:
+
+import React,{useState} from 'react'
+
+export default function App() {
+
+	const [cor, setCor] = useState(1)
+	
+	const vermelho = {color: 'red'}
+	const verde = {color: 'green'}
+	const azul = {color: 'blue'}
+	
+	const voltaCor = (c) =>{
+		if(c == 1) {
+			return vermelho
+		}
+		else if (c == 2){
+			return verde
+		}
+		else{
+			return azul
+		}
+	}
+	
+	const mudaCor = () => {
+		setCor(cor+1)
+		if(cor > 2) {
+			setCor(1)
+		}
+	}
+	
+	setInterval(mudaCor, 1000)        /* adicione um setInterval */
+
+	return (
+		<>
+			<h1 style = {voltaCor(cor)}>TEXTO</h1>
+			<button onClick={() => mudaCor()}>Muda Cor</button>
+		</>
+	);
+}
+
+
+////////////////////////////////////////&&&
+
+USANDO LISTAS E A FUNÇÃO MAP:
+VIDEO: https://www.youtube.com/embed/6iJABCS34Jk
+
+import React from 'react'
+
+export default function App() {
+
+	const lista = ['item1' , 'item2' , 'item3' ,'item4' ,'item5' ]
+	
+	const imprimir = lista.map ( (x) => 
+		<p>{x}</p>
+	)
+	
+	return (
+		<>
+			{imprimir}
+		</>
+	);
+}
+
+
+Caso queira imprimir um item especifico:
+...
+	return (
+		<>
+			{imprimir[2]}
+		</>
+	);
+...
+
+-----
+
+
+OBS: É possível colocar cada item em uma lista <ul><li>:
+
+import React from 'react'
+
+export default function App() {
+
+	const lista = ['item1' , 'item2' , 'item3' ,'item4' ,'item5' ]
+	
+	const imprimir = lista.map ( (x) => 
+		<li>{x}</li>
+	)
+	
+	return (
+		<>
+			<ul>{imprimir}</ul>
+		</>
+	);
+}
+
+----
+
+Para utilizar o indice (posição) dos itens da lista:
+
+import React from 'react'
+
+export default function App() {
+
+	const lista = ['item1' , 'item2' , 'item3' ,'item4' ,'item5' ]
+	
+	const imprimir = lista.map ( (x , indice) => 
+		<p key={indice}>{x} tem a posição {indice}</p>
+	)
+	
+	return (
+		<>
+			{imprimir}
+		</>
+	);
+}
+
+--------
+
+Para utilizar listas em JSON:
+
+import React from 'react'
+
+export default function App() {
+
+	const lista = [                                    /* lista json */
+	{nome: "Renato", sexo: "Masculino", idade: "31"},
+	{nome: "Maria", sexo: "Feminino", idade: "24"},
+	{nome: "Valter", sexo: "Masculino", idade: "36"}
+	];
+	
+	const imprimir = lista.map ( (x) => 
+		<p>{x.nome}</p>
+	)
+	
+	return (
+		<>
+			{imprimir}
+		</>
+	);
+}
+
+>>> Renato
+>>> Maria
+>>> Valter
+
+//////////////////////////////////////////////////&&&
+
+PARA MANIPULAR E CAPTURAR ELEMENTOS DE UM FORMULÁRIO:
+VIDEO: https://www.youtube.com/embed/CmdBwXsbGOs?autoplay=1
+
+import React, {useState} from 'react'
+
+export default function App() {
+
+	const [nome, setNome] = useState("")        /* Se quiser pode-se ter um texto dentro das aspas */ 
+
+	return (
+		<>
+			<label>Digite seu nome: </label>
+			
+			<input
+				type= "text"
+				name= "fnome"
+				value= {nome}
+				onChange={ (elemento) => setNome(elemento.target.value)}
+			/>
+			
+			<p>Nome digitado: {nome}</p>
+		</>
+	);
+}
+
+Com isso, ao digitar o nome, automaticamente as teclas digitadas aparecerão dentro da tag <p>
+
+----
+
+Normalmente utiliza-se uma função extra para lidar com os eventos do onChange:
+
+import React, {useState} from 'react'
+
+export default function App() {
+
+	const [nome, setNome] = useState("") 
+
+	const handle = (elemento) => {
+		setNome(elemento.target.value)
+	}
+
+	return (
+		<>
+			<label>Digite seu nome: </label>
+			
+			<input
+				type= "text"
+				name= "fnome"
+				value= {nome}
+				onChange={ (elemento) => handle(elemento) }
+			/>
+			
+			<p>Nome digitado: {nome}</p>
+		</>
+	);
+}
+
+---------------
+
+Outro exemplo:
+
+import React, { useState } from 'react';
+
+export default function App() {
+  const [text, setText] = useState('');
+
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
+
+  return (
+    <div>
+      <input type="text" value={text} onChange={handleChange} />
+      <p>{text}</p>
+    </div>
+  );
+}
+
+------------
+
+Para pegar os valores de um seletor:
+
+import React, {useState} from 'react'
+
+export default function App() {
+
+	const [nome, setNome] = useState("Renato")        
+
+	return (
+		<>
+			<label>Selecione uma pessoa: </label>
+			
+			<select value={nome} onChange={(elemento)=> setNome(elemento.target.value)}>
+				<option value="Renato">Renato</option>
+				<option value="Maria">Maria</option>
+				<option value="Valter">Valter</option>
+				<option value="Beatriz">Beatriz</option>
+			</select>
+			
+			<p>Pessoa selecionada: {nome}</p>
+		</>
+	);
+}
+
+Com isso, o nome da pessoa selecionada aparecerá automaticamente na tag <p>
+
+/////////////////////////////////////////&&&
+
+PARA MANIPULAR VARIOS OBJETOS DO FORMULÁRIO COM STATE:
+VIDEO: https://www.youtube.com/embed/UUY3cYUif0Y?autoplay=1
+
+
+import React, {useState} from 'react'
+
+export default function App() {
+
+  const [form, setForm] = useState({"nome":"" , "curso":"" , "ano":""})         /* É um JSON dentro dos parenteses */
+
+  const handle = (e) => {
+    if(e.target.getAttribute("name")== "fnome"){
+      setForm({"nome":e.target.value , "curso":form.curso , "ano":form.ano})
+    }
+    else if(e.target.getAttribute("name")== "fcurso"){
+      setForm({"nome":form.nome , "curso":e.target.value , "ano":form.ano})
+    }
+    else if(e.target.getAttribute("name")== "fano"){
+      setForm({"nome":form.nome , "curso":form.curso , "ano":e.target.value})
+    }
+  }
+
+	return (
+		<>
+			<label>Nome: </label>
+			<input type= "text" name= "fnome" value= {form.nome} onChange={ (e) => handle(e)}/>
+			<label>Curso: </label>
+			<input type= "text" name= "fcurso" value= {form.curso} onChange={ (e) => handle(e)}/>
+			<label>Ano: </label>
+			<input type= "text" name= "fano" value= {form.ano} onChange={ (e) => handle(e)}/>			
+			
+			<p>Nome digitado: {form.nome}</p>
+			<p>Curso digitado: {form.curso}</p>
+			<p>Ano digitado: {form.ano}</p>
+		</>
+	);
+}
+
+----------
+
+OBS: Poderia ter colocado as infos do JSON fora do useState ou importado de um arquivo ou url.
+
+const infos = {
+	"nome":"" , 
+	"curso":"" , 
+	"ano":""
+}
+
+const [form, setForm] = useState({infos})
+....
+
+//////////////////////////////////////////////////&&&
+
+ELEVAÇÃO DE STATE
+VIDEO: https://www.youtube.com/embed/Mgpj-YC7a7Y
+
+Começando com um exemplo simples:
+
+-Dentro do arquivo nota.js:
+
+import React from 'react'
+
+export default function Nota(props) {
+  return (
+    <div>
+      <legend>ID da nota: {props.id}</legend>
+      <input type="text" value={props.nota} onChange={(e) => props.setNota(e.target.value)} />
+    </div>
+  )
+}
+
+-Dentro do arquivo App.js:
+
+import React,{useState} from 'react'
+import Nota from './componentes/nota.jsx'
+
+export default function App() {
+
+  const [notas, setNotas] = useState("0")
+  return (
+    <>
+      <Nota id={1} nota={notas} setNota={setNotas}/>
+    </>
+  )
+}
+
+---------------------------
+
+Somando os resultados adicionando um novo componente:
+
+-Dentro do arquivo nota.js:
+
+import React from 'react'
+
+export default function Nota(props) {
+  return (
+    <div>
+      <legend>ID da nota: {props.id}</legend>
+      <input type="text" value={props.nota} onChange={(e) => props.setNota(e.target.value)} />
+    </div>
+  )
+}
+
+-Dentro do arquivo resultado.js:
+
+import React from 'react'
+
+export default function Resultado(props) {
+  return (
+
+    <div>
+      <p>Soma das notas: {props.somaNotas}</p>
+      <p>{props.somaNotas >= 60 ? "Aprovado" : "Reprovado"}</p>
+    </div> 
+  )
+}
+
+
+-Dentro do arquivo App.js:
+
+import React,{useState} from 'react'
+import Nota from './componentes/nota.js'
+import Resultado from './componentes/resultado.js'
+
+export default function App() {
+
+  const [nota1, setNotas1] = useState("0")
+  const [nota2, setNotas2] = useState("0")
+  
+  return (
+    <>
+      <Nota id={1} nota={nota1} setNota={setNotas1}/>
+      <Nota id={2} nota={nota2} setNota={setNotas2}/>
+
+      <Resultado somaNotas={parseFloat(nota1) + parseFloat(nota2)}/>
+    </>
+  )
+}
+
+
+
+---------------------------
+Usando um handler:
+
+-Dentro do arquivo App.js:
+
+import React,{useState} from 'react'
+import Nota from './componentes/nota.jsx'
+import Resultado from './componentes/resultado.jsx'
+
+export default function App() {
+
+  const [nota1, setNotas1] = useState("0")
+  const [nota2, setNotas2] = useState("0")
+
+  function handle(){
+    return parseFloat(nota1) + parseFloat(nota2)
+  }
+  
+  return (
+    <>
+      <Nota id={1} nota={nota1} setNota={setNotas1}/>
+      <Nota id={2} nota={nota2} setNota={setNotas2}/>
+
+      <Resultado somaNotas={handle()}/>
+    </>
+  )
+}
+
+
+----------------------------
+Usando apenas 1 State:
+
+-Dentro do arquivo nota.js:
+
+import React from 'react'
+
+export default function Nota(props) {
+  return (
+    <div>
+      <legend>ID da nota: {props.id}</legend>
+      <input type="text" name={props.nome} value={props.nota} onChange={(e) => props.setNota(e)} />
+    </div>
+  )
+}
+
+OBS: O target.value foi para o arquivo App.js
+
+
+-Dentro do arquivo resultado.js:
+
+import React from 'react'
+
+export default function Resultado(props) {
+  return (
+
+    <div>
+      <p>Soma das notas: {props.somaNotas}</p>
+      <p>{props.somaNotas >= 60 ? "Aprovado" : "Reprovado"}</p>
+    </div> 
+  )
+}
+
+
+-Dentro do arquivo App.js:
+
+import React,{useState} from 'react'
+import Nota from './componentes/nota.jsx'
+import Resultado from './componentes/resultado.jsx'
+
+export default function App() {
+
+  const [notas, setNotas] = useState({"nota1":"0", "nota2":"0"})
+
+  function handle(e){
+    if (e.target.name == "n1"){                                   /* OU if(e.target.getAttribute("name") == n1) */
+      setNotas({"nota1":e.target.value, "nota2":notas.nota2})
+    }
+    else if (e.target.name == "n2"){                              /* OU if(e.target.getAttribute("name") == n2) */
+      setNotas({"nota1":notas.nota1, "nota2":e.target.value})
+    }
+  }
+
+  return (
+    <>
+      <Nota id={1} nome={"n1"} nota={notas.nota1} setNota={handle}/>
+      <Nota id={2} nome={"n2"} nota={notas.nota2} setNota={handle}/>
+
+      <Resultado 
+        somaNotas={parseFloat(notas.nota1) + parseFloat(notas.nota2)}
+      />
+
+    </>
+  )
+}
+
+OBS: Dava para utilizar o id criado no arquivo nota.js:
+
+-Dentro do arquivo nota.js:
+
+import React from 'react'
+
+export default function Nota(props) {
+  return (
+    <div>
+      <legend>ID da nota: {props.id}</legend>
+      <input type="text" id= {props.id} value={props.nota} onChange={(e) => props.setNota(e)} />
+    </div>
+  )
+}
+
+-Dentro do arquivo App.js:
+
+import React,{useState} from 'react'
+import Nota from './componentes/nota.jsx'
+import Resultado from './componentes/resultado.jsx'
+
+export default function App() {
+
+  const [notas, setNotas] = useState({"nota1":"0", "nota2":"0"})
+
+  function handle(e){
+    if (e.target.id == "1"){                               
+      setNotas({"nota1":e.target.value, "nota2":notas.nota2})
+    }
+    else if (e.target.id == "2"){                          
+      setNotas({"nota1":notas.nota1, "nota2":e.target.value})
+    }
+  }
+
+  return (
+    <>
+      <Nota id={1} nome={"n1"} nota={notas.nota1} setNota={handle}/>
+      <Nota id={2} nome={"n2"} nota={notas.nota2} setNota={handle}/>
+
+      <Resultado 
+        somaNotas={parseFloat(notas.nota1) + parseFloat(notas.nota2)}
+      />
+
+    </>
+  )
+}
+
+//////////////////////////////////////////////////////////&&&
+
+CONTENÇÃO (para imprimir filhos)
+VIDEO: https://www.youtube.com/embed/-jKFmAKDJKc?autoplay=1
+
+
+-Dentro do arquivo texto.js:
+
+import React from 'react'
+
+export default function Texto(props) {
+  return (
+    <>
+      {props.children}
+    </>
+  )
+}
+
+
+-Dentro do arquivo App.js:
+
+import React from 'react'
+import Texto from './componentes/texto.js'
+
+export default function App() {
+  return (
+    <Texto>
+      <p>Texto no indice 0</p>
+      <p>Texto no indice 1</p>
+      <p>Texto no indice 2</p>
+    </Texto>
+  )
+}
+
+-Irá imprimir todos os filhos <p> dentro de <Texto>
+
+------------------
+
+-Dentro do arquivo texto.js:
+
+import React from 'react'
+
+export default function Texto(props) {
+  return (
+    <>
+      {props.children[2]}
+    </>
+  )
+}
+
+
+-Dentro do arquivo App.js:
+
+import React from 'react'
+import Texto from './componentes/Texto.js'
+
+export default function App() {
+  return (
+    <Texto>
+      <p>Texto no indice 0</p>
+      <p>Texto no indice 1</p>
+      <p>Texto no indice 2</p>
+    </Texto>
+  )
+}
+
+-Irá imprimir apenas o filho <p> dentro de <Texto> que está no indice 2
+
+
+-------------------
+
+-Dentro do arquivo canal.js:
+
+import React from 'react'
+
+export default function Canal() {
+  return (
+    <h1>
+      CFB Cursos
+    </h1>
+  )
+}
+
+
+-Dentro do arquivo caixa.js:
+
+import React from 'react'
+
+export default function Caixa(props) {
+  return (
+    <>
+      <p>{props.site}</p>
+      {props.children[0]}
+      {props.children[1]}
+    </>
+  )
+}
+
+
+-Dentro do arquivo App.js:
+
+import React from 'react'
+import Caixa from './componentes/Caixa.js'
+import Canal from './componentes/Canal.js'
+
+export default function App() {
+  return (
+    <>
+      <Caixa site="www.cfbcursos.com.br">
+        <Canal/>
+        <p>Curso de React</p>
+      <Caixa/>
+    </>
+  )
+}
+
+//////////////////////////////////////////////////////////&&&
+
+HOOK USE EFFECT
+VIDEO: https://www.youtube.com/embed/6id-PtDSnmw?autoplay=1
+
+O use effect (assim como o use state) é um hook que é chamado assim que a pagina é montada e atualizada
+
+import React,{useEffect,useState} from 'react'
+
+export default function App() {
+
+  const [contagem, setContagem] = useState(0)
+
+  useEffect(
+    () => console.log("Pagina carregada")
+  )
+
+  return (
+    <>
+      <p>Contagem: {contagem}</p>
+      <button onClick = { () => setContagem(contagem + 1) }>CONTAR</button>
+    </>
+  )
+}
+
+-Cada vez que clicar no botao, será adicionado 1 ao numero
+
+--------------------------
+
+import React,{useEffect,useState} from 'react'
+
+export default function App() {
+
+  const [contagem, setContagem] = useState(0)
+
+  useEffect(
+    () => console.log("Pagina carregada"),
+    document.title='Contagem dentro do useEffect:' + contagem                 //para atualizar o titulo do site na aba do navegador
+  )
+
+  return (
+    <>
+      <p>Contagem dentro do useState: {contagem}</p>
+      <button onClick = { () => setContagem(contagem + 1) }>CONTAR</button>
+    </>
+  )
+}
+
+- A atualização dos elementos dentro do useState são levemente mais rapidos que os elementos do useEffect.
+Portando primeiro aparecerá no corpo da página para depois aparecer na aba do navegador
+
+//////////////////////////////////////////////////////////&&&
+
+LOCAL STORAGE
+VIDEO: https://www.youtube.com/embed/oaDdTH2JQrA?autoplay=1
+
+import React from 'react'
+
+export default function App() {
+
+  localStorage.setItem("nome", "Bruno")            // Para criar uma chave e o seu Valor
+  localStorage.setItem("nome", "Carlos")           // Para alterar o valor de uma chave já existente
+  localStorage.getItem("nome")                     // Para pegar uma chave 
+  localStorage.removeItem("nome")                  // Para remover uma chave
+
+  return (
+    <>
+    </>
+  )
+}
+
+- setItem("nome da chave", "valor da chave") = Para criar uma chave. Caso já exista, será adicionado um novo valor para a chave
+
+----------------------
+
+import React,{useState} from 'react'
+
+export default function App() {
+
+  const [nome, setNome] = useState()
+
+  const armazenar = (chave, valor) = () => {
+    localStorage.setItem(chave, valor)
+  } 
+
+  const consultar = (chave) = () => {
+    alert(localStorage.getItem(chave))            //O valor da chave consultada será exibido em um alerta
+  } 
+
+  const apagar = (chave) = () => {
+    localStorage.removeItem(chave)
+  } 
+
+  return (
+    <>
+      <label>Digite um nome</label> <br/>
+      <input type="text" value={nome} onChange={(e) => setNome(e.target.value)}/> <br/>
+      <button onClick={() => armazenar('ls_nome', nome)}>Gravar nome</button>
+      <button onClick={() => consultar('ls_nome')}>Ver nome</button>
+      <button onClick={() => apagar('ls_nome')}>Remover nome</button>
+    </>
+  )
+}
+
+OBS: Para visualizar o Local Storage, vá para o modo desenvolvedor, clique Application e depois em Local Storage
+
+//////////////////////////////////////////////////////////&&&
+
+CRIANDO COMPONENTES DE CLASSE
+VIDEO: https://www.youtube.com/embed/pIUMIOgP8j8?autoplay=1
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+class Classe extends React.Component{                 // OU   export default class Classe extends React.Component{...}
+  render(){
+    return(
+      <h1>Primeiro Componente de Classe</h1>
+    )
+  }
+}
+
+export default Classe                              
+
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+
+  return (
+    <>
+      <h1>Componentes:</h1> 
+      <Classe/>
+    </>
+  )
+}
+
+>>> Componentes:
+>>> Primeiro Componente de Classe
+
+-----------------
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){                       // OU   constructor(){...}
+    super(props)                            // OU   super()
+  }         
+
+  render(){
+    return(
+      <div>
+        <p>Nome: {this.props.nome}</p>
+        <p>Sobrenome: {this.props.sobrenome}</p>
+      </div>
+    )
+  }
+}
+                            
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe 
+        nome="Bruno"
+        sobrenome="Campos"
+      />
+    </>
+  )
+}
+
+>>> Nome: Bruno
+>>> Sobrenome: Campos
+
+//////////////////////////////////////////////////////////&&&
+
+STATES EM COMPONENTES DE CLASSE
+VIDEO: https://www.youtube.com/embed/10_raCSnrqc?autoplay=1
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.pessoa = "Bruno Campos"
+  }         
+
+  render(){
+    return(
+      <div>
+        <p>Nome: {this.pessoa}</p>
+      </div>
+    )
+  }
+}
+                            
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe/>
+    </>
+  )
+}
+
+>>> Nome: Bruno Campos
+
+------------------
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.pessoa = {                        //formato das infos em JSON
+      nome: "Bruno",
+      sobrenome: "Campos",
+      idade: 25,
+      brasileiro: true
+    }
+  }         
+
+  render(){
+    return(
+      <div>
+        <p>Nome: {this.pessoa.nome}</p> 
+        <p>Sobrenome: {this.pessoa.sobrenome}</p> 
+        <p>Idade: {this.pessoa.idade} anos</p>
+        <p>Brasileiro: {this.pessoa.brasileiro ? "Sim" : "Não"}</p>
+      </div>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe/>
+    </>
+  )
+}
+
+>>> Nome: Bruno
+>>> Sobrenome: Campos
+>>> Idade: 25 anos
+>>> Brasileiro: Sim
+
+OBS: Porém, qualquer alteração feita no valor da variavel nome só aparecerá se atualizar a página. 
+Por isso o uso do useState é importante, como vemos abaixo:
+
+-----------------
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state = {                          //É obrigatório usar state como nome da função para utilizar o setState                
+      nome: "Bruno",
+    }
+  }       
+
+  mudar(){
+    this.setState(
+      {nome: "Carlos"}
+    )
+  }  
+
+  render(){
+    return(
+      <div>
+        <p>Nome: {this.state.nome}</p> 
+        <button onClick={() => this.mudar()}>MUDAR</button>
+      </div>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe/>
+    </>
+  )
+}
+
+-Ao clicar no botão, o nome Bruno será alterado para Carlos
+
+------------------
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state = {                            
+      ligado: false
+    }
+  }         
+
+  mudar(){
+    this.setState({ligado: !this.state.ligado})
+  }
+
+  render(){
+    return(
+      <div>
+        <p>ESTADO: {this.state.ligado ? "LIGADO" : "DESLIGADO"}</p> 
+        <button onClick={() => this.mudar()}>
+          {this.state.ligado ? "DESLIGAR" : "LIGAR"}                           // toogle
+        </button>
+      </div>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe/>
+    </>
+  )
+}
+
+-Com isso, o valor será mudado automaticamente ao clicar no botão, sem precisar atualizar a página
+
+//////////////////////////////////////////////////////////&&&
+
+FUNÇÃO DENTRO DE STATES EM COMPONENTES DE CLASSE
+VIDEO: https://www.youtube.com/embed/-QRlXs9LTOw?autoplay=1
+
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state = {                             
+      ligado: false
+    }
+  }         
+
+  mudar(){
+
+    this.setState(
+      (state) => (                                   //modo com arrow function
+        {ligado: !state.ligado}
+      )
+    )
+
+    this.setState(
+      function(state) {                             //modo com função tradicional
+        return {
+          ligado: !state.ligado
+        }
+      }
+    )
+
+  }
+
+  render(){
+    return(
+      <div>
+        <p>ESTADO: {this.state.ligado ? "LIGADO" : "DESLIGADO"}</p> 
+        <button onClick={() => this.mudar()}>MUDAR</button>
+      </div>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe/>
+    </>
+  )
+}
+
+-----------------------
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state = {                             
+      total: 0
+    }
+  }         
+
+  aumentar(){
+    this.setState(
+      (state, props) => (                                   
+        {total: state.total + props.fator}
+      )
+    )
+  }
+
+  render(){
+    return(
+      <div>
+        <p>Contagem: {this.state.total} </p> 
+        <button onClick={() => this.aumentar()}>AUMENTAR</button>
+      </div>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe
+        fator = {1}
+      />
+    </>
+  )
+}
+
+-Com isso, ao clicar no botão, o valor do total será somado o +1 (que é o valor do fator)
+
+OBS: Esse método acima, com uma função dentro do setState, é bem mais seguro e recomendado que o método tradicional pois evita erros de atualização, principalmente quando envolve contas.
+
+Método tradicional:
+ 
+...
+  aumentar(){
+    this.setState(                              
+        {total: this.state.total + this.props.fator}
+      )
+  }
+...
+
+////////////////////////////////////////////////////////////////&&&
+BIND
+VIDEO: https://www.youtube.com/embed/UH-s-DwcYA8?autoplay=1
+
+O Bind é usado para o this apontar para outro elemento.
+
+<html>
+<head>
+  <script>
+
+    function pessoa(){
+      console.log(this)
+    }
+
+    var infos = {
+      nome : "Bruno",
+      sobrenome : "Campos"
+    }
+
+    var pessoaInfo = pessoa.bind(infos)
+
+    pessoaInfo()
+
+  </script>
+</head>
+<body>
+</body>
+</html>
+
+>>> {nome: 'Bruno', sobrenome: 'Campos'}
+
+----------------
+
+<html>
+<head>
+  <script>
+
+    function pessoa(){
+      console.log(this.nome)
+    }
+
+    var infos = {
+      nome : "Bruno",
+      sobrenome : "Campos"
+    }
+
+    var pessoaInfo = pessoa.bind(infos)
+
+    pessoaInfo()
+
+  </script>
+</head>
+<body>
+</body>
+</html>
+
+>>> Bruno
+
+--------------------
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state = {                                        
+      nome: "Bruno"
+    }
+    this.novonome = this.mudar.bind(this)
+  }       
+
+  mudar(){
+    this.setState(                                   //Forma com função dentro do setState
+      (state) => (
+        {nome: "Carlos"}
+      )
+    )
+
+    this.setState({nome: "Carlos"})                  //Forma sem função dentro do setState
+  }  
+
+  render(){
+    return(
+      <div>
+        <p>{this.state.nome}</p>
+        <button onClick={this.novonome}>MUDAR</button>               //ou onClick={() => this.novonome()}
+      </div>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  return (
+    <>
+      <Classe/>
+    </>
+  )
+}
+
+////////////////////////////////////////////////////////////////&&&
+CICLO DE VIDA DE UM COMPONENTE
+VIDEO: https://www.youtube.com/embed/aeCiOmLlr94?autoplay=1
+
+(CRIAÇÃO)
+Na montagem, quando uma instancia do componente está sendo criada no DOM, a ordem é:  
+1o - constructor()
+2o - static getDerivedStateFromProps()
+3o - render()
+4o - componentDidMount()
+
+(ATUALIZAÇÃO)
+Na atualização do componente, por alterações causadas em props ou state, quando o componente esta sendo renderizado, a ordem é:
+1o - static getDerivedStateFromProps()
+2o - shouldComponenteUpdate()
+3o - render()
+4o - getSnapshotBeforeUpdate()
+5o - componentDidUpdate()
+
+(REMOÇÃO)
+Na desmontagem, quando o componente está sendo removido do DOM, a ordem é:
+1o - componentWillUnmount()
+
+(TRATAMENTO DE ERROS)
+Em tratamento de erros, quando existir algum erro em algum momento no componente, a ordem é:
+1o - static getDerivedStateFromError()
+2o - componentDidCatch()
+
+---------
+
+-Exemplo criando componentes:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    console.log("Primeiro aparece o constructor")
+  }       
+
+  static getDerivedStateFromProps(){
+    console.log("Em segundo vem o getDerivedStateFromProps")
+  }
+
+  componentDidMount(){
+    console.log("Em quarto vem o componentDidMount")
+  }
+
+  render(){
+    console.log("Em terceiro vem o render")
+    return(
+      <>
+      </>
+    )
+  }
+}
+
+------------
+
+-Exemplo com atualização:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state = {                                        
+      nome: "Bruno"
+    }
+  }       
+
+  componentDidUpdate(){                      //Aparece toda vez que o componente é atualizado
+    console.log("O componente mudou!")
+  }
+
+  mudar(){
+    this.setState(                                
+      (state) => (
+        {nome: "Carlos"}
+      )
+    )
+  }  
+
+  render(){
+    return(
+      <>
+        <p>Nome: {this.state.nome}</p>
+        <button onClick={() => this.mudar()}>MUDAR</button>
+      </>
+    )
+  }
+}
+
+-Ao clicar no botão, o valor do componente nome é alterado e, após a pagina ser atualizada pelo state, o componentDidUpdate é chamado.
+
+--------- &&&
+
+-Para remover um componente do DOM:
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default function Classe(){   
+    return(
+        <p>TEXTO</p>
+    )
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React, {useState} from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  const [mostrar, setMostrar] = useState(true)
+
+  const remover = () => {
+    setMostrar(false)                                            //OU setMostrar(!mostrar)
+  }
+
+  return (
+    <>
+      {mostrar && <Classe/>}
+      <button onClick={() => remover()}>REMOVER</button>        //OU <button onClick={remover}>REMOVER</button> 
+    </>
+  )
+}
+
+----------
+
+-Exemplo 1 ao remover um componente do DOM usando o componentWillUnmount():
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{         //obrigatório usar o React.Component junto com o render
+
+  componentWillUnmount(){                                    //Aparece toda vez que o componente é removido do DOM
+    console.log("O componente foi removido!")
+  }
+
+  render(){                                       
+    return(
+      <>
+        <p>TEXTO</p>
+      </>
+    )
+  }
+}
+
+
+-Dentro de um arquivo chamado App.js:
+
+import React, {useState} from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+  const [mostrar, setMostrar] = useState(true)
+
+  const remover = () => {
+    setMostrar(false)                                          //Ou setMostrar(!mostrar)
+  }
+
+  return (
+    <>
+      {mostrar && <Classe/>}
+      <button onClick={remover}>REMOVER</button>              //Ou <button onClick={() => remover()}>REMOVER</button>
+    </>
+  )
+}
+
+-----------
+
+-Exemplo 2 ao remover um componente do DOM  usando o componentWillUnmount():
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state = {                                        
+      nome: "Bruno"
+    }
+  }       
+
+  componentWillUnmount(){                      
+    console.log("O componente foi removido!")
+  }
+
+  render(){
+    return(
+      <>
+        <p>Nome: {this.state.nome}</p>
+      </>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React,{useState} from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+
+  const [nome, setNome] = useState(true)
+
+  const toggle = () => {
+    setNome(!nome)
+  } 
+
+  return (
+    <>
+      {nome ? <Classe/> : ""}
+      <button onClick={() => toggle()}>MOSTRAR/REMOVER</button>
+    </>
+  )
+}
+
+////////////////////////////////////////////////////////////////&&&
+ESTRUTURA BÁSICA DE UM COMPONENTE DE CLASSE  (RESUMÃO)
+VIDEO: https://www.youtube.com/embed/zRttpd14ci4?autoplay=1
+
+-Dentro de um arquivo chamado Classe.js:
+
+import React from 'react'
+
+export default class Classe extends React.Component{     
+
+  constructor(props){
+    super(props)
+    this.state={
+      chavestate1 : "valor1",
+      chavestate2 : 1000,
+      chavestate3 : true,
+      chavestateprops1 : this.props.valorstateprops1,   
+      chavestateprops2 : "valorstateprops2"            
+    }
+    this.chaveprops1
+    let bindFunção = Função.bind(this)
+  }     
+
+  Função(){
+    this.setState(
+      (state) => (
+        {chavestate1 : "novo valor"},
+        {chavestateprops1 : "novo valor"}
+      )
+    )
+  }  
+
+  componentDidMount()(
+    console.log("O componente foi criado")
+  )
+
+  componentDidUpdate()(
+    console.log("O componente foi atualizado")
+  )
+  
+  componentWillUnmount()(
+    console.log("O componente foi removido")
+  )
+
+
+  render(){
+    return(
+      <>
+        <p>Conteúdo do Componente de Classe</p>
+        <p>{this.state.chavestate1}</p>
+        <p>{this.state.chavestateprops1}</p>
+        <p>{this.state.chavestateprops2}</p>
+        <p>{this.props.chaveprops1}</p>
+        <p>{this.props.chaveprops2}</p>   
+        <button onClick={() => this.Função()}>CHAMAR FUNÇÃO SEM BIND</button>               
+        <button onClick={this.bindFunção}>CHAMAR FUNÇÃO COM BIND</button>             //OU onClick={() => this.bindFunção()}        
+      </>
+    )
+  }
+}
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Classe from './componentes/Classe.js'
+
+export default function App() {
+
+  return (
+    <>
+      <Classe
+        chaveprops1 = "Valor de chaveprops1"
+        chaveprops2 = "Valor de chaveprops2" 
+      />
+    </>
+  )
+}
+
+////////////////////////////////////////////////////////////////&&&
+VARIAVEIS GLOBAIS STATIC
+VIDEO: https://www.youtube.com/embed/0gCEIt-WNQ0?autoplay=1
+
+-Dentro de um arquivo chamado Globais.js:
+
+export default class Globais{        
+  static nome = "Bruno"
+  static sobrenome = "Campos"
+  static idade = 27  
+  static brasileiro = true
+}
+
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Globais from './componentes/Globais.js'
+
+export default function App() {
+
+  return (
+    <>
+      <p>{"Nome: " + Globais.nome}</p>
+      <p>{"Sobrenome: " + Globais.sobrenome}</p>
+      <p>{"Idade: " + Globais.idade + " anos"}</p>
+      <p>{"Brasileiro: "} {Globais.brasileiro ? "Sim" : "Não"}</p>
+    </>
+  )
+}
+
+>>> Nome: Bruno
+>>> Sobrenome: Campos
+>>> Idade: 27 anos
+>>> Brasileiro: Sim
+
+-----------------------
+
+-Dentro de um arquivo chamado Pessoa.js:
+
+export default class Pessoa{                         //class e não function
+  static nome = "Bruno"
+  static sobrenome = "Campos"
+}
+
+
+-Dentro de um arquivo chamado Infos.js:
+
+import React from 'react'
+import Pessoa from './Pessoa.js'
+
+export default function Infos(){                       //function e não class
+  return(
+    <>
+      <p>{"Nome: " + Pessoa.nome}</p>
+      <p>{"Sobrenome: " + Pessoa.sobrenome}</p>
+    </>
+  )
+}
+
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Infos from './componentes/Infos.js'
+
+export default function App() {
+
+  return (
+    <>
+      <Infos/>
+    </>
+  )
+}
+
+------------------
+
+-----------------------
+
+-Dentro de um arquivo chamado Pessoa.js:
+
+export default class Pessoa{                        
+  static nome = "Bruno"
+}
+
+
+-Dentro de um arquivo chamado App.js:
+
+import React,{useState} from 'react'
+import Pessoa from './componentes/Pessoa.js'
+
+export default function App() {
+
+  const [info, setInfo] = useState(Pessoa.nome)
+
+  const gravar = () => {
+    Pessoa.nome = info
+  }
+
+  const mostrar = () => {
+    alert(Pessoa.nome)
+  }
+
+  return (
+    <>
+      <input type="text" value={info} onChange={(e) => setInfo(e.target.value)}/>
+      <button onClick={() => gravar()}>GRAVAR</button>
+      <button onClick={() => mostrar()}>MOSTRAR</button>
+    </>
+  )
+}
+
+-Ao clicar em MOSTRAR, aparecerá o alerta com o texto Bruno. Porém, se alterar o o que está escrito no input e clicar em GRAVAR, ao clicar em MOSTRAR, será mostrado o novo valor gravado
+
+////////////////////////////////////////////////////////////////&&&
+NAVEGANDO ENTRE TELAS
+VIDEO: https://www.youtube.com/embed/-I2hggc2yFA?autoplay=1
+
+
+import React from 'react'
+
+export default function App() {
+
+  const navegar = () => {
+    window.open('https://www.google.com')
+  }
+  
+  return (
+    <>  
+      <button onClick={() => navegar()}>Ir para o Google</button> 
+    </>
+  )
+
+}
+
+---------------
+
+-Dentro de um arquivo chamado Pagina1.js:
+
+export default function Pagina1(){                        
+  return (
+    <>  
+      <p>Conteúdo da Página 1</p>
+    </>
+  )
+}
+
+
+-Dentro de um arquivo chamado App.js:
+
+import React from 'react'
+import Pagina1 from './componentes/Pagina1.js'
+
+export default function App() {
+
+  const navegar = () => {
+    window.open("http://localhost:3000/pagina1")
+  }
+  
+  return (
+    <>  
+      <button onClick={() => navegar()}>Ir para a Página 1</button> 
+    </>
+  )
+}
+
+
+---------------
+
+-Dentro de um arquivo chamado Pagina1.js:
+
+export default function Pagina1(){                        
+  return (
+    <>  
+      <p>Conteúdo da Página 1</p>
+    </>
+  )
+}
+
+
+-Dentro de um arquivo chamado Pagina2.js:
+
+export default function Pagina2(){                        
+  return (
+    <>  
+      <p>Conteúdo da Página 2</p>
+    </>
+  )
+}
+
+
+-Dentro de um arquivo chamado App.js:
+
+import React,{useState,useEffect} from 'react'
+import Pagina1 from './componentes/Pagina1.js'
+import Pagina2 from './componentes/Pagina2.js'
+
+export default function App() {
+
+  const [pagina, setPagina] = useState(0)
+
+  useEffect(
+    () => {
+      const url = window.location.href
+      const.res = url.split('?')
+      setPagina(res[1])
+    }
+  )
+
+  const LinksPaginas = (p) => {
+    if(p==1){
+      window.open('http://localhost:3000?1', '_self')
+    }
+    else if(p==2){
+      window.open('http://localhost:3000?2', '_self')      
+    }
+  }
+
+  const retornarPagina = () => {
+    if (pagina == 1) {
+      return <Pagina1/>
+    }
+    else if (pagina == 2) {
+      return <Pagina2/>
+    }
+    else {
+      return <div>
+              <button onClick={() => LinksPaginas(1)}>Ir para a Página 1</button>
+              <button onClick={() => LinksPaginas(2)}>Ir para a Página 2</button>
+            </div>
+    }
+  }
+
+  return (
+    <>  
+      {retornarPagina()}   
+    </>
+  )
+}
+
+////////////////////////////////////////////////////////////////&&&
+NAVEGANDO ENTRE TELAS COM REACT ROUTER E LINK
+VIDEO: https://www.youtube.com/embed/WATv_Md3y_o?autoplay=1
+
+Primeiro instale a extensão com:
+npm install react-router-dom
+
+-----
+
+-Dentro de um arquivo chamado Pagina1.js:
+
+export default function Pagina1() {                        
+  return (
+    <div className="pagina1">  
+      <p>Conteúdo da Página 1</p>
+    </div>
+  )
+}
+
+-Dentro de um arquivo chamado Erro404.js:
+
+export default function Erro404() {                        
+  return (
+    <div className="Erro404">  
+      <p>A página não foi encontrada.</p>
+    </div>
+  )
+}
+
+-Dentro de um arquivo chamado Home.js:
+
+import React from 'react'
+import {Link} from 'react-router-dom'
+
+export default function Home() {
+  
+  return (
+    <div className="home">  
+      <Link to="/pagina1">Link para a página 1</Link>
+    </div>
+  )
+}
+
+
+-Dentro de um arquivo chamado App.js:    (ou Index.js)
+
+import React from 'react'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import Home from './componentes/Home.js'
+import Pagina1 from './componentes/Pagina1.js'
+import Erro404 from './componentes/Erro404.js'
+
+export default function App() {
+  
+  return (
+    <>  
+      <BrowserRouter>
+
+        <Routes>
+          <Route path="/" index element={<Home />} />
+          <Route path="/pagina1" element={<Pagina1 />} />
+          <Route path="*" element={<Erro404 />} />
+        </Routes>
+
+      </BrowserRouter>
+    </>
+  )
+}
+
+-----------------
+
+Usando o useNavigate ao invés de Link:
+VIDEO: https://www.youtube.com/embed/X3It9vgZqcU?autoplay=1
+
+-Dentro de um arquivo chamado Pagina1.js:
+
+export default function Pagina1(){                        
+  return (
+    <div className="pagina1">  
+      <p>Conteúdo da Página 1</p>
+    </div>
+  )
+}
+
+-Dentro de um arquivo chamado Home.js:
+
+import React from 'react'
+import {useNavigate} from 'react-router-dom'
+
+export default function Home() {
+
+  const nav = useNavigate()
+
+  const navigate = () => {
+    nav('/pagina1')
+  }
+  
+  return (
+    <div className="home"> 
+      <button onClick={navigate}>Ir para a página 1</button>
+    </div>
+  )
+}
+
+
+-Dentro de um arquivo chamado App.js:    (ou Index.js)
+
+import React from 'react'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import Home from './componentes/Home.js'
+import Pagina1 from './componentes/Pagina1.js'
+
+export default function App() {
+  
+  return (
+    <>  
+      <BrowserRouter>
+
+        <Routes>
+          <Route path="/" index element={<Home />} />
+          <Route path="/pagina1" element={<Pagina1 />} />
+        </Routes>
+
+      </BrowserRouter>
+    </>
+  )
+}
+
+------------------
+
+Dynamic Route:
+https://www.youtube.com/embed/c02YoWR9gSY?autoplay=1
+
+
+-Dentro de um arquivo chamado Produtos.js:
+
+const Produtos = () => {                      //Ou export defaul function Produtos(){...}
+  
+  const Itens = [
+    {id: 1, nome:"Carro"},
+    {id: 2, nome:"TV"},
+    {id: 3, nome:"Geladeira"},
+  ]
+
+  return (
+    <ul>
+      {Produtos.map((Itens) => (
+        <li key={Itens.id}>
+          <Link to={`/produtos/${Itens.id}`}>
+            <h2>{Itens.nome}</h2>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )
+
+}
+
+
+-Dentro do arquivo App.js:
+
+....
+      <BrowserRouter>
+
+        <Routes>
+          <Route path="/" element={<Index/>} />
+          <Route path="/produtos/:id" element={<Produtos/>} />       // :variavel é uma rota dinamica
+        </Routes>
+
+      </BrowserRouter>
+....
+
+
+-----------
+
+Dynamic Route usando useParams() no react-router:
+LINK: https://reactrouter.com/api/hooks/useParams#examples
+
+-Num arquivo chamado Posts.js:
+
+import { useParams } from "react-router";
+
+export default function Post() {
+  let params = useParams();
+  return <h1>Post: {params.postId}</h1>;
+}
+
+// Assuming a route pattern like /posts/:postId is matched by /posts/123 then params.postId will be "123".
+
+-No arquivo chamado App.js:
+
+import { useParams } from "react-router"
+
+function SomeComponent() {
+  let params = useParams()
+  params.postId
+}
+
+<Route path="/posts/:postId" element={<Post />} />;
+
+////////////////////////////////////////////////////////////////&&&
+EXERCICIO 1 com BARRA DE PESQUISA
+VIDEO: https://www.youtube.com/embed/whBg2A-ls2I?autoplay=1
+
+import React from 'react'
+
+export default function App() {
+
+  const lista = [                                    
+  {nome: "Renato", sexo: "Masculino", idade: "31"},
+  {nome: "Maria", sexo: "Feminino", idade: "24"},
+  {nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  const imprimir = () => {
+    return lista.map ( (x) => {
+      if (x.sexo === "Masculino") {
+        return <p key={x.nome}>{x.nome}</p>;
+      }
+      return null;
+    });
+  }
+
+  return (
+    <>
+      {imprimir()}
+    </>
+  );
+}
+
+>>> Renato
+>>> Valter
+
+-------------
+
+import React,{useState} from 'react'
+
+const carros = [
+  {categoria: "Esporte", preço: "100000", modelo: "Golf"},
+  {categoria: "Utilitario", preço: "125000", modelo: "Hillux"},
+  {categoria: "SUV", preço: "85000", modelo: "HRV"},
+]
+
+const mostrar = (cat) => {
+  return carros.map ( (carro) => {
+    if (carro.categoria.toUpperCase() === cat.toUpperCase() || cat.toUpperCase() === '') {
+      return (
+        <div key={carro.modelo}>
+          <p>{carro.modelo}</p>
+          <p>R$ {carro.preço}</p>
+          <p>{carro.categoria}</p>
+          <br/>
+        </div>
+      )
+    }
+    return null;
+  })
+}
+
+const pesquisar = (cat, scat) => {
+  return (
+    <div>
+      <label>Digite uma categoria</label>
+      <input type="text" value={cat} onChange={(e) => scat(e.target.value)} />
+    </div>
+  )
+}
+
+export default function App() {
+
+  const [categoria, setCategoria] = useState('')
+
+  return (
+    <>  
+      {pesquisar(categoria, setCategoria)}
+      <br/>
+      {mostrar(categoria)}
+    </>
+  )
+}
+
+////////////////////////////////////////////////////////////////&&&
+IMPORTANDO DADOS DE UMA LISTA JSON
+
+No mesmo arquivo:  (FORMA 1)
+
+import React from 'react';
+
+export default function Pessoas() {
+  const lista = [                                    
+    {nome: "Renato", sexo: "Masculino", idade: "31"},
+    {nome: "Maria", sexo: "Feminino", idade: "24"},
+    {nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  return (
+    <div>
+      {lista.map((pessoa, index) => (
+        <div key={index}>
+          <p>Nome: {pessoa.nome}</p>
+          <p>Sexo: {pessoa.sexo}</p>
+          <p>Idade: {pessoa.idade}</p>
+          <hr />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+---------
+
+Em arquivos separados:  (FORMA 2)
+
+-No arquivo dados.js:
+
+export const lista = [                                    
+  {nome: "Renato", sexo: "Masculino", idade: "31"},
+  {nome: "Maria", sexo: "Feminino", idade: "24"},
+  {nome: "Valter", sexo: "Masculino", idade: "36"}
+];
+
+
+-No arquivo App.js:
+
+import React from 'react';
+import { lista } from './componentes/dados.js';
+
+export default function App() {
+  return (
+    <div>
+      {lista.map((pessoa, index) => (
+        <div key={index}>
+          <h3>{pessoa.nome}</h3>
+          <p>Sexo: {pessoa.sexo}</p>
+          <p>Idade: {pessoa.idade} anos</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+-----------
+
+Com useState: (FORMA 3)
+
+-Num arquivo chamado lista.js:
+
+export const pessoas = [
+  {nome: "Renato", sexo: "Masculino", idade: "31"},
+  {nome: "Maria", sexo: "Feminino", idade: "24"},
+  {nome: "Valter", sexo: "Masculino", idade: "36"}
+]
+
+-Num arquivo chamado App.js:
+
+import React, { useState } from 'react';
+import {pessoas} from './componentes/lista.js';
+
+export default function Pessoas() {
+
+  const [lista, setLista] = useState(pessoas);
+
+  const addPessoa = () => {
+    setLista([...lista, {nome: "João", sexo: "Masculino", idade: "28"}]);
+  };
+
+  return (
+    <div>
+
+      <button onClick={addPessoa}>Adicionar Pessoa</button>
+
+      {lista.map((pessoa, index) => (
+        <div key={index}>
+          <p>{pessoa.nome} - {pessoa.sexo} - {pessoa.idade} anos</p>
+        </div>
+      ))}
+
+    </div>
+  );
+}
+
+////////////////////////////////////////////////////////////////&&&
+CALCULADORA
+VIDEO: https://www.youtube.com/embed/bHu_jB9apfM?autoplay=1
+
+-Num arquivo chamado App.js:
+
+import React, { useState } from 'react';
+
+const fpeso = (p, sp) => {
+  return (
+    <div>
+      <label>Peso </label>
+      <input type="text" value={p} onChange={(e) => {sp(e.target.value)}} />
+    </div>
+  )
+}
+
+const faltura = (a, sa) => {
+  return (
+    <div>
+      <label>Altura </label>
+      <input type="text" value={a} onChange={(e) => {sa(e.target.value)}} />
+    </div>
+  )
+}
+
+const fcalcular = (p, a, sr) => {
+  const calc = () => {
+    sr(p * a)                                     //Se quisesse somar, seria:  sr(parseInt(p) + parseInt(a))
+  }
+  return (
+    <div>
+      <button onClick={calc}>CALCULAR</button>
+    </div>
+  )
+}
+
+const fresultado = (res) => {
+  return (
+    <div>
+      <p>Resultado: {res.toFixed(2)}</p>
+    </div>
+  )
+}
+
+export default function App() {
+
+  const [peso, setPeso] = useState(0)
+  const [altura, setAltura] = useState(0)
+  const [resultado, setResultado] = useState(0)
+
+  return (
+    <>
+      {fpeso(peso, setPeso)}
+      {faltura(altura, setAltura)}
+      {fcalcular(peso, altura, setResultado)}
+      {fresultado(resultado)}
+    </>
+  )
+}
+
+---------------
+
+Para separar cada função em um componente diferente:
+
+-Num arquivo chamado Peso.js:
+
+export default function Peso(props) {
+  return (
+    <div>
+      <label>Peso </label>
+      <input type="text" value={props.p} onChange={(e) => {props.sp(e.target.value)}} />
+    </div>
+  )
+}
+
+-Num arquivo chamado Altura.js:
+
+export default function Altura(props) {
+  return (
+    <div>
+      <label>Altura </label>
+      <input type="text" value={props.a} onChange={(e) => {props.sa(e.target.value)}} />
+    </div>
+  )
+}
+
+-Num arquivo chamado Calculo.js:
+
+export default function Calculo(props) {
+  const calc = () => {
+    props.sr(props.p * props.a)                              
+  }
+  return (
+    <div>
+      <button onClick={calc}>CALCULAR</button>
+    </div>
+  )
+}
+
+-Num arquivo chamado Resultado.js:
+
+export default function Resultado(props) {
+  return (
+    <div>
+      <p>Resultado: {props.res.toFixed(2)}</p>
+    </div>
+  )
+}
+
+
+-Num arquivo chamado App.js:
+
+import React, { useState } from 'react';
+import Peso from './componentes/Peso.js'
+import Altura from './componentes/Altura.js'
+import Calculo from './componentes/Calculo.js'
+import Resultado from './componentes/Resultado.js'
+
+export default function App() {
+
+  const [peso, setPeso] = useState(0)
+  const [altura, setAltura] = useState(0)
+  const [resultado, setResultado] = useState(0)
+
+  return (
+    <>
+      <Peso p={peso} sp={setPeso} />
+      <Altura a={altura} sa={setAltura} />
+      <Calculo p={peso} a={altura} sr={setResultado} />
+      <Resultado res={resultado} />
+    </>
+  )
+}
+
+-------------
+
+Caso utilizemos componentes de classe: (React de Classe ao invés de React Funcional)
+
+-Num arquivo chamado Peso.js:
+
+import React from 'react'
+
+export default class Peso extends React.Component{     
+  constructor(){
+    super()
+  }     
+  render(){
+    return(
+      <div>
+        <label>Peso </label>
+        <input type="text" value={this.props.p} onChange={(e) => {this.props.sp(e.target.value)}} />
+      </div>
+    )
+  }
+}
+
+-Num arquivo chamado Altura.js:
+
+import React from 'react'
+
+export default class Altura extends React.Component{   
+  constructor(){
+    super()
+  }     
+  render(){
+    return (
+      <div>
+        <label>Altura </label>
+        <input type="text" value={this.props.a} onChange={(e) => {this.props.sa(e.target.value)}} />
+      </div>
+    )
+  }
+}
+
+-Num arquivo chamado Calculo.js:
+
+import React from 'react'
+
+export default class Calculo extends React.Component{   
+  constructor(){
+    super()
+  }     
+  calc = () => {
+    this.props.sr(this.props.p * this.props.a)                              
+  }
+  render(){
+    return (
+      <div>
+        <button onClick={this.calc}>CALCULAR</button>
+      </div>
+    )
+  }
+}
+
+-Num arquivo chamado Resultado.js:
+
+import React from 'react'
+
+export default class Resultado extends React.Component{   
+  constructor(){
+    super()
+  }     
+  render(){
+    return (
+      <div>
+        <p>Resultado: {this.props.res.toFixed(2)}</p>
+      </div>
+    )
+  }
+}
+
+-Num arquivo chamado App.js:
+
+import React, { useState } from 'react';
+import Peso from './componentes/Peso.js'
+import Altura from './componentes/Altura.js'
+import Calculo from './componentes/Calculo.js'
+import Resultado from './componentes/Resultado.js'
+
+export default function App() {
+
+  const [peso, setPeso] = useState('')
+  const [altura, setAltura] = useState('')
+  const [resultado, setResultado] = useState(0)
+
+  return (
+    <>
+      <Peso p={peso} sp={setPeso} />
+      <Altura a={altura} sa={setAltura} />
+      <Calculo p={peso} a={altura} sr={setResultado} />
+      <Resultado res={resultado} />
+    </>
+  )
+}
+
+OBS: O componente Calculo foi realizado da seguinte maneira no video:
+
+-Num arquivo chamado Calculo.js:
+
+import React from 'react'
+
+export default class Calculo extends React.Component{   
+  constructor(){
+    super()
+    this.calc = this.fcalc.bind(this)
+  }     
+
+  fcalc = () => {
+    this.props.sr(this.props.p * this.props.a)                              
+  }
+
+  render(){
+    return (
+      <div>
+        <button onClick={this.calc}>CALCULAR</button>
+      </div>
+    )
+  }
+}
+
+OUTRA FORMA SEM O BIND E COM A FUNÇÃO DENTRO DO RENDER:
+
+import React from 'react'
+
+export default class Calculo extends React.Component{   
+  constructor(){
+    super()
+  }     
+  render(){
+    const calc = () => {
+      this.props.sr(this.props.p * this.props.a)                              
+    }
+    return (
+      <div>
+        <button onClick={calc}>CALCULAR</button>
+      </div>
+    )
+  }
+}
+
+////////////////////////////////////////////////////////////////&&&
+KEY
+VIDEO: https://www.youtube.com/embed/ZKTaOoNCAcg?autoplay=1
+
+
+-Num arquivo chamado carros.js:
+
+export default function Carro(props) {
+  return <p>{props.marca}</p>;
+}
+
+-No arquivo chamado App.js:
+
+import React from 'react';
+import Carro from './componentes/carros.js';
+
+export default function App() {
+  const carros = [
+    {id: 1, marca: 'Ford'},
+    {id: 2, marca: 'BMW'},
+    {id: 3, marca: 'Audi'}
+  ];
+
+  return (
+    <>
+      {carros.map((car) => <Carro key={car.id} marca={car.marca} />)}
+    </>
+  );
+}
+
+------------
+
+import React from 'react'
+
+function ListaNumeros(props) {
+  const num = props.numeros
+  const lista_numeros = num.map(
+    (n) => <li key={n.toString()}>{n}</li>             //.toString() é necessário????
+  )
+  return (<ul>{lista_numeros}</ul>)
+}
+
+const array_numeros = [1,2,3,4,5,6,7,8,9]
+
+export default function App() {
+  return (
+    <>
+      <ListaNumeros numeros={array_numeros} />
+    </>
+  )
+}
+
+
+////////////////////////////////////////////////////////////////&&&
+CRIANDO E IMPORTANDO UMA API NO NODE JS
+VIDEO: https://www.youtube.com/embed/VsXwvgW17ow?autoplay=1
+
+Crie um App de Node JS (no video é criado no repplit)
+
+-No arquivo index.js:
+
+var carros='['+
+'{"id":1,"marca":"Honda","modelo":"HRV"},'+
+'{"id":2,"marca":"VW","modelo":"Golf"},'+
+'{"id":3,"marca":"Fiat","modelo":"Toro"},'+
+'{"id":4,"marca":"GM","modelo":"Tracker"}'+
+']';
+
+var http = require('http');
+var server = http.createServer(function(request, response){
+	response.setHeader('Access-Control-Allow-Origin','*');
+	response.writeHeader(200,{"Content-Type":"text/html"});
+	response.write(carros);
+	response.end();
+});
+server.listen(3000);
+
+--------------
+
+Outra forma (mais simples???):
+
+-No arquivo index.js:
+
+var nomes = [                                                        //array em JSON
+  {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+  {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+  {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+];
+
+var obj = JSON.stringify(nomes);                                     //para transformar JSON em string
+
+var http = require('http');                                          //para importar o modulo http
+
+var server = http.createServer(function(request, response){
+  response.setHeader('Access-Control-Allow-Origin','*');             //para todos terem acesso a API
+  response.writeHead(200,{"Content-Type":"text/html"});              //para apresentar os dados como texto/html
+  response.write(obj);
+  response.end();
+});
+
+server.listen(3000);                                                 //para escutar na porta 3000
+
+-------
+
+var nomes = [    
+  {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+  {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+  {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+];
+
+var obj = JSON.stringify(nomes);
+
+const http = require('http');
+
+const requestListener = function (req, res) {
+  res.writeHead(200,{"Content-Type":"text/html"});
+  res.end(obj);
+}
+
+const server = http.createServer(requestListener);
+server.listen(3000);
+
+
+--------------
+
+Criando API no Node JS com YARN, EXPRESS e NODEMON:
+VIDEO: https://www.youtube.com/embed/WejbsEnvvRQ?autoplay=1
+
+-Instale o Node JS
+-Abra o terminal do VS Code
+-Procure no terminal a pasta onde ficarão os arquivos:
+  cd..
+  cd backend                    (backend é o nome da pasta)
+-Dentro da pasta, digite:  npm init
+-Aperte Enter nas próximas partes
+-Após terminar, será criado um arquivo chamado package.json na pasta
+-Será preciso instalar algumas bibliotecas. É possivel instalar pelo proprio npm, mas é menos confiavel. Então será usado o Yarn para instalar as bibliotecas, pois é mais rápido e confiavel.
+-Entre no terminal e digite:  npm install -g yarn
+-Será preciso instalar a biblioteca Express. Digite no terminal:  yarn add express
+-Crie um arquivo chamado index.js dentro da pasta
+
+-No arquivo index.js:
+
+const express = require('express');
+const server = express();
+
+server.get('/', (req, res) => {
+	return res.json({mensagem: "A API está funcionando"})
+});
+
+server.listen(3000, () => {
+	console.log("Servidor está funcionando")      //Opcional
+});
+
+
+-Para iniciar a API, dentro do terminal digite:  node index.js
+-Para parar a API (e ver mudanças e alterações) aperte Ctrl + C no terminal
+
+-Para visualizar a API, acesse no navegador a url:  localhost:3000/
+
+---
+
+-Caso queira mudar a url, mude o codigo abaixo:
+
+server.get('/produtos', (req, res) => {
+	return res.json({mensagem: "Esta é a página de produtos"})
+});
+
+A url seria então:  localhost:3000/produtos
+
+---
+
+-Para adicionar o conteúdo JSON:
+
+var nomes = [    
+  {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+  {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+  {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+];
+
+const express = require('express');
+const server = express();
+
+server.get('/', (req, res) => {
+	return res.json(nomes)
+});
+
+server.listen(3000)
+
+---
+
+Os conteudo JSON normalmente fica em uma pasta separada. Por exemplo:
+
+backend
+  node_modules
+  src
+    data
+      Nomes.json
+  index.js
+  package.js
+  yarn.lock
+
+
+-Dentro do arquivo Nomes.json:
+
+var nomes = [    
+  {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+  {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+  {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+];
+
+-Dentro do arquivo index.js:
+
+const express = require('express');
+const server = express();
+const nomes = require('./src/data/filmes.json');
+
+server.get('/nomes', (req, res) => {
+	return res.json(nomes)
+});
+
+server.listen(3000)
+
+---
+
+Para atualizar as alterações sem precisar parar a API, é preciso instalar a biblioteca nodemon:
+
+-No terminal digite:  yarn global add nodemon
+-Ao terminar a instalação, digite:  clear
+
+-Dentro do arquivo package.json, altere o codigo para:
+
+...
+"scripts": {
+  "start":"nodemon ./index.js",
+  "test":"echo \"Error: no test specified\" && exit 1"
+},
+...
+
+-Após isso, para iniciar a API, digite no terminal:  yarn start
+-Com isso, qualquer alteração feita no codigo será atualizado automaticamente na tela.
+
+---
+
+Para consumir os dados da API usando o yarn e o axios:
+VIDEO: https://www.youtube.com/embed/k8hz8WIxhAA?autoplay=1
+
+////////////////////////////////////////////////////////////////&&&
+CONSUMINDO DADOS DA API COM AXIOS E COMPONENTE DE CLASSE
+VIDEO: https://www.youtube.com/embed/GrxM7aHyN84?autoplay=1
+
+-Primeiro é necessário instalar a biblioteca axios no node js:
+-No terminal, entre na pasta correta:  cd..    
+-Digite no terminal:  npm install axios
+-Após a instalação, digite no terminal:  npm install react-axios              (por prevenção, instale essa biblioteca)
+(Caso queira instalar o axios no replit, clique em Shell e depois digite no terminal:  npm install axios)
+ 
+-Dentro da pasta componentes, crie um arquivo para receber os dados da API
+
+-Arquivo ListaNomes.js:
+
+import React from 'react'
+import axios from 'axios'
+
+export default class ListaNomes extends React.Component{
+
+  state = {
+    nomes:[]
+  }
+
+  componentDidMount(){
+    axios.get('https://3008adde-f980-4aa7-ac95-186b91f8fb9b-00-23bm4y0g030ut.picard.replit.dev/')
+      .then(res=>{
+        this.setState({nomes:res.data})
+      })
+  }
+  render(){
+    return(
+      <div>
+        {this.state.nomes.map(pessoa => 
+          <div key={pessoa.id}>
+            <p>{pessoa.nome}</p>
+            <p>{pessoa.sexo}</p>
+            <p>{pessoa.idade} anos</p>
+          </div>
+        )}
+      </div>
+    )
+  }
+}
+
+OBS: Em axios.get(url) , a url é a que o replit criou para a API com os dados. Caso a API fosse criada pelo Node JS, a url seria outra
+
+-No arquivo App.js:
+
+import React from 'react'
+import ListaNomes from './componentes/ListaNomes.js'
+
+export default function App(){
+  return(
+    <>
+      <ListaNomes />
+    </>
+  )
+}
+
+////////////////////////////////////////////////////////////////&&&
+CONSUMINDO DADOS DA API COM AXIOS E COMPONENTE FUNCIONAL
+VIDEO: https://www.youtube.com/embed/ufb8a6ZztOM?autoplay=1
+
+-Siga as recomendações de instalação de bibliotecas do exemplo acima com componentes de classe
+
+-Arquivo ListaNomes.js:
+
+import React, {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function ListaNomes() {
+
+  const [nomes, setNomes] = useState([])
+
+  useEffect(() => {
+    axios.get('https://3008adde-f980-4aa7-ac95-186b91f8fb9b-00-23bm4y0g030ut.picard.replit.dev/')
+      .then(res=>{
+        setNomes(res.data)
+      })
+  })
+
+
+  return(
+    <div>
+      {nomes.map(pessoa => 
+        <div key={pessoa.id}>
+          <p>{pessoa.nome}</p>
+          <p>{pessoa.sexo}</p>
+          <p>{pessoa.idade} anos</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+-No arquivo App.js:
+
+import React from 'react'
+import ListaNomes from './componentes/ListaNomes.js'
+
+export default function App(){
+  return(
+    <>
+      <ListaNomes />
+    </>
+  )
+}
+
+////////////////////////////////////////////////////////////////&&&
+CONSUMINDO DADOS DA API COM FETCH
+VIDEO: https://www.youtube.com/embed/fTqOfPfOFJE?autoplay=1
+
+É possível consumir os dados da API sem precisar de nenhuma biblioteca como o Axios. Para isso, utiliza-se o Fetch.
+
+-Arquivo ListaNomes.js:
+
+import React, {useState, useEffect} from 'react'
+
+export default function ListaNomes() {
+
+  const [nomes, setNomes] = useState([])
+
+  useEffect(() => {
+    fetch('https://3008adde-f980-4aa7-ac95-186b91f8fb9b-00-23bm4y0g030ut.picard.replit.dev/')
+      .then(res => res.json())
+      .then(
+        (res) => {
+          setNomes(res)
+        }
+      )
+  })
+
+  return(
+    <div>
+      {nomes.map(pessoa => 
+        <div key={pessoa.id}>
+          <p>{pessoa.nome}</p>
+          <p>{pessoa.sexo}</p>
+          <p>{pessoa.idade} anos</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+-No arquivo App.js:
+
+import React from 'react'
+import ListaNomes from './componentes/ListaNomes.js'
+
+export default function App(){
+  return(
+    <>
+      <ListaNomes />
+    </>
+  )
+}
+
+------
+
+Caso queira usar componente de classe ao invés de componente funcional:
+
+-Arquivo ListaNomes.js:
+
+import React from 'react'
+
+export default class ListaNomes extends React.Component{
+
+  state = {
+    nomes:[]
+  }
+
+  componentDidMount(){
+    fetch('https://3008adde-f980-4aa7-ac95-186b91f8fb9b-00-23bm4y0g030ut.picard.replit.dev/')
+      .then(res => res.json())
+      .then(
+        (res) => {
+          const data = res.data || res || [];
+          this.setState({nomes:data})
+        }
+      )
+  }
+
+  render(){
+    return(
+      <div>
+        {this.state.nomes.map(pessoa => 
+          <div key={pessoa.id}>
+            <p>{pessoa.nome}</p>
+            <p>{pessoa.sexo}</p>
+            <p>{pessoa.idade} anos</p>
+          </div>
+        )}
+      </div>
+    )
+  }
+}
+
+////////////////////////////////////////////////////////////////&&& ***
+BOTÕES / INTERATIVIDADE
+
+-Para mudar de cor sem usar useState:
+
+import React from 'react'
+
+const mudar = () => {
+  document.getElementById("txt").style.color = "red";
+}
+
+export default function App() {
+
+  return (
+    <>  
+      <button onClick={mudar}>BOTÃO</button>
+      <p id="txt">TEXTO DE EXEMPLO</p>
+    </>
+  )
+}
+
+-Para mudar de cor usando useState, sem toggle e sem importar um arquivo css:
+
+import React, {useState} from 'react'
+
+export default function App() {
+
+  const [cor, setCor] = useState('red');
+
+  const mudar = () => {
+    setCor(document.getElementById('txt').style.color = cor);
+  }
+
+  return (
+    <>  
+      <button onClick={mudar}>BOTÃO</button>
+      <p id="txt">TEXTO DE EXEMPLO</p>
+    </>
+  )
+}
+
+------
+
+Outra forma:
+
+import React, {useState} from 'react'
+
+export default function App() {
+
+  const [cor, setCor] = useState('blue');
+
+  const mudar = () => {
+    if (cor === 'blue') {
+      setCor('red');
+    } 
+  }
+
+  return (
+    <>  
+      <button onClick={mudar}>BOTÃO</button>
+      <p id="txt" style={{color: cor}}>TEXTO DE EXEMPLO</p>
+    </>
+  )
+}
+
+-------------
+
+Para mover um elemento sem usar useState:
+
+import React from 'react';
+
+const mover = () => {
+  document.getElementById("caixa").style.left = "150px";
+}
+
+export default function App() {
+  return (
+    <>
+      <button onClick={mover}>BOTÃO</button>
+      
+      <div id="caixa" style={{ backgroundColor: 'green', height: '100px', width: '100px', position: 'absolute', left: '0px' }}></div>
+      
+    </>
+  );
+}
+
+-----------
+
+TOGGLE (É melhor usar useState para atualizar o estado e forçar a renderização):
+
+Toogle para mostrar e esconder:
+
+-Arquivo App.css:
+
+.hide {
+  display: none;
+}
+
+-Arquivo App.jsx:
+
+import React, { useState } from 'react';
+import './App.css';
+
+export default function App() {
+  
+  const [show, setShow] = useState(true);
+
+  return (
+    <>
+      <button onClick={() => setShow(!show)}>TOGGLE</button>
+  
+      <div className={show ? "show" : "hide"}>TEXTO</div>
+    </>
+  )
+};
+
+-----------
+
+Toggle para alternar entre classes:
+
+-Arquivo App.css:
+
+.azul {
+  color: blue;
+}
+
+.vermelho {
+  color: red;
+}
+
+
+-Arquivo App.jsx:
+
+import React, { useState } from 'react';
+import './App.css';
+
+export default function App() {
+  
+  const [cor, setCor] = useState(true);
+
+  return (
+    <>
+      <button onClick={() => setCor(!cor)}>TOGGLE</button>
+  
+      <div className={cor ? "azul" : "vermelho"}>TEXTO</div>
+    </>
+  )
+};
+
+-----------
+
+Outra forma sem usar classes:
+
+import React, {useState} from 'react'
+
+export default function App() {
+
+  const [cor, setCor] = useState('blue');
+
+  const mudar = () => {
+    if (cor === 'blue') {
+      setCor('red');
+    } else {
+      setCor('blue');
+    }
+  }
+
+  return (
+    <>  
+      <button onClick={mudar}>BOTÃO</button>
+      <p id="txt" style={{color: cor}}>TEXTO DE EXEMPLO</p>
+    </>
+  )
+}
+
+-----------
+
+Toggle para mostrar uma barra lateral na direita:
+
+-Arquivo App.css:
+
+.fundo {
+  background-color: yellow;
+  width: 100vw;
+  height: 100vh;
+}
+
+.show {
+  width: 40vw;
+  height: 100vh;
+  background-color: gray;
+  right: 0px;
+  top: 0px;
+  position: absolute;
+  transition: all 0.2s;
+}
+
+.hide {
+  right: -40vw;                                    // OU display: none;
+}
+
+-Arquivo App.jsx:
+
+import React, { useState } from 'react';
+import './App.css';
+
+export default function App() {
+  
+  const [show, setShow] = useState(false);
+
+  return (
+    <>
+      <div className="fundo">
+        <button onClick={() => setShow(!show)}>TOGGLE</button>
+        <div className={show ? "show" : "hide"}></div>
+      </div>
+    </>
+  )
+};
+
+--------------
+
+Toggle com mensagem de pop-up e fundo escurecendo:
+
+-Arquivo App.css:
+
+.fundo {
+  background-color: #dbdbdb;
+  width: 100vw;
+  height: 100vh;
+  transition: all 0.2s;
+}
+
+.fundoescuro {
+  background-color: #8f8f8f;
+  width: 100vw;
+  height: 100vh;
+  transition: all 0.2s;
+}
+
+.show {
+  width: 60vw;
+  height: 50vh;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.2s;
+}
+
+.hide {
+  display: none;
+}
+
+-Arquivo App.jsx:
+
+import React, { useState } from 'react';
+import './App.css';
+
+export default function App() {
+
+  const [show, setShow] = useState(false);
+  const [fundo, setFundo] = useState(true);
+
+  return (
+    <>
+      <div className={fundo ? "fundo" : "fundoescuro"}>
+        <button onClick={() => {setShow(!show), setFundo(!fundo)}}>TOGGLE</button>
+        <div className={show ? "show" : "hide"}></div>
+      </div>
+    </>
+  )
+};
+
+-----------------------------
+
+HOVER
+
+-Arquivo App.css:
+
+.txt:hover{
+  color: red;
+  cursor: pointer;
+}
+
+-Arquivo App.jsx:
+
+import React from 'react';
+import './App.css';
+
+export default function App() {
+
+  return (
+    <>
+      <p className="txt">TEXTO</p>
+    </>
+  )
+};
+
+
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: Use state (forma recomendada)
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+Forma simples:
+
+import { usestate } from "react";
+
+const App = () => {
+  const [count, setCount] = usestate(0);
+  const incrementCount = () => {
+    setCount(count + 1);                           //ERRADO
+  }
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={incrementCount}>Increment</button>
+    </div>
+  )
+}
+export default App;
+
+-------
+
+Forma CORRETA:
+
+import { usestate } from "react";
+
+const App = () => {
+
+  const [count, setCount] = usestate(0);
+
+  const incrementCount = () => {
+    setCount((prevState) = prevState + 1);            //CERTO
+  }
+
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={incrementCount}>Increment</button>
+    </div>
+  )
+}
+
+export default App;
+
+----------
+
+import { usestate } from "react";
+
+const App = () => {
+
+  const [state, setState] = usestate({count: 0, theme: "light"});
+
+  const incrementcount = () => {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        count: prevState.count + 1,
+        theme: "dark"
+      }
+    })
+  }
+
+  return (
+    <div>
+      <h1>{state.count}</h1>
+      <button onClick={incrementCount}>Increment</button>
+    </div>
+  )
+}
+
+export default App;
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: Use Effect FORMA CORRETA
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+import { useState, useEffect } from "react"; 
+
+const App = () => {
+  const [resourceType, setResourceType] = useState("posts");
+
+  useEffect(() => {
+    fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
+    .then((response) => response.json())
+    .then((json) => console.log(json));
+  }, [resourceType]);                          //Só executa este bloco de código quando resourceType for alterado
+
+  const changeResourceType = (resourceType) => {
+    setResourceType(resourceType);
+  }
+
+  return (
+    <div>
+      <h1>{resourceType}</h1>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <button onClick={() => changeResourceType("posts")}>Posts</button>
+        <button onClick={() => changeResourceType("comments")}>Comments</button>
+        <button onClick={() => changeResourceType("todos")}>Todos</button>
+      </div>
+    </div>
+  )
+}
+
+export default App;
+
+OBS: O useEffect é chamado sempre e apenas quando o valor de resourceType é alterado.
+
+UseEffect não pode ser usado de forma assincrona. Exemplo:
+
+  useEffect( async () => {
+    fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
+    .then((response) => response.json())
+    .then((json) => console.log(json));
+  }, [resourceType]);
+
+Então é necessário fazer da seguinte forma para usar async e await:
+
+  useEffect(() => {
+    const fetchResourceTypes = async () => {
+      const response = await fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
+      const responseJSON = await response.json()
+      console.log(responseJSON)
+    }
+    fetchResourceTypes()
+  }, [resourceType]);
+
+--------
+
+import { useState, useEffect } from "react"; 
+
+const App = () => {
+  const [resourceType, setResourceType] = useState("posts");
+  const [items, setItems] = useState([])
+
+  useEffect(() => {
+    const fetchResourceTypes = async () => {
+      const response = await fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
+      const responseJSON = await response.json()
+      setItems(responseJSON)
+    }
+    fetchResourceTypes()
+  }, [resourceType]);
+
+  const changeResourceType = (resourceType) => {
+    setResourceType(resourceType);
+  }
+
+  return (
+    <div>
+      <h1>{resourceType}</h1>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <button onClick={() => changeResourceType("posts")}>Posts</button>
+      </div>
+      {items.map((item) => {
+        <p>{item.title}</p>
+      })}
+    </div>
+  )
+}
+
+export default App;
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: useLayoutEffect
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+Muito parecido com o useEffect, mas:
+useEffect = só é executado depois que o DOM tiver sido montado pelo React
+useLayoutEffect = é executado antes do DOM ser montado pelo React
+
+import {useLayoutEffect, useState} from 'react';
+
+const App = () => {
+  const [count, setCount] = useState(1);
+
+  useLayoutEffect(() => {
+    console.log(count);
+  }, [count]);
+
+  return (
+    <>
+      <h1>{count}</h1>
+      <button onClick={() => setCount((prev) => prev + 1)}
+    </>
+  );
+};
+
+export default App;
+
+O useLayoutEffect é melhor usado quando se quer fazer uma alteração no DOM baseando-se em algum elemento do DOM
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: useRef
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+O useRef guarda um valor, assim como o useState, mas quando é atualizado, o componente não é renderizado novamente.
+
+-Para referenciar algum elemento HTML:
+
+import { useState, useEffect, useRef } from "react";
+
+const App = () => {
+  const [name, setName] = usestate("");
+
+  const renders = useRef(0)
+
+  useEffect(() => {
+    renders.current = renders.current + 1
+  }) 
+
+  return (
+    <div>
+      <input 
+        value={name} 
+        onChange={(e) => setName(e.target.value)} 
+      />
+      <p>Olá, {name}</p>
+      <p>{renders.current}</p>
+    </div>
+  )
+}
+
+export default App;
+
+Neste exemplo, o useRef vai guardar a quantidade de vezes que houver alguma alteração no input e o componente precisar ser renderizado
+
+-------------- &&&
+
+-FOCUS usando useRef:
+
+import { useState, useRef } from "react";
+
+const App = () => {
+  const [name, setName] = usestate("");
+
+  const inputRef = useRef()
+
+  const focusInput = () => {
+    inputRef.current.focus()
+  }
+
+  return (
+    <div>
+      <input 
+        ref={inputRef}
+        value={name} 
+        onChange={(e) => setName(e.target.value)} />
+      <button onClick={focusInput}>FOCUS INPUT</button>
+    </div>
+  )
+}
+
+export default App;
+
+Ao clicar no botão, o focus irá para o input
+
+-----------
+
+-Para guardar o valor anterior de um componente usando o useRef:
+
+import { useState, useEffect, useRef } from "react";
+
+const App = () => {
+  const [name, setName] = usestate("");
+
+  const nomeAntigo = useRef()
+
+  useEffect(() => {
+    nomeAntigo.current = name
+  }, [name])
+
+  return (
+    <div>
+      <input 
+        value={name} 
+        onChange={(e) => setName(e.target.value)} 
+      />
+      <p>Nome atual: {name}</p>
+      <p>Nome antigo: {nomeAntigo.current}</p>
+    </div>
+  )
+}
+
+export default App;
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: useReducer
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+O useReducer deve ser usado (ao invés do useState) quando o state for muito complexo/grande 
+
+import {useReducer} from 'react'
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "increment":
+      return {
+        counter: state.counter + 1,
+      }
+    case "decrement":
+      return {
+        counter: state.counter - 1,
+      }
+    default:
+      return state;
+  }
+}
+
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, {counter: 0})
+
+  return (
+    <div>
+      <p>{state.counter}</p>
+      <button onClick={() => dispatch({type: "increment"})}>Increment</button>
+      <button onClick={() => dispatch({type: "decrement"})}>Decrement</button>
+    </div>
+  )
+}
+
+export default App
+
+-------------
+
+import {useReducer, useState} from 'react'
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "add-task":
+      return {
+        tasks: [
+          ...state.tasks,
+          {name: action.payload, isCompleted: false},
+        ],
+      };
+    default:
+      return state;
+  }
+};
+
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, { tasks: [] });
+
+  const [inputValue, setInputValue] = useState("");
+
+  return (
+    <div>
+      <input 
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <button 
+        onClick={() => {
+          dispatch({type: "add-task", payload: inputValue});
+          setInputvalue("");
+        }}
+      >
+        Adicionar
+      </button>
+
+      {state.tasks.map((task) => (
+        <p>{task.name}<p>
+      ))}
+    </div>
+  );
+};
+
+export default App;
+
+----------
+
+import {useReducer, useState} from 'react'
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "add-task":
+      return {
+        ...state,
+        tasks: [...state.tasks, {name: action.payload, isCompleted: false},
+        tasksCount: state.tasksCount + 1,
+        ],
+      };
+    case "toggle-task":
+      return {
+        ...state,
+        tasks: state.tasks.map((item, index) => 
+          index === action.payload ? { ...item, isCompleted: !item.isCompleted } : item
+        ),
+      };
+    default:
+      return state;
+  }
+};
+
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, { tasks: [], tasksCount: 0 });
+
+  const [inputValue, setInputValue] = useState("");
+
+  return (
+    <div>
+      <input 
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <button 
+        onClick={() => {
+          dispatch({type: "add-task", payload: inputValue});
+          setInputvalue("");
+        }}
+      >
+        Adicionar
+      </button>
+
+      {state.tasks.map((task, index) => (
+        <p
+          onClick={() => dispatch({ type: "toggle-task", payload: index })}
+          style={{ textDecoration: task.isCompleted ? "line-through" : "none"}}
+        >
+          {task.name}
+        <p>
+      ))}
+    </div>
+  );
+};
+
+export default App;
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: useContext
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+-No arquivo theme-context.js:
+
+import {useState, createContext} from 'react'
+
+export const ThemeContext = createContext({
+  theme: "light",
+  toggleTheme: () => {},
+});
+
+const ThemeContextProvider = ({children}) => {
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = () => {
+    if (theme === "light") {
+      return setTheme("dark");
+    }
+    return setTheme("light");
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export default ThemeContextProvider;
+
+-No arquivo Pagina1.js:
+
+import {useContext} from "react";
+import {ThemeContext} from "./contexts/theme-context";
+
+const Pagina1 = () => {
+  const {theme, toggleTheme} = useContext(ThemeContext);
+
+  return (
+    <>
+      <div
+        style={{
+          padding: 20,
+          borderRadius: 10,
+          backgroundColor: theme === "light" ? "#eee" : "#333",
+          color: theme === "dark" ? "#eee" : "#333",
+        }}
+      >
+        <h1>Current theme: {theme}</h1>
+        <button onClick{() => toggleTheme()}>Toggle Theme</button>
+      </div>
+    </>
+  )
+}
+
+export default Pagina1;
+
+
+-No arquivo App.js:
+
+import ThemeContextProvider from "./contexts/theme-context";
+import Pagina1 from "./Pagina1";
+
+const App = () => {
+  return (
+    <ThemeContextProvider>
+      <Pagina1 />
+    </ThemeContextProvider>
+  );
+};
+
+export default App;
+
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: UseMemo
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+Para otimizar a performance da aplicação, o useMemo pode ser usado para guardar o valor na memória. 
+Bem útil para alguma função que esteja dando problema por ser lenta ou estar travando a aplicação e sendo chamada sem haver nenhuma alteração em seu valor.
+
+import {useState, useMemo} from 'react';
+
+const App = () => {
+  const [number, setNumber] = useState(1);
+  const [text, setText] = useState("");
+
+  const doubleNumber = useMemo(() => {
+    return slowFunction(number);
+  }, [number]);
+
+  return (
+    <>
+      <p>{number}</p>
+      <input value={text} onChange={(e) => setText(e.target.value)} />
+      <button onClick={() => setNumber(2)}>Increment</button>
+      <p>text: {text}</p>
+    </>
+  );
+};
+
+const slowFunction = (num) => {
+  console.log("Slow function is being called!");
+  for (let i = 0; i <= 10000; i++) {}
+  return num * 2;
+};
+
+export default App;
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: useCallback
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+Assim como o useMemo, é usado para otimizar a aplicação. Ele guarda uma função na memoria que somente será recriada caso algum elemento definido seja alterado.
+useCallback = guarda a função em si
+useMemo = guarda o retorno da função
+
+-No arquivo List.js:
+
+import {useEffect, useState} from "react";
+
+const List = ({getItems}) => {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    getItems().then((result) => setItems(result));
+  }, [getItems]);
+
+  return (
+    <>
+      {items && 
+        items.map((item) => 
+          <p key={item.id}>
+            {item?.title || item?.name}
+          </p>
+        )
+      }
+    </>
+  );
+};
+
+export default List;
+
+
+-No arquivo App.js:
+
+import {useState} from 'react'
+import List from "./List";
+
+const App = () => {
+  const [text, setText] = useState("");
+  const [resourceType, setResourceType] = useState("posts");
+
+  const getItems = useCallback(
+    async (number) => {
+      console.log("getItems is being called!")
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/${resourceType}`
+      );
+      const responseJSON = await response.json();
+
+      return responseJSON;
+    },
+    [resourceType]              //Função só será recriada se houver alteração em resourceType
+  );
+
+  return (
+    <div>
+      <input value={text} onChange={(e) => setText(e.target.value)} />
+
+      <button onClick-{() => setResourceType("posts")}>Posts</button>
+      <button onClick-{() => setResourceType("comments")}>Comments</button>
+      <button onClick-{() => setResourceType("todos")}>Todos</button>
+
+      <List getItems={getItems} />
+    </div>
+  );
+};
+
+////////////////////////////////////////////////////////////////&&&
+HOOK: useLayoutEffect
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+Muito parecido com o useEffect
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////&&&
+
+VIDEO: 
+
+
+
+import React from 'react';
+
+export default function App() {
+
+  return (
+    <>
+    </>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------&&&
+ALURA:
+CRIANDO O SITE COM OS COMPONENTES CRIADOS NO REACT:
+
+Crie a pasta do componente dentro da pasta src:
+
+src
+  header
+    header.css
+    header.js
+  assets
+    icons
+      logo.svg
+
+
+-Dentro do arquivo header.js:
+OBS: troque as classes por className
+
+import React from 'react'
+import './header.css'
+import Logotipo from '../assets/icons/logo.svg'           *crie uma variavel para receber o caminho do arquivo
+
+export default function Header() {
+  return(
+
+    <section className="header-content">
+      <div className="center">
+        <div className="logo">
+          <a href="#">
+            <img src={Logotipo} />             *troque o caminho do src pela variavel criada e remova as aspas
+          </a>
+        </div>
+        <div className="menu">
+          <a href="#">HOME</a>
+          <a href="#">LOJA</a>
+          <a href="#">CONTATO</a>
+        </div>
+      </div>
+    </section>
+
+  )
+}
+
+-Dentro do arquivo App.js:
+
+import React from 'react'
+import './App.css'
+import Header from './header/header.js'         
+
+export default function App() {
+  return(
+    <>
+      <Header/>
+    </>
+  )
+}
+
+
+OBS: A cor de fundo do site seria alterado no arquivo App.css:
+
+body {
+  background-color: red;
+}
+
+
+
+
+

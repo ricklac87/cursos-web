@@ -1,0 +1,197 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+ul {
+    padding: 0px!important;
+}
+
+/* -----------------------
+PRIMEIRO CABEÇALHO
+ ----------------------- */
+
+.menu-principal {
+    width: 100%;
+    background-color: darkgray;
+    height: 60px;
+}
+
+main, .content {
+    margin: 0 auto;
+    width: 980px;
+    position: relative;
+}
+
+.logo {
+    float: left;
+    padding: 16px;
+    width: 70%;
+}
+
+.redes-sociais ul li {
+    margin-left: 25px;
+    display: inline-block;
+    float: left;
+    list-style: none;
+}
+/* outra versão
+.redes-sociais ul li {
+    padding: 16px;
+    display: inline-block;
+    float: right;
+    list-style: none; 
+}
+*/
+.redes-sociais {
+    width: 25%;
+    float: right;
+}
+
+
+/* -----------------------
+SEGUNDO CABEÇALHO
+ ----------------------- */
+
+.col-100 {
+    width: 100%;
+    float: left;
+    position: relative;
+}
+
+.header-2 {
+    width: 980px;
+    background-color: white;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.menu-urls {
+    height: 80px;
+    border-bottom: 3px solid gray;
+}
+
+.menu ul li {
+    margin-left: 15px;
+    display: inline-block;
+    color: gray;
+    height: 50px;
+}
+
+.menu ul li:hover {
+    border-bottom: 3px solid aquamarine;
+}
+
+.menu ul li a:hover {
+    color: aquamarine;
+}
+
+.menu ul li a {
+    color: aquamarine;
+    text-decoration: none;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.menu {
+    width: 70%;
+    float: left;
+}
+
+
+/* --------------------
+barra de busca
+-----------------------*/ 
+.busca {
+    text-align: center;
+    width: 30%;
+    float: right;
+}
+
+.busca input {
+width: 190px;
+height: 36px;
+padding: 12px;
+margin-top: 10px;
+border: 1px solid gray;
+background-image: url(../img/icone-search.png);
+background-repeat: no-repeat;
+background-position: 96%;
+}
+
+
+
+/*-------------------
+SLIDER JAVASCRIPT
+-------------------*/
+
+/*----------------
+botão esquerdo
+----------------*/
+button.slick-prev {
+    font-size: 0px;
+    border: none;
+    width: 25px;
+    height: 51px;
+    z-index: 9;
+    background-color: transparent;
+    position: absolute;
+    background-image: url(../img/botao-anterior.png);
+    top: 35%;
+    left: 14%;
+}
+
+/*--------------
+botão direito
+--------------*/
+button.slick-next {
+    font-size: 0px;
+    border: none;
+    width: 25px;
+    height: 51px;
+    z-index: 9;  /*para botar essa camada por cima*/
+    background-color: transparent;
+    position: absolute;
+    background-image: url(../img/botao-proximo.png);
+    top: 35%;
+    right: 14%;
+}
+
+.slick-list {
+    width: 100%!important;
+}
+
+.slick-initialized {
+    overflow: hidden; /*para remover o scroll lateral do slider*/
+}
+
+/*---------------
+botões no slider
+-----------------*/
+.slick-dots li button {
+    font-size: 0px;
+    border: 5px solid white;
+    width: 26px;
+    height: 26px;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slick-dots {
+    margin: 0 auto;
+    width: 50%;
+    position: absolute;
+    left: 50%;
+    top: 600px;
+}
+
+li.slick-active button {
+    background: aqua;
+}
+
+.slick-dots li {
+    padding-left: 10px;
+    display: inline-block;
+}

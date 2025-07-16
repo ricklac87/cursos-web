@@ -1,0 +1,356 @@
+area util: 1120px até 1440px (dividido em 12 colunas)     (1140px padrão wordpress)
+total: 1920px
+total 4k: 2560px
+
+banner que se estende na largura inteira da tela:
+desktop = largura 1920px / altura 600 ou 650
+mobile = largura 1080px / altura 1080 (formato quadrado) ou até 1200 
+
+slider: altura = 600px ou 650px
+
+padding top PC = 100px
+padding top Mobile = 50px
+padding left-right Mobile = 15px
+
+----------------------------------------------------------
+
+responsividade:
+PC = 1025px -> 1440px em diante       (ou 768px -> 991px)
+tablet = 641px -> 1024px              (ou 468px -> 767px)
+mobile = 0px (300px) -> 640px         (ou 0px -> 467px)
+
+wordpress:
+pc = 1140 a 1280px
+tablet retrato = 768 a 1024px
+celular em modo retrato = 320 a 767px
+
+PC = 12 colunas - margem 160px - gutter 32px - container 1120px      (ou margem 150px que daria container com 1140px)
+tablet = 8 colunas - margem 32px - gutter 16px (ou 24px) - container 680px
+mobile = 4 colunas - margem 16px - gutter 16px - container 358px
+
+layout grid rows - count 1000 - type top - height 8 - offset 0 - outer 8
+
+-----------------------------------------------------
+
+Fontes design:
+
+titan one, poetsen, rubik, akira expanded, forever freedom, humane, lisbeth, la luxes, noir pro, carters, nimbus, eurostile, dharma gothic, pressio, abolition, vinyl, antarctican, avenir, (não tem no google fonts)
+
+
+-----------------------------------------------------
+
+Tamanhos fonte:
+barra de navegação: 14px a 20px           open sans 18px 700-bold
+titulo header: 48px a 60px bold
+subtitulo header: 16px a 24px 
+altura botão: 36px a 58px
+texto botão: 14px a 20px
+
+altura barra de navegação PC: 72px
+altura barra de navegação mobile: 72px
+
+titulo texto grande: 38px a 52px bold
+titulo texto pequeno: 20px a 32px bold
+subtitulo: 16px a 22px bold
+texto: 16px a 22px (18px melhor)
+extra / leia mais: 13,5px a 16px
+legenda imagem: 18px italic
+
+titulo footer links: 14 a 18px bold
+footer links: 14px a 18px
+trademark: 12px a 14px
+
+configuração alternativa:
+PC = heading 96px - button e subtitulo 32px
+tablet = heading 72px - button e subtitulo 28px
+mobile = heading 56px - button e subtitulo 24px
+
+-----------------------------------------------------------
+
+FONTES WEB:
+
+fonte sem serifa extras: fonte principal, open-sans/helvetica/verdana/roboto/calibre/montserrat, arial, sans-serif
+fonte com serifa extras: fonte principal, times, serif
+
+TOP 10:
+Blinker, Georama, Exo, Cairo, Lilita One, Kufam, Source sans pro, Asap condensed, Signika negative, Rubik
+
+
+Melhores fontes:
+plus jakarta sans, manrope, calistoga, mulish, yaldevi, anybody, bakbak one, kufam, molengo, georama, league gothic, atkinson, anek, blinker,
+encode sans, russo one, chivo, catamaran, yanone kaffeesatz, lilita one, asap condensed, fira sans, public sans, maven pro, signika negative,
+exo, barlow, cairo, cabin, rubik, ibm plex sans, inter, prompt, source sans pro, ubuntu, pt sans, poppins
+
+
+Grossa/reta/sans: 
+plus jakarta sans, manrope, mulish, yaldevi, anybody, farro, bakbak one, mohave, nobile, share, georama, kufam, league gothic, big shoulders display,
+atkinson, anek, sarala, antonio, mada, blinker, encode sans, russo one, saira, fira sans, public sans, maven pro, barlow, rubik, ibm plex sans,
+archivo, inter, work sans, prompt, noto sans, source sans pro, ubuntu, Passion one, oswald, montserrat, open sans, roboto, pt sans, poppins
+
+Fina/reta/sans:
+tauri, voces, doppio one, shippori antique, convergence, molengo, metrophobic, mukta, news cycle, cuprum, catamaran, overpass, cabin, arimo, krona one.
+dm sans, raleway, nunito sans, pathway gothic one, lato, 
+
+Redondas/Arredondadas:
+dongle, thasadith, balsamiq sans, K2D, baloo, mitr, yanone kaffeesatz, lilita one, asap condensed, signika negative, titan one, concert one, 
+overlock, 
+
+Blog/jornal: 
+calistoga, texturina, cantora one, strait, voces, shippori antique, andika, spinnaker, miriam libre, telex, economica, atkinson, niramit, basic,
+bench nine, antonio, bai jamjuree, sansita, pragati narrow, viga, baloo, news cycle, mitr, secular one, cuprum, francois one, chivo, catamaran, 
+asap condensed, fira sans, public sans, maven pro, fjalla one, anton, el messiri, oswald, 
+
+Descontraída:
+truculenta, mouse memoirs, bubblegum sans, league gothic, rowdies, yanone kaffeesatz, lilita one, signika negative, anton, titan one, overlock,
+fugaz one
+
+Leve/fina/feminina: 
+ruluko, farsan, kite one, strait, fresca, belleza, 
+
+Quadrada/tech/banco/corporativa:
+offside, recursive, anaheim, prosto one, genos, miriam libre, alumni sans, michroma, bai jamjuree, monda, saira, exo, barlow, cairo, Space grotesk, 
+
+Bizarras:
+stalinist one, passero one, revalia, sigmar, keania one, bruno ace, denk one, rum raisin, chango, monomaniac one, zen dots, kelly slab, chau philomene one
+yusei magic, racing sans one, shrikhand, 
+
+Maiúsculas:
+staaliches, bungee, bebas neue, 
+
+Com serifa:
+slabo, merriweather, cormorant garamond, eb garamond, libre bodoni, bodoni moda, martel, average, shippori mincho, brawler, xanh mono, 
+gentium book basic 
+
+futura, century expanded, times new roman, helvetica, circular std (não tem no google fonts)
+
+8 melhores fontes para UI:
+Inter, Space grotesk, work sans, dm sans, open sans / manrope, nunito sans, roboto, poppins
+satoshi, supreme, switzer, geist (não tem no google fonts)
+
+-----------------------------------------------------
+
+email marketing: 600 largura x 1200 altura
+
+Email marketing fontes:
+Open Sans, Lato, Montserrat, Barlow, Poppins (sem serifa)
+Playfair Display, Eb Garamond, Forum, Caudex (com serifa)
+
+Outras fontes (não estão no google fonts):
+Museo Sans Rounded, Quicksand, CoFo Sans, Abolition, Sofia Pro, Graphik, FS Me, Lil Grotesk (sem serifa)
+Palatino, Caponi, Ratio Modern (com serifa) 
+
+-----------------------------------------------------
+
+instagram - post stories ou igtv: 1920px altura x 1080px largura - duração até 60 segundos
+instagram - reels: 1920px altura x 1080px largura - de 15 a 90 segundos de duração - Com relação ao tamanho que o Reels ocupa no feed, é recomendável usar margens de segurança de 390 pixels na parte inferior e 250 pixels na parte superior para não perder informações relevantes da imagem.
+instagram - capa do reels: 1350px altura x 1080px largura
+instagram - post para feed: 1080px x 1080px
+instagram - post horizontal para feed (paisagem): 608px altura x 1080px largura
+instagram - post vertical para feed (retrato): 1350px altura x 1080px largura
+
+facebook - post story: 1920px altura x 1080px largura
+facebook - post para feed: 1080px x 1080px
+facebook - post horizontal para feed (paisagem): 608px altura x 1080px largura
+facebook - post vertical para feed (retrato): 1350px altura x 1080px largura
+facebook - imagem com link: 630px altura x 1200px largura
+facebook - capa para evento: 628px altura x 1200px largura
+facebook - foto de capa para perfil: 828px altura x 315px largura
+facebook - foto de capa para grupos: 856px altura x 1640px largura
+
+twitter - capa do perfil: 500px altura x 1500px largura
+twitter - imagem do tweet: 900px altura x 1600px largura
+
+linkedin - capa do perfil pessoal: 396px altura x 1584px largura
+linkedin - capa do perfil da empresa: 191px altura x 1128px largura
+linkedin - post no feed: 628px altura x 1200px largura
+linkedin - post de video no modo retrato: 1900px altura x 1080px largura
+linkedin - post de video no modo paisagem: 1080px altura x 1920px largura
+
+youtube - capa do canal: 1440px altura x 2560px largura
+youtube - foto de perfil: 500px altura x 500px largura
+youtube - thumbnails: 1080px altura x 1920px largura
+
+O TikTok aceita diversos tamanhos em suas publicações, mas o padrão dele é o mesmo dos stories, 1080 de largura por 1920 de altura. 
+
+----------------------------------------------------
+
+Cores:
+
+brand color: (botoes, links, nav ativo, icones)  
+texto:
+background:
+borda:
+botoes secundários:
+supporting color: (mensagem de erro = red / confirmação = green / alerta = orange ou yellow / info neutra = blue)
+
+branco 1: #FAFFFF
+branco 2: #F8FDFD
+branco 3: #ECF2F3
+branco 4: #F6F7F9
+branco 5: #F0ECE8
+branco 6: #DDD4DE
+branco 7: #F5F3F1
+branco 8: #F8F5F8
+branco 9: #F4F6E1
+branco 10: #EDEDED
+branco 11: #FCFBFF
+
+preto 1: #131313
+preto 2: #101211
+preto 3: #050407
+preto 4: #010E12
+preto 5: #111111
+preto 6: #020202
+preto 7: #111111
+preto esverdeado: #0A1817
+
+epic: #121212
+nerdbunker: #1E1E26, #18181E, #282830
+cinza 1: #C2CDCD
+cinza 2: #A8AFB0
+cinza 3: #1C1C1C
+cinza 4: #313942
+cinza 5: #272D27
+cinza 6: #313630
+cinza 7: #D5D5D5
+cinza 8: #1C1D20
+
+rosa 1: #F25690 
+rosa 2: #E4427C
+rosa 3: #DC4B79
+rosa 4: #EC4279
+rosa 5: #FC0063
+rosa 6: #FB63AD
+rosa 7: #EBB4C6
+rosa 8: #DA4363
+rosa 9: #FEAAFE
+rosa 10: #FBE7E7
+rosa 11: #FFBDB7
+rosa 12: #EB2F96
+rosa e azul: #F36CAF, #F7C7E2, #2ADBFC, #B7E7F8
+
+vermelho santander: #CC0000
+vermelho 1: #FD1718
+vermelho 2: #FC3A5C
+vermelho 3: #BE2C2A
+vermelho/rosa 1: #F82C5B
+vermelho/rosa 2: #8D2339
+
+laranja 1: #FE3E00
+laranja 2: #FE4917
+laranja 3: #F79E49
+laranja 4: #EC7312
+laranja 5: #F94B08
+laranja 6: #F6A53A
+laranja 7: #FDB145
+laranja 8: #FF6635
+laranja 9: #FB7402
+laranja + preto + branco: #FDB143, #020202, #F8F7F3
+
+amarelo 1: #FFDF10
+amarelo 2: #FAC743
+amarelo 3: #FDB60C
+amarelo 4: #F8BB00
+dourado 1: #C6A524
+dourado 2: #FADF4A
+dourado 3: #FAD64A
+amarelo + azul + preto + branco = #168EB2, #FFBB00, #0C0C0C, #FFFFFF
+amarelo + preto + branco + cinza = #FEC800, #000000, #EFEFEF, #151515, #3B3B3B
+
+verde lima: #BBDB27
+verde 1: #008600
+verde 2: #2CA01C
+verde 3: #A9FE5E
+verde 4: #75826B
+verde 5: #247A5D
+verde 6: #BCE44D
+verde 7: #BCEDD7
+verde 8: #DEE54D
+verde 9: #C3FC00
+verde 10: #243A21
+verde 11: #254B57
+verde 12: #00A991
+verde + verde + preto + branco: #1E8283, #EFFFFF, #FFFFFF, #322D4E
+verde + roxo + branco: #E8FF70, #A050CF, #4A32BC, #F8F8F8
+verdes/azuis + laranja: #046C62, #EDFBFE, #FB9E5F
+
+azul marinho escuro: #040A12
+azul marinho + laranja: #001018, #002733, #FE7900
+azul marinho + marrom: #0B0E16, #292629
+azuis esverdeados: #1B8381, #00A38F
+azuis escuros: #0D2152, #050C1C
+azuis escuros + verdes + vermelho: #191E4F, #161B43, #129B61, #54ECAA, #FD1718
+azul 1: #0078FF
+azul 2: #141527
+azul 3: #347AFE
+azul 4: #02A4D3
+azul 5: #747ACF
+azul 6: #5B46FB
+azul 7: #1F0E4F
+azul 8: #B3C3FD
+azul 9: #6C9FC4
+azul 10: #168EB2
+azul 11: #191D2F
+azul 12: #312DFF
+azul 13: #01041A
+azul 14: #5DFED2
+azul 15: #081C3C
+azul 16: #196BDE
+azul 17: #50F8CE
+azul 18: #2166FF
+azuk 19: #2B7FFF
+
+roxos: #6C5C89, #211F2D, #705D94, #BA95EB
+roxo 1: #BB16D2
+roxo 2: #8734B4
+roxo 3: #613DFE
+roxo 4: #604DD9
+roxo 5: #310632
+roxo 6: #C2A2D0
+roxo 7: #8A75C0
+roxo 8: #5700EF
+roxo 9: #03000F
+roxo 10: #27164F
+roxo 11: #832A99
+roxo 12: #8133F1
+roxo 13: #B78AF7
+
+marrom 1: #9D6E4E
+marrom 2: #63291D
+marrom 3: #CE8A5C
+marrom 4: #AC5232
+marrom 5: #373232
+
+
+-----------------------------------------------------
+
+favicon:
+wordpress tamanho sugerido 512 x 512px
+
+
+----------------------------------------------------
+
+
+https://picsum.photos/200/300
+https://picsum.photos/id/237/200/300
+
+[wpdreams_ajaxsearchlite]
+
+[fibosearch]
+
+Ajax Search Lite
+ElementsKit Lite
+Happy Elementor Addons
+Smush
+
+
+tablet largura 768
+mobile largura 360
+
+
+
+
+
+
+
+

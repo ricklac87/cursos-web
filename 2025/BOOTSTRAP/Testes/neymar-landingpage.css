@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap');
+
+/* para zerar as configurações do google chrome*/
+*{
+    margin: 0%;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    font-family: "Oswald";
+}
+
+/*outra forma, de outro video
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Oswald";
+}
+*/
+
+.background-neymar{
+    background: rgba(3,0,12,0.7) url(/image/imagem.png);
+    background-blend-mode: darken;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+    max-width: 100%
+}
+

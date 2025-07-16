@@ -1,0 +1,1927 @@
+PARAMETROS INICIAIS PARA LIMPAR CONFIGURAÇÕES:
+
+Criar um arquivo chamado reset.css e importá-lo dentro da tag head:
+<head>
+    <title>TITULO</title>
+    <link rel="stylesheet" href="reset.css">   *tem que vir antes do estilo CSS
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+Dentro do arquivo reset.css:
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+  background: #000;
+  font-family: var(--font_principal);
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+-------------------------------------------------------------&&&
+
+VARIAVEIS:
+
+Criar um arquivo vars.css para declararmos as variaveis usadas:
+
+:root {
+    /* FONT */
+    --font-dm--sans: "DM Sans", sans-serif;
+}
+
+
+Chamando a variavel:
+body {
+    font-family: var(--font-dm--sans);
+}
+
+
+------
+
+
+-Criando variaveis padrões para cores e fontes usadas no site:
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
+@font-face {
+    font-family: 'Bebas';
+    src: url('../fontes/Bebas_Neue.otf') format('opentype');
+    font-weight: normal;
+}
+
+:root {
+    --cor_principal: red;
+    --cor_secundaria: orange;
+    --cor_texto: dark-gray;
+    --cor_link: purple;
+
+    --fonte_padrao: Arial, Verdana, Helvetica, sans-serif;
+    --fonte_destaque: 'Bebas Neue', cursive;
+    --fonte_oswald: 'Oswald', sans-serif;
+}
+
+
+
+
+-------------------------------------------------------------&&&
+SECTIONS E DIVS:
+
+Para cada div e section:
+
+.section {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    flex-direction: column;
+
+    background-color:white;
+    border-radius: 8px;
+    padding:4px 8px;
+    margin-top: 10px;
+
+    gap:14px;
+
+    color:#b3b3b3;
+    font-weight: 600;
+    font-size:14px;
+}
+
+.div{
+
+}
+
+
+.main-container {
+    max-width: 80vw;        *largura ocupa 80% da tela
+    height: 100vh;          *altura ocupa 100% da tela
+}
+
+
+
+
+@media screen and (max-width: 767px) {
+...
+}
+
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+...
+}
+
+
+ALURA:
+
+@media screen and (max-width: 1015px) {
+...
+}
+
+O arquivo media-queries.css precisa ser incorporado no final, após os outros arquivos css:
+
+<head>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="vars.css">
+    <link rel="stylesheet" href="main-content.css">
+    <link rel="stylesheet" href="media-queries.css">
+</head>
+
+
+
+-------------------------------------------------------------
+
+<!-- CSS CURSO
+
+////    INCLUSÃO DE CSS:
+&&&     
+        PARA INCLUIR ARQUIVO CSS EXTERNO DENTRO DA TAG HEAD - ESTILO EXTERNO
+        <link rel="stylesheet" href="NomeDoArquivo.css">
+
+        ////
+
+        PARA INCLUIR CÓDIGO CSS DENTRO DA TAG HEAD - ESTILO INTERNO
+        <head>
+            <style>
+                seletor {
+                    propriedade: valor;
+                }
+            </style>    
+        </head>
+
+        ////
+        
+        PARA INCLUIR CÓDIGO CSS DENTRO DA TAG NO BODY - ESTILO INLINE
+        <body>
+            <tag style="propriedade: valor;"></tag>
+        </body>          
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        
+////    SELETORES:    
+&&&
+        .CLASSE {
+            propriedade: valor;
+        }
+
+        #ID {
+            propriedade: valor;
+        }
+
+        TAG {
+            propriedade: valor;
+        }
+
+        Exemplo:
+        body {
+            color: red;
+        }
+
+        ///
+
+        -Para mais de um elemento, separar por vírgulas:
+
+        Tag1 , Tag2 , Tag3 {
+            .....
+        }
+
+        ///
+
+        -Para elementos pai / filho, separar por espaço e colocar em ordem hierarquica:
+
+        container div form input {
+            ....
+        }
+
+        ///
+
+        -Para selecionar elementos específicos:
+
+        div#texto {         *para selecionar as divs com id "texto"
+            ....
+        }
+
+        div.texto {         *para selecionar as divs com a classe "texto"
+            ....
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+////    RESETAR CONFIGURAÇÕES PADRÕES DO NAVEGADOR
+&&&     
+        * {
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+        }
+
+        O * simboliza todas as tags e elementos da página
+
+        OBS: Melhor incorporar um arquivo reset.css
+
+        /////////////////////////////////////////////////////////////////////////////////////
+        
+////    COR TEXTO:          
+&&&       
+        color: red;                            *cor do texto
+        color: #ffffff;                      *hexadecimal
+        color: rgb(255,0,0);                 *rgb(red, green, blue)
+        color: rgba(255 , 0 , 0 , 0.5);      *transparência de 0 a 1:   rgba(red, green, blue, transparência)
+
+        /////////////////////////////////////////////////////////////////////////////////////
+        
+////    TEXTO:          
+&&&       
+
+        letter-spacing: 5px;                 *espaçamento entre as letras
+        word-spacing: 5px;                   *espaçamento entre as palavras
+
+        line-height: 1px;                    *espaçamento entre as linhas usando pixels como tamanho
+        line-height: 1;                      *espaçamento entre as linhas usando 1 linha como tamanho
+
+        text-align: center;                  *alinhamento do texto no centro
+        text-align: left;                    *alinhamento do texto na esquerda
+        text-align: right;                   *alinhamento do texto na direita
+        text-align: justify;                 *alinhamento do texto justificado
+
+        text-align-last: right;              *alinhamento da última linha do texto à direita    
+        text-align-last: left;               *alinhamento da última linha do texto à esquerda  
+        text-align-last: center;             *alinhamento da última linha do texto no centro                 
+
+        direction: rtl;                      *direção do texto (e alinhamento) da direita para a esquerda
+        direction: ltr;                      *direção do texto (e alinhamento) da esquerda para a direita
+
+        white-space: nowrap;                 *o texto não terá quebra de linha
+        white-space: normal;                 *valor padrão com quebra de linha
+
+        overflow: visible;                   *valor padrão. Mostra tudo, inclusive o que estiver de fora de um container
+        overflow: hidden;                    *para ocultar o texto transbordando (ao usar o white-space:nowrap)
+        overflow: scroll;                    *para adicionar uma barra de rolagem/scroll para o texto na parte de baixo
+        overflow: auto;                      *para adicionar uma barra de rolagem/scroll caso seja necessário
+
+        word-break: break-all;               *adiciona quebra de linha ao texto onde for necessário (inclusive no meio de uma palavra)
+        word-break: normal;                  *valor padrão. Não muda nada
+
+        unicode-bidi: bidi-override;         *Para colocar de trás para frente certos idiomas (japonês, árabe...)
+
+        text-decoration: none;               *para remover sublinhado de links
+        text-decoration: overline;           *linha em cima do texto
+        text-decoration: line-through;       *texto riscado
+        text-decoration: underline;          *texto sublinhado
+
+        text-transform: none;                *texto sem alteração
+        text-transform: uppercase;           *texto em letras maiúsculas
+        text-transform: lowercase;           *texto em letras minúsculas
+        text-transform: capitalize;          *primeira letra de todas as palavras com letra maiúscula
+
+        text-indent: 30px;                   *espaço de indentação/recuo
+
+        columns: 2;                          *para separar o texto em colunas
+        columns: 100px 3;                    *separado em 3 colunas contendo 100px de largura
+        -webkit-columns: 2;                  *para outros navegadores
+        -moz-columns: 2;                     *para o mozilla firefox
+
+        column-gap: 10px;                    *distância entre as colunas
+        column-rule: 1px outset red;         *para inserir uma linha entre as colunas 
+        column-rule: 1px inset red;          *para inserir uma linha entre as colunas 
+
+        text-shadow: 2px 2px 2px black;      *Sombra: (distanciahorizontal, distanciavertical, blur, cor)
+        text-shadow: 2px 2px 2px black , -2px -2px 2px black;      *2 sombras. Para adicionar mais é só separar por virgulas
+
+        ////
+
+        -TEXTO COM GRADIENTE DENTRO:
+        background: linear-gradient(to bottom, yellow, orange);
+        color: transparent;                          *texto invisível
+        background-clip: text;                       *para que seja mostrado somente a área do texto
+        -webkit-background-clip: text;               *para navegadores que não suportem o background-clip: text é
+                                                      preciso usar o vendor prefix -webkit
+
+        ////
+
+        -Para mostrar somente algumas linhas de texto:
+        VIDEO: https://www.youtube.com/watch?v=srzsj3xtHMM
+
+        .texto {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;                   *só mostrará 3 linhas de texto
+            overflow: hidden;
+        }
+
+        ////
+
+        Importando fontes da web:
+
+        No arquivo de estilo ou reset.css:
+
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap');
+
+        *{
+            font-family: "Oswald", sans-serif;
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    PSEUDOELEMENTOS
+&&&     
+        nomedatag::first-letter {           *para modificar a primeira letra de um texto (p, h1, div, etc...)
+            color: red;                     
+        }
+
+        nomedatag::first-line {             *para modificar a primeira linha de um texto (p, h1, div, etc...)
+            color: red;                     
+        }
+
+        ::selection {
+            background-color: yellow;       *para modificar o texto selecionado
+        }
+
+        ::-moz-selection {                  *para usar no mozilla firefox
+            ....
+        }
+
+        ////
+
+        nomedatag::before {                  *Pseudoelemento para inserir um conteúdo antes da tag
+            content: "Exemplo"               *para inserir um texto como conteúdo
+            content: url(imagem.png)         *para inserir uma imagem como conteúdo
+            content: url(https://...)        *para inserir uma imagem de um site como conteúdo
+
+            color: red;                      *para mudar a cor de texto do conteúdo
+            width: 50px;                     *para mudar a largura do conteúdo
+            height: 50px;                    *para mudar a altura do conteúdo
+        }
+
+        nomedatag::after {                   *Pseudoelemento para inserir um conteúdo depois da tag
+            .....                            *as mesmas regras do ::before se aplicam ao ::after
+        }
+
+        nomedatag#nomedoID::before {         *para inserir conteúdo apenas na tag com um id específico 
+            ....
+        }
+
+        nomedatag.nomedaclasse::before {     *para inserir conteúdo apenas na tag com uma classe específica
+            ....
+        }
+
+        ///////////////
+
+////    PSEUDOCLASSE:
+&&&
+
+        -:has():
+
+        div:has(p) {              *para selecionar somente divs que tenham tags <p> como filhos
+            ....
+        }
+
+        div:has(.texto) {         *para selecionar somente divs que tenham a classe (texto)
+            ....
+        }
+
+        Obs: O firefox talvez não seja possível usar pois ainda está em fase de testes (12-2023)
+
+        ////
+
+        -:is():
+
+        div h2, div p, div button, div .texto {        *Versão completa
+            ....
+        }
+
+        div :is(h2, p, button, .texto) {               *versão resumida
+            ....
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+////    FONT / FONTE DE TEXTO:
+&&&     
+        font-family: Arial;                                                 *apenas 1 fonte
+        font-family: Roboto, Arial, "Times New Roman", sans-serif;          *mais de 1 fonte. Usar aspas em fontes com espaço
+        font-size: 10pt;                                                    *tamanho da fonte geralmente em pt e não px
+        font-size: clamp(1rem, 10vw, 2rem);                                 *texto ocupa 10% com o minimo de 1rem e maximo de 2rem
+        font-weight: bold;                                                  *Tipos: bold, bolder, lighter e normal
+        font-style: italic;                                                 *Tipos: italic, oblique e normal
+
+        font-variant: small-caps;           *todas as letras em maiúsculas (inclusive a primeira letra que fica maior do que as outras)
+
+        PARA USAR UMA FONTE PRÓPRIA:
+        @font-face {
+            font-family: 'Roboto Slab';
+            src: url('../fonts/robotoslab-regulart.woff') format('woff');
+        }
+
+        PARA IMPORTAR UMA FONTE:
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
+        div {
+            font-family: 'Oswald', sans-serif;
+        }
+        </style>
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+////    BACKGROUND:
+&&&      
+        background: red url(nomedoarquivo.jpeg) no-repeat 0px 0px / 200px;    (cor, imagem, repeat, positionX, positionY / tamanho)
+
+        background-color: red;
+        background-color: #ffffff;
+        background-color: rgb(255, 0, 0);
+        background-color: rgba(255, 0, 0 , 0.5);
+
+        background: linear-gradient(to top, red, yellow);                        *gradiente linear para cima
+        background: linear-gradient(to right, red, yellow);                      *gradiente linear para direita
+        background: linear-gradient(to bottom, red, yellow);                     *gradiente linear para baixo
+        background: linear-gradient(to left, red, yellow);                       *gradiente linear para esquerda
+        background: linear-gradient(45deg, red, yellow);                         *direção de 45 graus
+        background: linear-gradient(to right, red, yellow, blue);                *3 cores de gradiente
+        background: linear-gradient(to right, red, yellow, blue, green);         *4 cores de gradiente
+        background: linear-gradient(45deg, red 0%, yellow 70%);                  *vermelho começa em 0% e amarelo em 70%
+        background: radial-gradient(red, yellow, blue);                          *gradiente radial
+        background: radial-gradient(circle, red, yellow, blue);                  *para indicar que o gradiente será um círculo perfeito
+        background: repeating-linear-gradient(to top, red 0%, yellow 30%);       *gradiente que repete
+
+        background: color-mix(in hsl , red , black 20%);                          *mistura com gradiente
+		  
+		  background: radial-gradient(at center, red, yellow);                      *gradiente circular no centro com 2 cores
+		  background: radial-gradient(circle, red, blue, black);                    *gradiente circular co centro com 3 cores
+		  background: radial-gradient(circle, red 20%, blue 40%, black 60%);        *gradiente circular com porcentagem para cada cor
+
+		  background: radial-gradient(farthest-corner at 40px 40px, red, yellow);   *gradiente circular no canto usando pixels
+		  background: radial-gradient(farthest-corner at 100% 100%, red 20%, blue 40%, black 60%);    *com 3 cores e no canto
+		  
+		  background: radial-gradient(farthest-corner at 0 0, red, yellow);         *gradiente circular no topo esquerdo
+		  background: radial-gradient(farthest-corner at 0 100%, red, yellow);      *gradiente circular na base esquerda
+		  background: radial-gradient(farthest-corner at 100% 0, red, yellow);      *gradiente circular no topo direito
+		  background: radial-gradient(farthest-corner at 100% 100%, red, yellow);   *gradiente circular na base direita
+		  
+		  background: radial-gradient(circle 300px at 80% 20%, blue, red);          *gradiente circular de tamanho 300px a 80% da esquerda e 20% do topo
+		  
+ 
+        background-image: url(nomedoarquivo.jpeg); 
+        background-image: url(nomedoarquivo1.jpeg), url(nomedoarquivo2.jpeg);     *para 2 imagens de background
+        background-image: url(https://picsum.photos/1200/800);
+
+        background-size: contain;
+        background-size: cover;
+        background-size: 50%;
+        background-size: 400px;
+        background-size: 400px 400px;   (largura e altura)
+
+        background-repeat: no-repeat;
+        background-repeat: repeat;
+        background-repeat: repeat-x;     *para repetir horizontalmente
+        background-repeat: repeat-y;     *para repetir verticalmente
+
+        background-position: center;
+        background-position: 0px 0px;
+
+        background-attachment: fixed;     *para que o background fique fixo ao rolar a página
+        background-attachment: scroll;    *valor padrão
+
+        background-clip: border-box;     *para que o background comece no início da borda
+        background-clip: padding-box;     *para que o background comece no início do padding
+        background-clip: content-box;     *para que o background comece no início do conteúdo interno
+
+        box-shadow: 2px 2px 2px black;      *Sombra: (distanciahorizontal, distanciavertical, blur, cor)
+        box-shadow: 2px 2px 2px black , -2px -2px 2px black;      *2 sombras. Para adicionar mais é só separar por virgulas
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+////    TAMANHO:
+&&&     
+        width: 100px;                           *largura
+        width: clamp(100px, 50%, 200px);        *largura ocupa 50% com o minimo de 100px e maximo de 200px
+        min-width: 50px;                        *largura mínima
+        max-width: 150px;                       *largura máxima
+        width: max(70%, 100px);                 *width = 70%  e  min-width = 100px
+
+        width: clamp(200px, 40%, 400px);        *largura ocupa 40% com minimo de 200px e maximo de 400px
+        width: clamp(20rem, 30vw, 70rem);
+        width: clamp(10vw, 20em, 100vw);
+
+        height: 100px;                          *altura
+        height: clamp(100px, 50%, 200px);       *altura ocupa 50% com o minimo de 100px e maximo de 200px
+        min-height: 50px;                       *altura mínima
+        max-height: 150px;                      *altura máxima
+        height: max(70%, 100px);                *height = 70%  e  min-height = 100px
+
+        width: unset;                           *para herdar do pai
+        height: unset;                          *para herdar do pai
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+////    UNIDADES DE MEDIDA:
+&&&
+        px = unidade em pixels                  *16px é o tamanho padrão da tag <p> nos navegadores
+        pt = unidade em pontos (para texto)     *1pt = 1,3333px  / 20pt = 26,6666px
+        ex = unidade relativa ao tamanho da letra x da fonte escolhida (font-family) 
+        % = unidade em porcentagem da janela
+        pc = unidade em paicas                  *1pc = 16px
+
+        rem = unidade relativa ao font-size do elemento raiz (que é o <html>) 
+        É melhor usar rem em textos. Para converter px em rem é só dividir por 16
+
+        em = unidade relativa ao font-size do elemento anterior (elemento pai)
+             Exemplo: se o elemento A tem font-size:10px; e o elemento B tem font-size:2em; , então o elemento B tem 20px
+             Exemplo: se o elemento A tem font-size:10px; e o elemento B tem font-size:1em; , então o elemento B tem 10px
+             Exemplo: se o elemento A tem font-size:10px; e o elemento B tem font-size:0.5em; , então o elemento B tem 5px
+
+        vw = unidade relativa a largura da janela (1vw = 1% da janela / 100vw = 100% da janela)
+        width: 50vw; = width: 50%; 
+        OBS: Não é bom para largura de containers pois desconsidera o tamanho das barra de rolagem
+
+        vh = unidade relativa a altura da janela (1vh = 1% da janela / 100vh = 100% da janela)
+        height: 50vh; = height: 50%;
+        OBS: Não é bom para mobile 
+
+        dvw e dvh = dinamic viewport      *dvh é melhor para mobile
+        svw e svh = small viewport        *svh é melhor para mobile
+        lvw e lvh = large viewport        *lvh é melhor para mobile
+
+        vmin = unidade relativa a 1% da largura ou altura da janela, o que for menor
+        vmax = unidade relativa a 1% da largura ou altura da janela, o que for maior
+
+        cm = unidade em centimetros (usar somente em material impresso)   *1cm = 37,7952px
+        mm = unidade em milimetros (usar somente em material impresso)    *1mm = 3,7795px
+        in = unidade em polegadas (usar somente em material impresso)    *1in = 2,54cm = 96px
+
+
+        ALTURA E LARGURA TOTAL DE CONTAINERS PARA MOBILE:
+        Para largura de um container ou wrapper é melhor usar width: 100%
+        Para altura de uma container ou wrapper é melhor usar min-height: 100svh;
+        VIDEO: https://www.youtube.com/embed/7judyqwqmKo?autoplay=1
+        VIDEO: https://www.youtube.com/embed/ru3U8MHbFFI?autoplay=1
+        VIDEO: https://www.youtube.com/embed/veEqYQlfNx8?autoplay=1
+
+        
+        /////////////////////////////////////////////////////////////////////////////////////
+
+////    POSITION / POSIÇÃO X e Y / Z-INDEX:
+&&&     
+
+        position:static;             *valor padrão. Para posicionar de acordo com o elemento anterior, desde que este tenha display:block     
+        position:absolute;           *É possível determinar uma posição (top, left) para um elemento com relação ao container
+        position:relative;           *Para posicionar dentro do container de acordo com o elemento anterior (desde que tenha position:static)
+        position:fixed;              *Para posicionar de acordo com a janela do nevagador (tamanho de tela) e deixar fixo
+
+        z-index: 1;                  *Para mudar a camada de um elemento (trazer para frente ou para trás). A camada da frente terá o valor 1 e a de trás terá o valor 2.
+
+        top: 10px;                   *posição ou distância com relação ao topo
+        left: 10px;                  *posição ou distância com relação à esquerda
+        right: 10px;                 *posição ou distância com relação à direita
+        bottom: 10px;                *posição ou distância com relação à base
+
+        inset: 10px;                 *posição ou distância com relação ao topo, esquerda, direita e base
+                                     *top: 10px , right: 10px , bottom: 10px , left: 10px
+
+        float: left;                 *para indicar que o elemento será flutuante para a esquerda de outros elementos
+        float: direita;              *para indicar que o elemento será flutuante para a direita de outros elementos
+
+        .fix {                       *foi criada a classe fix para ser usada em elementos em que não queira que seja aplicado o float
+            clear: left;             *Para que o elemento não seja afetado pelo float:left
+            clear: right;            *Para que o elemento não seja afetado pelo float:right
+            clear: both;             *Para que o elemento não seja afetado pelo float:left e float:right
+        }
+
+        overflow: visible;           *valor padrão. Mostra tudo, inclusive o que estiver de fora de um container
+        overflow: hidden;            *para ocultar o que está transbordando
+        overflow: scroll;            *para adicionar uma barra de rolagem/scroll para ver a parte de baixo
+        overflow: auto;              *para adicionar uma barra de rolagem/scroll caso seja necessário
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+////    BORDER / BORDA:
+&&& 
+        border: 1px solid red;      (width style color)
+        border: 1px dotted red;
+        border: 1px dashed red;
+        border: 1px double red;
+        border: 1px groove red;
+        border: 1px outset red;
+        border: 1px hidden red;
+        border: 1px none red;
+
+        border-top: 1px solid red;
+        border-left: 1px solid red;
+        border-bottom: 1px solid red;
+        border-right: 1px solid red;
+
+        border: 5px 3px;                                   *5px no topo/base e 3px na esquerda/direita
+        border-inline: 5px;                                *5px na esquerda e direita
+        border-block: 5px;                                 *5px na topo e na base
+
+        border-width: 1px;
+        border-style: solid;
+        border-color: red;
+
+        border-radius: 13px;
+        border-radius: 100%;
+        border-radius: 0px 13px 5px 20px;    (sup-esq , sup-dir , inf-dir , inf-esq)
+
+        border-top-width: 1px;
+        border-left-width: 1px;
+        border-bottom-width: 1px;
+        border-right-width: 1px;
+
+        border-top-style: solid;
+        border-left-style: solid;
+        border-bottom-style: solid;
+        border-right-style: solid;
+
+        border-top-color: red;
+        border-left-color: red;
+        border-bottom-color: red;
+        border-right-color: red;
+
+        border-image: url(nomedoarquivo.png) 30 round;      *https://www.youtube.com/watch?v=dfcqbCl4DXE&list=PLx4x_zx8csUi47Bnugpk78nqJN6rYvEnV&index=11
+        border-image: url(nomedoarquivo.png) 30 stretch;
+
+        outline: 1px solid red;                                   *borda externa, porém não ocupa espaço, diferentemente do border
+        outline-width: 1px;                                       *Obs: O border fica em cima do outline
+        outline-style: solid;
+        outline-color: red;
+        outline-offset: 5px;                                      *borda interna (dentro do outline)
+        outline-radius: NÃO FUNCIONA;
+
+        box-shadow: 2px 2px 2px black;                            *Sombra: (distanciahorizontal, distanciavertical, blur, cor)
+        box-shadow: 2px 2px 2px black , -2px -2px 2px black;      *2 sombras. Para adicionar mais é só separar por virgulas
+
+        -Para colocar degradê na cor da borda:
+        VIDEO: https://www.youtube.com/watch?v=l_MKNuzVAh4
+
+        HTML:
+        <section id="borda">
+            <h1 id="caixa">TEXTO DE EXEMPLO</h1>
+        </section>
+
+        CSS:
+        #borda {
+            border: 5px solid white;
+            padding: 2rem;
+            border-image: linear-gradient(to bottom, turquoise, purple) 1;       *podem ser usado os números 1, 2, 3 ou 4 no final (tanto faz)
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        Caso queira bordas arredondadas:
+        #borda {
+            border: 10px solid transparent;
+            padding: 2rem;
+            border-radius: 13px;
+            background-image: linear-gradient(white, white), linear-gradient(to bottom, red, purple);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+
+
+        Para adicionar um traço em baixo com degradê:
+        #borda::after {
+            content: "";
+            height: 4px;
+            width: 100%;
+            display: block;
+            background-image: linear-gradient(to bottom, red, purple);
+            border-radius: 0 0 4rem 4rem;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+////    MARGIN / MARGEM (ESPAÇO EXTERNO):
+&&&     
+        margin: 5px 5px 5px 5px;   (top,right,bottom,left)
+        margin: 5px;                                        *5px para todos
+        margin: 10%;                                        *10% para todos
+        margin: auto;                                       *para centralizar um elemento. Só funciona se tiver width
+
+        margin-top: 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        margin-left: 5px;
+
+        margin: 5px 3px;                                   *5px no topo/base e 3px na esquerda/direita
+        margin-inline: 5px;                                *5px na esquerda e direita
+        margin-block: 5px;                                 *5px na topo e na base
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+////    PADDING (ESPAÇO INTERNO):
+&&&
+        padding: 5px 5px 5px 5px;                           *(top,right,bottom,left)
+        padding: 5px;                                       *5px para todos
+        padding: 10%;                                       *10% para todos
+
+        padding-top: 5px;
+        padding-right: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+
+        padding: 5px 3px;                                   *5px no topo/base e 3px na esquerda/direita
+        padding-inline: 5px;                                *5px na esquerda e direita
+        padding-block: 5px;                                 *5px na topo e na base
+
+        /////////////////////////////////////////////////////////////////////////////////////
+
+////    LINKS / HOVER:
+&&& 
+        text-decoration: none;      *para remover o sublinhado dos links
+        cursor: pointer;            *ícone de mão com o mouse em cima de um link
+
+        a:hover {                   *para alterar ao passar o mouse por cima
+            ....
+        }
+
+        a:link {                    *para alterar um link que ainda não foi clicado
+            ....
+        }
+
+        a:visited {                 *para alterar um link que já foi clicado
+            ....
+        }
+
+        a:active {
+            ....
+        }
+
+        -Para alterar todos os 3 ao mesmo tempo:
+        a:link , a:visited , a:active {     
+          ....
+        } 
+
+        ou
+
+        a {
+          ....
+        }
+
+
+        -Para alterar a página que será aberta ao clicar no link:
+        HTML:
+        <a href="https://..." target="_self">Para abrir o link na própria aba</a>
+        <a href="https://..." target="_blank">Para abrir o link em outra aba</a>
+        <a href="https://..." target="_new">Para abrir o link em outra aba somente se não tiver outra aba aberta no mesmo domínio/site</a>
+        <a href="https://..." target="_parent">????????</a>
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
+////    DISPLAY / EXIBIÇÃO / ALINHAMENTO:
+&&&     
+
+        display: none;                  *para esconder um elemento (ele não ocupa mais o seu espaço)
+        visibility: hidden;             *para esconder um elemento (ele ainda ocupa o seu espaço)
+
+        display: inline;                *valor padrão. Para alinhar elementos horizontalmente (um do lado do outro)
+        display: inline-block;          *para alinhar elementos horizontalmente (um do lado do outro) em bloco
+        display: block;                 *para alinhar elementos verticalmente (um embaixo do outro) em bloco
+        display: table-cell;            *para alinhar como se fosse uma célula de uma tabela (e podendo usar o vertical-align)
+
+        display: flex;                  *Para alinhar elementos horizontalmente (um do lado do outro) responsivamente
+
+        vertical-align: top;            *alinhamento vertical no topo
+        vertical-align: middle;         *alinhamento vertical no centro
+        vertical-align: bottom;         *alinhamento vertical na base
+
+        Obs: 
+        Uma <div> possui um padrão de display:block e um <span> possui um padrão de display:inline
+        O elemento com display:block ocupa toda a área disponível na linha inteira (ou até o seu limite de largura) e não aceita outros elementos na mesma linha que ele.
+        O elemento com display:inline ocupa apenas o seu tamanho e permite outros elementos na mesma linha.
+        O elemento com display:inline-block permite alterar a sua largura e altura e aceita outros elementos na mesma linha.
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    RESPONSIVIDADE / FLEX / BOX / GRID / MEDIA:
+&&&     VIDEO: https://www.youtube.com/watch?v=4WzzTkYvLKI
+        VIDEO: https://www.youtube.com/watch?v=9fiGNmcnSNo
+
+        box-sizing: content-box;                 *Valor padrão. O valor do padding e da borda influenciam no tamanho total do elemento
+        box-sizing: border-box;                  *O elemento será mostrado no seu valor real, não sendo contabilizados o padding e borda a mais
+
+        ///
+
+////    FLEX:
+        O elemento com display:flex permite outros elementos na mesma linha e é flexível (responsivo), 
+        redimensionando em telas menores
+        
+        HTML:
+        <section>
+            <div id="d1"></div>
+            <div id="d2"></div>
+            <div id="d3"></div>
+        <section>
+
+        CSS:
+        section {
+            display: flex;                       *Para aplicar responsividade em diferentes tamanhos de tela e redimensionar os elementos
+            min-width: 500px;                    *As divs redimensionarão até chegar em 500px, onde não serão mais redimensionadas
+
+            flex-wrap: wrap;                     *As divs passarão para a linha de baixo ao redimensionar a tela
+            flex-wrap: no-wrap;                  *valor padrão. Sem responsividade de tela
+
+            justify-content: flex-start;         *Alinhar as divs à esquerda
+            justify-content: flex-end;           *Alinhar as divs à direita
+            justify-content: center;             *Alinhar as divs no centro
+            justify-content: space-between;      *Separar os elementos igualmente para toda a esquerda e direita
+            justify-content: space-around;       *Separar os elementos igualmente no centro 
+            justify-content: space-evenly;       *Separar os elementos igualmente no centro (mais para o centro)
+
+            align-itens: flex-start;             *Alinhar as div no topo
+            align-itens: flex-end;               *Alinhar as div na base
+            align-itens: center;                 *Alinhar as div no centro
+
+            flex-direction: row;                 *valor padrão. Altera a direção do elementos para linhas (um do lado do outro)
+            flex-direction: row-reverse;         *Inverte a posição dos elementos horizontalmente (um do lado do outro) 
+            flex-direction: column;              *Altera a direção do elementos para colunas (um embaixo do outro)
+            flex-direction: column-reverse;      *Inverte a posição dos elementos verticalmente (um embaixo do outro) 
+
+            flex-flow: row wrap;                 *flex-flow é a junção do flex-direction com flex-wrap
+            flex-flow: column nowrap;            *Sintaxe: flex-flow: flex-direction flex-wrap;
+        }
+
+        div {
+            flex: 1;                             *todos os elementos serão distribuídos por toda a largura e terão o mesmo tamanho
+            flex: 0 1 auto;                      *valor padrão do flex (flex-grow:0  flex-shrink:1  flex-basis:auto)
+            flex: 1 0 auto;                      *é o mesmo que flex: 1;
+
+            flex-grow: 0;                        *valor padrão. Elementos ocuparão apenas o seu próprio tamanho
+            flex-grow: 1;                        *todos os elementos serão distribuídos por toda a largura e terão o mesmo tamanho
+
+            flex-shrink: 0;                      *elementos não diminuirão a largura ao redimensionar a tela
+            flex-shrink: 1;                      *elementos diminuirão a largura ao redimensionar a tela
+
+            align-self: flex-start;              *para alinhar todas as div no topo
+            align-self: center;                  *para alinhar todas as div no centro
+            align-self: flex-end;                *para alinhar todas as div na base
+
+        #d1 {
+            order: 3;                            *para alterar a ordem. Passará a ocupar o local de #d3
+            flex-grow: 1;                        *A div ocupará todo o espaço vazio juntamente com #d3
+            flex-basis: auto;                    *valor padrão
+            flex-basis: 100%;                    *A div ocupará todo espaço da section
+            flex-basis: 50%;                     *A div ocupará a metade da section
+        }
+
+        #d2 {
+            order: 1;                            *para alterar a ordem. Passará a ocupar o local de #d1
+            flex-shrink: 0;                      *A div não  diminuirá a largura ao redimensionar a tela
+
+            align-self: flex-start;              *para alinhar esta div específica no topo
+            align-self: center;                  *para alinhar esta div específica no centro
+            align-self: flex-end;                *para alinhar esta div específica na base
+        }
+
+        #d3 {
+            order: 2;                            *para alterar a ordem. Passará a ocupar o local de #d2
+            flex-grow: 1;                        *A div ocupará todo o espaço vazio juntamente com #d1
+        }
+
+        }
+
+
+        align-content: center;                  *align-content só funciona junto com flex-wrap:wrap;
+        gap: 2rem;                              *gap só funciona junto com flex-wrap:wrap;
+
+        ////////
+
+////    GRID / GRADE:
+
+        display: grid;                           *para utilizar grid (grade) para organizar os elementos
+        display: inline-grid;                    *Os elementos passarão a ocupar apenas o seu tamanho
+
+        grid-template-columns: auto auto;        *2 colunas em grid separadas igualmente ocupando toda a largura
+        grid-template-columns: auto auto auto;   *3 colunas em grid separadas igualmente ocupando toda a largura
+        grid-template-columns: 50px 70px 30px;   *3 colunas em grid com 50, 70 e 30px de largura
+        grid-template-columns: 50px 70px auto;   *2 primeiras colunas com 50, 70 de largura e a última coluna ocupa o resto
+        grid-template-columns: 1fr 1fr 1fr;      *3 colunas em grid que ocupam 1 fração de largura cada
+        
+        grid-template-rows: auto;                *valor padrão das fileiras/linhas em grid
+        grid-template-rows: 50px;                *primeira fileira/linha em grid com 50px de altura
+        grid-template-rows: 50px 70px;           *primeira fileira/linha com 50px de altura e a segunda com 70px de altura
+        grid-template-rows: 50px auto;           *primeira fileira/linha com 50px de altura e as demais fileiras com altura padrão
+
+        grid-column-gap: 10px;                   *espaço entre as colunas 
+        grid-row-gap: 10px;                      *espaço entre as fileiras/linhas
+        grid-gap: 10px;                          *espaço entre as colunas e linhas de 10px
+        gap: 10px;                               *espaço entre as colunas e linhas de 10px
+        grid-gap: 10px 5px;                      *espaço entre as linhas de 10px e de 5px entre as colunas
+
+        grid-column-start: 1;                    *para indicar em que coluna o elemento vai começar
+        grid-column-end: 2;                      *para indicar que um elemento vai terminar até antes do valor estabelecido
+        grid-column: 1 / 4;                      *junção do grid-column-start e do grid-column-end
+        Obs: se um container é dividido em 3 colunas e um elemento dentro dele começa no 1 (grid-column-start: 1)
+        e termina no 3 (grid-column-end: 3), ele vai ocupar as 2 primeiras colunas e não todas elas.
+        grid-column: 1 / -1;                      *vai do 1o até o último grid
+        grid-column: 1 / -2;                      *vai do 1o até o penúltimo grid
+
+        grid-row-start: 1;                       *para indicar em que linha o elemento vai começar
+        grid-row-end: 2;                         *para indicar que um elemento vai terminar até antes do valor estabelecido
+        grid-row: 1 / 4;                         *junção do grid-row-start e do grid-row-end
+        Obs: se um container é dividido em 3 linhas e um elemento dentro dele começa no 1 (grid-row-start: 1)
+        e termina no 3 (grid-row-end: 3), ele vai ocupar as 2 primeiras linhas e não todas elas.
+
+        grid-column: 1 / span 3;                 *elemento começa na coluna 1 e expande até a coluna 3 (ocupando as 3 colunas)
+        Obs: O span não funciona com o grid-row
+
+        grid-area: 1 / 1 / 3 / 3;                *junção de grid-column e grid-row
+                                                 grid-area: grid-row-start / grid-column-start / grid-row-end / grid-column-end
+                                                 
+        /////
+        VIDEO: https://www.youtube.com/watch?v=XT3pF7ivpQw&list=PLx4x_zx8csUi47Bnugpk78nqJN6rYvEnV&index=74
+        É possível dar um nome para area em grid:
+
+        HTML:
+        <container class="container">
+            <div class="header">HEADER</div>
+            <div class="principal">PRINCIPAL</div>
+            <div class="lateral">LATERAL</div>
+            <div class="footer">FOOTER</div>
+        </container>
+        
+        CSS:
+        .header {
+            grid-area: areaheader;
+        }
+
+        .principal {
+            grid-area: areaprincipal;
+        }
+
+        .lateral {
+            grid-area: arealateral;
+        }
+
+        .footer {
+            grid-area: areafooter;
+        }
+
+        .container {
+            grid-template-columns: auto auto auto auto;
+            grid-template-rows: auto;
+            grid-template-areas: 
+                "areaheader areaheader areaheader areaheader"
+                "areaprincipal areaprincipal . arealateral"         *O . simboliza uma área em branco
+                "areafooter areafooter areafooter areafooter"
+        }
+
+        -----------
+
+        ALURA:
+
+        .main-content {
+            display: grid;
+            justify-items: center;
+            grid-template-columns: 1fr 1fr 1fr 1fr;          *vão aparecer 4 blocos
+            grid-gap: 16px;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+
+        @media screen and (max-width: 1015px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;             *vão aparecer 2 blocos em telas abaixo de 1015px
+            }
+        }
+
+
+        ////////
+
+////    MEDIA:
+        VIDEO: https://www.youtube.com/watch?v=ww70KzFnnPA
+
+        @media screen and (....) {                       *para configurar a visualização do conteúdo em telas                                        
+            ....                                         (de celular, tablet, computador, laptop, TV, etc...) 
+        }
+
+        @media print and (....) {                        *para configurar a visualização do conteúdo ao imprimir
+            ....
+        }
+
+        @media speech and (....) {                       *para configurar a visualização do conteúdo em leitores de arquivos digitais
+            ....
+        }
+
+        @media all and (....) {                          *para configurar a visualização do conteúdo para tudo
+            ....
+        }
+
+        ////
+
+        @media screen and (max-width: 991px) {           *configuração será ativada quando a largura for menor que 991px
+            .....
+        }
+
+        @media screen and (min-width: 320px) and (max-width: 768px) {           *configuração será ativada quando a 
+            .....                                                               largura for maior que 320px e menor que 768px
+        }
+
+        ////
+
+        @media screen and (max-width: 400px) and (orientation: portrait) {      *configuração será ativada quando a 
+            .....                                                               largura for menor que 400px e estiver em
+        }                                                                       modo retrato (em pé)
+        
+        @media screen and (max-width: 400px) and (orientation: lansdcape) {     *configuração será ativada quando a 
+            .....                                                               largura for menor que 400px e estiver em
+        }                                                                       modo paisagem (deitado)
+
+        ////
+
+        -Para a imagem redimensionar o tamanho em dispositivos móveis:
+
+        @media screen and (max-width: 400px) and (orientation: portrait) {      
+            img {
+                width: 100%;
+            }                                                              
+        }                                                                      
+        
+        @media screen and (max-width: 400px) and (orientation: lansdcape) {    
+            img {
+                width: 100%;
+            }                                                                    
+        }    
+
+        ////
+
+////    -Tamanhos de tela:
+
+        HTML:
+        <div class="mobile"></div>
+        <div class="tablet"></div>
+        <div class="desktop"></div>
+
+        CSS:
+        @media screen and (min-width:240px) and (max-width:767.75px) {
+            div.tablet, div.desktop {display:none;}
+            div.mobile {atributo: valor;}
+        }
+
+        @media screen and (min-width:768px) and (max-width:1023.75px) {
+            div.mobile, div.desktop {display:none;}
+            div.tablet {atributo: valor;}
+        }
+
+        @media screen and (min-width:1024px) {
+            div.mobile, div.tablet {display:none;}
+            div.desktop {atributo: valor;}
+        }
+
+        ////////
+
+        Para transformar uma lista em uma tabela:
+        <ol>
+            <ul>
+                <li>Item 1</li>
+                <li>Item 2</li>
+                <li>Item 3</li>
+            </ul>
+        <ol>
+
+        CSS:
+        ol {
+            display: table;
+        }
+
+        ul {
+            dusplay: table-row;
+        }
+
+        li {
+            display: table-cell;
+        }
+
+        //////////////////////
+
+        -Responsividade sem flex-box:
+        VIDEO: https://www.youtube.com/watch?v=WcGPSeuJDJ0
+
+        CSS:
+        main {
+            min-width: 280px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        main img {
+            width: 100%
+        }
+
+        HTML:
+        <main>
+            <h1>Título</h1>
+            <p>Texto</p>
+            <picture>
+                <source media="(max-width: 600px)" srcset="./imagens/foto-mobile.jpg">
+                <img src="./imagens/foto-normal.jpg" alt="Foto de exemplo">
+            </picture>
+        </main>
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
+////    TRANSFORMAÇÃO / MOVIMENTAÇÃO 2D
+&&&     
+        transform: translate(100px, 200px);          *Para mover:  translate(eixoX, eixoY)
+        transform: translateX(100px);                *Para mover:  translateX(eixoX)
+        transform: translateX(50%);                  *Para mover usando porcentagem
+        transform: translateY(200px);                *Para mover:  translateY(eixoY)
+
+        transform: rotate(45deg);                    *Para girar/rotacionar:  rotate(ângulo)
+
+        transform-origin: 0% 0%;                     *Para transformar/girar a partir do ponto superior esquerdo
+        transform-origin: 0px 0px;                   *Para transformar/girar a partir do ponto superior esquerdo
+        transform-origin: 50% 0%;                    *Para transformar/girar a partir do ponto superior central
+        transform-origin: 100% 0%;                   *Para transformar/girar a partir do ponto superior direito
+        transform-origin: 100% 100%;                 *Para transformar/girar a partir do ponto inferior direito
+        
+        transform: scale(2);                         *Para aumentar ou diminuir a escala
+            *scale(1): tamanho original
+            *scale(0.5): diminuir o tamanho pela metade
+            *scale(2): dobrar o tamanho
+
+        transform: skewX(20deg);                     *Para inclinar para esquerda no eixo X:   skewX(ângulo)
+        transform: skewX(-20deg);                    *Para inclinar para direita no eixo X:   skewX(ângulo)
+        transform: skewY(20deg);                     *Para inclinar para cima no eixo Y:   skewY(ângulo)
+        transform: skewY(-20deg);                    *Para inclinar para baixo no eixo Y:   skewY(ângulo)
+        transform: skew(20deg, 10deg);               *Para inclinar no eixo X e no eixo Y:   skew(ânguloX, ânguloY)
+
+        Obs: Não é possível usar tipos de transform separadamente, então é preciso usar tudo junto:
+        transform: translate(100px, 200px) scale(2);
+
+        ou utilizar o transform:matrix:
+        transform: matrix(2, 0, 0, 2, 0, 0)          *matrix(scaleX, skewY, skewX, scaleY, translateX, translateY)
+
+        resize: horizontal;                          *para poder redimensionar manualmente um elemento na horizontal 
+        resize: vertical;                            *para poder redimensionar manualmente um elemento na vertical
+        resize: both;                                *para poder redimensionar manualmente verticalmente e horizontalmente
+        Obs: Para usar o resize, é preciso usar junto com o overflow:auto. 
+        Se for estipulado o width e height para o elemento, este passará a ser a largura e altura mínima dele.
+
+        -Para usar o resize com imagens:
+        HTML:
+        <div>
+            <img src="imagem.png" />
+        </div>
+
+        CSS:
+        div {
+            width: 100px;
+            height: 100px;
+            padding: 10px;
+            resize: both;
+            overflow: hidden;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        div:hover {
+            border: 1px solid #eee;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
+////    ANIMAÇÃO / TRANSITION
+&&&     
+        transition: width 2s;                                       *animação da largura em 2 segundos     
+        transition: width 2000;                                     *animação da largura em 2000 milisegundos (2 segundos)    
+        transition: height 2s;                                      *animação da altura em 2 segundos    
+        transition: background-color 2s;                            *transição da cor de fundo em 2 segundos
+        transition: color 2s;                                       *transição da cor de texto em 2 segundos
+        transition: transform 2s;                                   *animação da transformação em 2 segundos
+        transition: width 2s, height 0.5s, color 1s, trasnform 4s;  *para ajustar o tempo de transição de mais de um atributo
+
+        transition-delay: 0s;                                       *valor padrão. Atraso no começo da animação de 0 segundos
+        transition-delay: 1s;                                       *Atraso de 1 segundo para começar a animação
+
+        transition-timing-function: ease;                           *valor padrão. Começa devagar, acelera e termina devagar
+        transition-timing-function: ease-in-out;                    *Começa devagar e termina devagar
+        transition-timing-function: ease-in;                        *Começa devagar e acelera no final
+        transition-timing-function: ease-out;                       *Começa rápido e desacelera no final
+        transition-timing-function: linear;                         *velocidade constante em toda a animação
+        transition-timing-function: cubic-bezier(1, 0.5, 1, 0.5);   *eixo y é a velocidade: cubic-bezier(x e y do bezier 1 e x e y do bezier 2)
+        Obs: é possível modificar o cubic-bezier no inspecionar do navegador
+
+        transition: transform 1s ease 3s;                           *transition: (propriedade duração velocidade delay)
+
+        ///////////////
+
+        PARA ANIMAR ALGO:
+
+        https://www.youtube.com/embed/xdap5e3-DwM?autoplay=1
+        https://www.youtube.com/embed/YszONjKpgg4?autoplay=1
+
+        transition: width 5s ease 0s;                                *transition: (propriedade duração velocidade delay)
+
+        Exemplo para mover algo:
+
+        HTML:
+        <div class="caixa"></div>
+
+        CSS:
+        .caixa {
+            background-color: red;
+            width: 300px;
+            height: 300px;
+            transition: transform 1s ease; 
+        }
+
+        .caixa:hover {
+            transform: translateX(100px);
+        }
+
+        Ao passar o mouse por cima da caixa, ela irá mover 100px para a direita
+
+        Direções:
+        transform: translateX(100px)     *para ir para direita
+        transform: translateX(-100px)    *para ir para esquerda
+        transform: translateY(100px)     *para ir para baixo
+        transform: translateX(-100px)    *para ir para cima
+
+        /////
+
+        Exemplo para mudar a cor de algo:
+
+        HTML:
+        <div class="caixa"></div>
+
+        CSS:
+        .caixa {
+            background-color: red;
+            width: 300px;
+            height: 300px;
+            transition: background-color 1s ease; 
+        }
+
+        .caixa:hover {
+            background-color: blue;
+        }
+
+        /////
+
+        Exemplo para esticar algo:
+
+        HTML:
+        <div class="caixa"></div>
+
+        CSS:
+        .caixa {
+            background-color: red;
+            width: 300px;
+            height: 300px;
+            transition: width 1s ease; 
+        }
+
+        .caixa:hover {
+            width: 700px;
+        }
+
+        ///////
+
+        Exemplo para girar algo:
+
+        HTML:
+        <div class="caixa"></div>
+
+        CSS:
+        .caixa {
+            background-color: red;
+            width: 300px;
+            height: 300px;
+            transition: transform 1s ease; 
+        }
+
+        .caixa:hover {
+            transform: rotate(150deg);
+        }
+
+        ///////
+
+        Exemplo para aumentar algo:
+
+        HTML:
+        <div class="caixa"></div>
+
+        CSS:
+        .caixa {
+            background-color: red;
+            width: 300px;
+            height: 300px;
+            transition: transform 1s ease; 
+        }
+
+        .caixa:hover {
+            transform: scale(2);
+        }
+
+
+        /////////////
+
+        ANIMAÇÕES COM KEYFRAMES
+
+        HTML:
+        <div id="caixa">ELEMENTO DA ANIMAÇÃO</div>
+
+        CSS (Animações separadas):
+        @keyframes NomedaAnimação1 {                                *Criou e deu um nome para a animação 1
+            from {left:0px ; top:0px}                               *onde e como começa a animação 1
+            to {left:500px ; top:500px}                             *onde e como termina a animação 1
+        }
+
+        @keyframes NomedaAnimação2 {                                *Criou e deu um nome para a animação 2
+            from {background-color: yellow ; color: orange}         *onde e como começa a animação 2
+            to {background-color: yellow ; color: red}              *onde e como termina a animação 2
+        }
+
+        #caixa {
+            position: relative;
+            left: 500px                                             *para que o elemento permaneça no ponto final da animação
+            top: 500px                                              *para que o elemento permaneça no ponto final da animação
+            width: 200px;
+            height: 200px;
+
+            animation-name: NomedaAnimação1;                        *ativou somente a animação 1
+            animation-name: NomedaAnimação1 , NomedaAnimação2;      *ativou as animações 1 e 2
+
+            animation-duration: 0s , 2s;                            *declarou a duração das animações
+            transition-timing-function: linear;                     *declarou o velocidade de transição das animações
+
+            animation-iteration-count: 4;                           *a animação será realizada 4 vezes
+            animation-iteration-count: infinite;                    *a animação será realizada em loop
+
+            animation-play-state: running;                          *valor padrão. Animação roda normalmente
+            animation-play-state: paused;                           *para parar a animação
+
+            animation-direction: reverse;                           *para rodar a animação de trás para frente
+            animation-direction: alternate;                         *para alternar a animação entre normal e reverse
+
+            animation-fill-mode: none;                              *valor padrão
+            animation-fill-mode: forwards;                          *elemento vai parar no último keyframe
+            animation-fill-mode: backwards;                         *elemento vai parar no primeiro keyframe
+            animation-fill-mode: both;                              *A animação vai seguir as regras de forwards e backwards
+
+            animation: anima 1s ease-in forwards 3 alternate 1s;    *animation: nomedaanimação duração velocidade modo loop direção delay;
+        }
+
+        /////
+
+        CSS (Animações juntas):
+        @keyframes Anima {                                                  *Criou a animação Anima
+            0% {left:0px ; top:0px ; background-color: yellow}              *a animação começa em 0%
+            25% {left:100px ; top:100px  ; background-color: orange}  
+            50% {left:200px ; top:200px  ; background-color: red}
+            75% {left:100px ; top:100px  ; background-color: orange}
+            100% {left:0px ; top:0px  ; background-color: yellow}           *a animação termina em 100%                      
+        }   
+
+        #caixa {
+            position: relative;                                    
+            width: 200px;
+            height: 200px;
+            animation-name: Anima;                      
+            animation-duration: 2s;                           
+            transition-timing-function: ease-in; 
+            animation-iteration-count: infinite;                
+        }
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////
+
+////    TRANSFORMAÇÃO / MOVIMENTAÇÃO 3D
+&&&     
+        As mesmas que regras da transformação 2D se aplicam no 3D, com a adição do eixo Z.
+
+        transform: rotateX(45deg);                    *Para girar/rotacionar no eixo X:  rotateX(ângulo)
+        transform: rotateY(45deg);                    *Para girar/rotacionar no eixo Y:  rotateY(ângulo)
+        transform: rotateZ(45deg);                    *Para girar/rotacionar no eixo Z:  rotateZ(ângulo)
+
+        transform: rotate3d(45deg, 20deg, 10deg);     *Para girar/rotacionar nos eixos X, Y, Z:  rotateZ(ânguloX, ânguloY, ânguloZ)
+        transform: rotate3d(0, 1, 0, 60deg);          *(eixox, eixoy, eixoz, ângulo)
+
+        backface-visibility: visible;                 *Valor padrão. Face de trás vai girar e ficar invertido
+        backface-visibility: hidden;                  *Para esconder a parte de trás
+
+        perspective: 100px;                           *adicionar perspectiva. Para visualizar, é preciso aplicar em containers, body, etc...
+
+        transform: translateX(20px);                 *Para mover no eixo X:  translateX(tamanho)
+        transform: translateY(20px);                 *Para mover no eixo Y:  translateY(tamanho)
+        transform: translateZ(20px);                 *Para mover no eixo Z:  translateZ(tamanho)
+
+
+        -Script em javascript para girar em 3D:    https://www.youtube.com/watch?v=B-vEwHOT6dM&list=PLx4x_zx8csUi47Bnugpk78nqJN6rYvEnV&index=22
+        CSS:
+        #caixa {
+            width: 200px;
+            height: 200px;
+            background-color: yellow;
+        }
+        
+        HTML:
+        <div id="caixa" onclick="Iniciar()">
+            TEXTO GIRANDO
+        </div>
+
+        JAVASCRIPT:
+        var caixa, eixoY=0, girando;
+
+        function Iniciar() {
+            caixa = document.getElementById("caixa");
+            clearInterval(girando);
+            girando = setInterval("Girar()",5)
+        }
+
+        function Girar() {
+            eixoY += 1;
+            caixa.style.transform = "rotateY(" + eixoY + "deg)";
+            if (eixoY == 180 || eixoY >= 360) {
+                clearInterval(girando);
+                if (eixoY >= 360) {
+                    eixoY = 0
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+////    FILTROS / FILTER
+&&&     
+        filter: grayscale(100%);                        *imagem sem cores (preto e branco) - porcentagem entre 0 e 100
+        filter: grayscale(1);                           *imagem sem cores (preto e branco) - valor entre 0 e 1
+        filter: grayscale(50%);                         *imagem com poucas cores - porcentagem entre 0 e 100
+        filter: grayscale(0.5);                         *imagem com poucas cores - valor entre 0 e 1
+        filter: grayscale(0%);                          *imagem original com cores - porcentagem entre 0 e 100
+        filter: grayscale(0);                           *imagem original com cores - valor entre 0 e 1   
+
+        filter: blur(2px);                              *imagem com desfoque
+        filter: blur(0px);                              *imagem sem desfoque
+
+        filter: opacity(100%);                          *imagem original sem alterações - porcentagem entre 0 e 100
+        filter: opacity(1);                             *imagem original sem alterações - valor entre 0 e 1 
+        filter: opacity(50%);                           *imagem semi-transparente - porcentagem entre 0 e 100
+        filter: opacity(0.5);                           *imagem semi-transparente - valor entre 0 e 1 
+        filter: opacity(0%);                            *imagem completamente transparente - porcentagem entre 0 e 100
+        filter: opacity(0);                             *imagem completamente transparente - valor entre 0 e 1 
+
+        filter: drop-shadow(3px 3px 1px black);         *para adicionar uma sombra:  drop-shadow(distX , distY, blur, cor)
+
+        filter: brightness(200%);                       *imagem com mais brilho (mais clara) - porcentagem 
+        filter: brightness(2);                          *imagem com mais brilho (mais clara) - números
+        filter: brightness(100%);                       *imagem original- porcentagem 
+        filter: brightness(1);                          *imagem original - números
+        filter: brightness(50%);                        *imagem com pouco brilho (mais escura) - porcentagem 
+        filter: brightness(0.5);                        *imagem com pouco brilho (mais escura) - números
+        filter: brightness(0%);                         *imagem preta (totalmente escura) - porcentagem 
+        filter: brightness(0);                          *imagem preta (totalmente escura) - números
+
+        filter: contrast(200%);                         *imagem com mais contraste - porcentagem 
+        filter: contrast(2);                            *imagem com mais contraste - números
+        filter: contrast(100%);                         *imagem original- porcentagem 
+        filter: contrast(1);                            *imagem original - números
+        filter: contrast(0%);                           *imagem sem contraste - porcentagem 
+        filter: contrast(0);                            *imagem sem contraste - números
+
+        filter: hue-rotate(180deg);                     *para alterar a matiz de cor da imagem:  hue-rotate(graus)
+        filter: hue-rotate(0deg);                       *imagem original sem alterações
+
+        filter: saturate(200%);                         *imagem com as cores bastante fortes e saturadas - porcentagem
+        filter: saturate(2);                            *imagem com as cores bastante fortes e saturadas - número
+        filter: saturate(100%);                         *imagem original sem alterações - porcentagem
+        filter: saturate(1);                            *imagem original sem alterações - número
+        filter: saturate(0%);                           *imagem sem cores - porcentagem
+        filter: saturate(0);                            *imagem sem cores - número
+
+        filter: sepia(100%);                            *imagem com efeito de sépia (envelhecido)
+        filter: sepia(0%);                              *imagem original sem alterações
+
+        filter: invert(1);                              *para inverter as cores
+        filter: invert(0);                              *imagem original sem alterações
+
+        -Para aplicar mais de um filtro, é obrigatório colocar todos juntos:
+        filter: opacity(90%) brightness(110%) saturate(120%) contrast(80%);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        
+////    LISTAS / MARCADORES DE LISTAS:
+&&&
+        list-style: none;                              *remover marcadores em listas
+        list-style-type: none;                         *remover marcadores em listas
+
+        list-style-type: square;                       *quadrados como marcadores em listas 
+        list-style-type: disc;                         *tipo padrão com círculo preenchido (valor padrão para <ul>)
+        list-style-type: circle;                       *circulo não preenchido (interior branco) em listas
+
+        list-style-type: decimal;                      *números em listas (1, 2, 3, etc...) (valor padrão para <ol>)
+        list-style-type: decimal-leading-zero;         *números em listas (01, 02, 03, etc...)
+        list-style-type: lower-alpha;                  *letras minúsculas em listas (a, b, c, etc...)
+        list-style-type: upper-alpha;                  *letras maiúsculas em listas (A, B, C, etc...)
+        list-style-type: lower-roman;                  *numerais romanos em minúsculo (i, ii, iii, iv, etc...)
+        list-style-type: upper-roman;                  *numerais romanos em maiúsculo (I, II, III, IV, etc...)
+
+        list-style-image: url(nomedoarquivo.png);      *marcador personalizado em listas
+
+        list-style-position: inside;                   *posição do marcador dentro do <li>
+        list-style-position: outside;                  *valor padrão. Posição do marcador fora do <li>
+
+        Para fazer um menu de navegação com listas:
+        ol {
+            list-style: none:
+            padding: 0px;
+        }
+
+        li {
+            width: 150px;
+            height: 40px;
+            background-color: red;
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        li:hover {
+            background-color: orange;
+            cursor: pointer;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+////    CRIAR UMA VARIÁVEL NO CSS
+&&&     VIDEO: https://www.youtube.com/watch?v=3S5ts5bzvzM
+        
+        FORMA 1 (somente valor):
+        
+        :root {
+            --cor: red;       *foi criada a variavel cor com o valor red
+        }
+
+        h1 {
+            color: var(--cor);                     
+        }
+
+        *Obs: 
+        var(--variavel) = CORRETO   
+        var (--variavel) = VAI DAR ERRO
+
+        ////
+
+        FORMA 2 (atributo e valor):
+
+        :root {
+            --gradiente: linear-gradient(to right, red, purple);      *foi criada a variavel gradiente com atributo e valor entre parenteses
+        }
+
+        div {
+            background-image: var(--gradiente);
+        }
+
+        ////
+
+        -Criando variaveis padrões para cores e fontes usadas no site:
+
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
+
+        @font-face {
+            font-family: 'Bebas';
+            src: url('../fontes/Bebas_Neue.otf') format('opentype');
+            font-weight: normal;
+        }
+
+        :root {
+            --cor_principal: red;
+            --cor_secundaria: orange;
+            --cor_texto: dark-gray;
+            --cor_link: purple;
+
+            --fonte_padrao: Arial, Verdana, Helvetica, sans-serif;
+            --fonte_destaque: 'Bebas Neue', cursive;
+            --fonte_oswald: 'Oswald', sans-serif;
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    TABELAS:
+&&& 
+        table {
+            border: 1px solid black;           *borda externa (da tabela)
+            width: 800px;                      *largura da tabela
+            table-layout: fixed;               *mesma largura para todas as células
+            border-collapse: separate;         *valor padrão. Células possuem um espaçamentro entre elas 
+            border-collapse: collapse;         *para remover o espaçamento entre as células
+            border-spacing: 10px 10px;         *espaçamento entre as células (eixoX e eixoY)
+            empty-cells: show;                 *valor padrão. Mostra as células vazias
+            empty-cells: hide;                 *esconder as células vazias
+        }
+
+        td , th {
+            border: 1px solid black;           *borda interna (da célula)
+            width: 200px;                      *largura da célula
+            height: 10px;                      *altura da célula
+            vertical-align: top;               *alinhar texto no topo
+            vertical-align: middle;            *alinhar texto no centro
+            vertical-align: bottom;            *alinhar texto na base
+            text-align: left;                  *alinhar texto à esquerda
+            text-align: center;                *alinhar texto no centro
+            text-align: right;                 *alinhar texto à direita
+            text-align: justify;               *alinhar texto justificado
+        }
+
+        table, td, th {
+            border: 1px solid black;           *borda interna e externa
+        }
+
+        Formatação zebra:
+        tr:nth-child(even) {                   *para que as células pares tenham uma cor diferente, facilitando a leitura
+            background: #ddd;
+        }
+
+        Obs: A formatação zebra foi aplicada no elemento tr, mas pode ser aplicada em outros elementos, como p, h1, div, etc...
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    INHERIT / INITIAL
+&&&     
+        HTML:
+        <div>
+            <h1>Titulo</h1>
+        </div>
+        
+        CSS:
+        div {
+            color: red;
+        }
+
+        h1 {
+            color: inherit;                 *h1 vai herdar a cor do elemento pai anterior, no caso a div que tem cor vermelha
+        }
+
+        ////
+
+        HTML:
+        <div>
+            <h1>Titulo</h1>
+        </div>
+
+        CSS:
+        * {
+            color: blue;
+        }
+
+        div {
+            color: red;
+        }
+
+        h1 {
+            color: initial;                  *h1 vai herdar a cor inicial da propriedade, no caso a cor azul
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    ANCORA / ANCHOR:
+&&&     VIDEO: https://www.youtube.com/watch?v=srzsj3xtHMM
+
+        <div id="topo">TOPO</div>        
+        <a href="#topo">CLIQUE AQUI PARA IR PARA O TOPO</a>
+
+        CSS:
+        html {
+            scroll-behavior: smooth;            *para fazer um scroll suave
+        }
+        
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    CARROUSEL
+&&&     VIDEO: https://www.youtube.com/watch?v=srzsj3xtHMM
+
+        .container {
+            width: 800px;
+            height: 500px;
+            display: flex;
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+        }
+
+        .container .card {
+            min-width: 100px;
+            display: flex;
+            align-itens: center;
+            justify-content: center;
+            scroll-snap-align: center;
+        
+        } 
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    POINTER EVENTS
+&&&     VIDEO: https://www.youtube.com/embed/S-VeYcOCFZw?autoplay=1
+
+        .container:hover {
+            pointer-events: none;             *O mouse não conseguirá interagir com o objeto
+            pointer-events: auto;             *O mouse pode interagir com o objeto
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////    MELHORES ESTILOS DOS ELEMENTOS:
+&&&     
+
+        BOTÕES:
+        VIDEO: https://www.youtube.com/watch?v=Op3hhQhNKIc
+
+			Exemplo 1:
+			
+        .btn {
+            background: linear-gradient(to bottom, yellow , orange );
+            padding: 0.8em;
+            border-radius: 9999px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+				filter: drop-shadow(2px 5px 1px rgba(0,0,0,.1)); 
+        }
+		  
+		  	.btn:hover {
+				filter: brightness(1.3);
+			}
+			
+			----------
+		  
+		  Exemplo 2:
+		  
+		  .btn {
+				border: none;
+				cursor: pointer;
+				padding: 0.8em;
+				border-radius: 0.3em;
+            font-size: 1rem;
+				background: linear-gradient(0deg, rgba(6,14,131,1) 0%, rgba(12,25,180,1) 100%);
+				box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+					7px 7px 20px 0px rgba(0,0,0,.1),
+					4px 4px 5px 0px rgba(0,0,0,.1);
+			}
+				
+			.btn:hover {
+				background: linear-gradient(0deg, rgba(0,3,255,1) 0%, rgba(2,126,251,1) 100%);
+			}
+		  
+		  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+        
+
+  

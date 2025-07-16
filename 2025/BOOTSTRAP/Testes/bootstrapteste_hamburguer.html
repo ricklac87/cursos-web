@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 1</title>
+
+    <!--link BOOTSTRAP 4.5.0-->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+
+        *{
+            margin: 0;
+            padding: 0;
+            /*box-sizing: border-box;
+            font-family:"...."*/
+        }
+
+        /*.center {
+            margin: 0 auto;
+            padding: 0 2%;
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1100px;
+        }*/
+
+        .main1 {
+            background-color: red;
+            padding: 5px 0;
+        }
+
+        .main2 {
+            background-color: #ffff;
+            padding: 5px 0;
+        }
+
+
+
+
+
+
+        /*para não aparecer o hamburguer*/
+        .hamburguer {
+            display: none;
+        }
+        /*Menu que aparece ao clicar no hamburguer*/
+        .menu {
+            display: none;
+            background-color: rgb(243, 243, 243);
+            border-bottom: 1px solid gray;
+            position: absolute;
+            left: 0;
+            top: 34px;
+            opacity: 0; 
+            transition: 0.2s; 
+        }
+        .menu a {
+            text-decoration: none;
+            color: seagreen;
+            margin: 1px;
+        }
+        .menu.show {
+            opacity: 1; 
+        }
+        .menu.hidde {
+            opacity: 0; 
+        }        
+
+
+        .logo img {
+            max-width: 100px;
+        }
+
+
+        .foto h5 {
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+        }
+
+
+
+        @media screen and (max-width: 767px) {
+
+            .hamburguer {
+                display: block;
+            }
+            .hamburguer i {
+                font-size: 15px;   
+                color: rgb(255, 255, 255); 
+                cursor: pointer;    
+                padding-top: 8px;  /*para alinhar com a logo*/
+            }
+
+
+        }
+
+        @media screen and (max-width: 1023px) and (min-width: 768px) {
+
+        }
+            
+
+    </style>
+</head>
+<body>
+    <section class="main1"> 
+
+            <div class="container">	
+
+                <div class="row">
+
+                        <div class="col-6 text-left logo">
+
+                            <img src="./img/logo-santander2.png" />
+
+                        </div>
+
+                        <div class="col-6 text-right hamburguer">
+
+                            <i class="fa-solid fa-bars hamburguer-icone"></i>
+
+                        </div>
+                        
+                </div>
+
+            </div>
+    </section> 
+
+    <section class="main2"> 
+
+        <div class="container">	
+
+            <div class="row">
+
+                <div class="col-12 text-center foto">
+                    <img src="https://picsum.photos/301/300" />
+                    <h5>
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                    </h5>
+                </div>
+
+                <div class="col-12 text-center menu">
+                    <a href='#'>Opção 1</a>
+                    <br>
+                    <a href='#'>Opção 2</a>
+                    <br>
+                    <a href='#'>Opção 3</a>
+                </div>    
+
+            </div>
+        </div>
+    </section> 
+
+
+
+
+    
+</body>
+
+    <!--ICONE HAMBURGUER DO FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/1d82588ad9.js" crossorigin="anonymous"></script>
+
+    <!--SCRIPT HAMBURGUER-->
+    <script>
+		var el = document.querySelector('.hamburguer-icone');
+
+		el.addEventListener('click', () => {
+			//alert('Clicado');
+
+			var menuitens = document.querySelector('.menu');
+
+			if(menuitens.classList.contains('show')){
+				menuitens.classList.add('hide');
+				menuitens.classList.remove('show');
+			}
+			else {
+				menuitens.classList.add('show');
+				menuitens.classList.remove('hide');
+			}		
+		});
+	</script>
+
+</html>

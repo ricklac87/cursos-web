@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif
+        }
+        .center {
+            margin: 0 auto;
+            padding: 0 2%;
+            flex-wrap: wrap;
+            display: flex;
+            max-width: 1100px;
+        }
+
+
+
+
+        .header {
+            background-color: tomato;
+            flex-wrap: wrap;
+            padding: 8px 0;
+        }
+
+
+
+        
+        .btn {
+            text-align: right;
+            /*margin-right: 20px;   OPCIONAL*/
+            width: 100%;
+        }
+
+        .btn button {
+            color: black;
+            background-color: white;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            padding: 1px 10px;
+            font-weight: bolder;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .btn a button:hover {
+            text-decoration: none;
+            background-color: rgb(199, 199, 199);
+            color: red;
+        }
+
+
+
+    </style>
+</head>
+<body>
+        <section class="header">
+            <div class="center">
+                <div class="btn">
+                    <a href="#">
+                        <button type="submit">CLIQUE AQUI</button>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+</body>
+</html>

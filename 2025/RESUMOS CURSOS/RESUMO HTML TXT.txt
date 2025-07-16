@@ -1,0 +1,2236 @@
+
+ESTRUTURA PASTAS:
+
+src
+    assets
+        icons
+            hamburguer.svg
+            home.svg
+            search.svg
+        img
+            logo.svg
+            favicon.svg
+    styles
+        reset.css
+        vars.css
+        media-queries.css
+        main-content.css
+        sidebar-content.css
+        header-content.css
+        footer-content.css
+index.html
+script.js
+
+
+--------------------------------------------------&&&
+
+Criar arquivo index.html
+
+Apertar ! + tecla Enter  no VSCode:
+
+
+---------------------------------------------------&&&
+
+ESTRUTURA:
+
+<!Doctype html>
+<html lang="pt-BR">        *trocar en para pt-BR
+
+</head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>TITULO</title>       *TITULO DO SITE
+
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">   *favicon
+
+    <link rel="stylesheet" href="reset.css"  />      *para resetar as configurações
+    <link rel="stylesheet" href="estilo.css"  />     *CSS EXTERNO
+
+    <script></script>          *opcional para adicionar um script do Javascript, framework, etc...
+
+</head>
+
+<body>
+
+    <header>Cabeçalho</header>                    *TOPO
+
+        <nav>Barra de Navegação do topo</nav>     *links com a barra de navegação
+
+    <main>
+
+        <div class="main-container">
+
+            <section>
+                <article>                         *opcional
+                    Seção 1
+                <article>
+            </section>
+
+            <section>
+                Seção 2
+            </section>
+
+            <aside>Barra Lateral</aside>              *opcional
+
+            <article>Artigo/Post</article>            *opcional
+
+        <div>
+
+    </main>
+
+    <aside>Barra Lateral</aside>                  *barra lateral opcional
+
+    <footer>Rodapé</footer>                       *BASE
+
+        <nav>Barra de Navegação da base</nav>     *links com a barra de navegação
+
+    <script></script>                             *para adicionar um script do Javascript
+
+</body>
+
+</html>
+
+-----------------------------------------------&&&
+
+<div> = separa em partes (É a CASA)
+<section> = separa em seções (São os cômodos da casa) 
+<span> = não separa o conteudo
+
+
+<section>:
+Normalmente começa com um titulo <h1> a <h6>
+
+Exemplo:
+
+<h1>TITULO DOS TEXTOS/h1>
+<section>
+  <h2>Titulo 1</h2>
+  <p>Texto de exemplo 1.</p>
+</section>
+
+<section>
+  <h2>Titulo 2</h2>
+  <p>Texto de exemplo 2.</p>
+</section>
+
+----
+
+<span>:
+Normalmente usado para selecionar um trecho de um texto
+
+Exemplo:
+
+<p>Este texto só é vermelho <span class="red">AQUI</span></p>
+
+.red {
+    color: red;
+}
+
+
+
+-----------------------------------------------&&&
+
+Para criar uma tag com uma classe ou ID no VSCode:
+
+div.titulo      =  irá criar uma <div> com a classe "titulo"
+
+div#titulo      =  irá criar uma <div> com o id "titulo"
+
+--------
+
+Nomeando classes:
+
+<div class="library">
+    <div class="library__content">
+        <h1 class="library__title">TITULO<h1/>
+        <p class="library__text">TEXTO<p/>
+        <button class="library__button">BOTÃO<button/>
+    </div>
+</div>
+
+
+-----------------------------------------------&&&
+
+COMENTARIOS:
+
+Para comentar varias linhas de codigo no VSCode:
+
+Selecione o trecho e digite Ctrl + ;
+
+Ctrl K + Ctrl C     (tambem funciona)
+
+---------------------------------------------------&&&
+
+BARRA DE NAVEGAÇÃO: <nav></nav>
+
+<body>
+
+    <nav>
+        <div>
+
+        </div>
+    </nav>     
+
+</body>
+
+---
+
+<body>
+    <div class="sidebar">
+        <nav class="sidebar__navigation">
+            <ul>
+                <li>
+                    <a href="">
+                        <span class="icone_inicio"></span>
+                        <span>Início</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class="icone_buscar"></span>
+                        <span>Buscar</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>  
+</body>
+
+-----------------------------------------------&&&
+
+LINK:  <a></a>
+
+<body>
+    <a 
+        href="https://www.google.com/"      *url para onde irá ao clicar
+        href="/css/default.asp"             *abre um arquivo no diretorio
+        href="mailto:someone@example.com"   *para um email
+        href="#"                            *link vazio
+        target="_blank"                     *abre uma aba nova
+        title="texto dentro da caixinha"    *abre uma caixinha com um texto ao passar o mouse
+    >
+        LINK PARA CLICAR
+    </a>
+</body>
+
+
+A tag <a> normalmente vem com algumas configurações no arquivo CSS, como:
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+----
+
+Link para alguma seção da página (ÂNCORA):
+
+<a href="#hero">IR PARA HERO SECTION</a>
+
+<div id="hero"></div>
+
+CSS:
+html {
+    scroll-behavior: smooth;            *para fazer um scroll suave
+}
+
+----
+
+By default, the linked page will be displayed in the current browser window. To change this, you must specify another target for the link.
+
+The target attribute specifies where to open the linked document.
+
+The target attribute can have one of the following values:
+
+_self - Default. Opens the document in the same window/tab as it was clicked
+_blank - Opens the document in a new window or tab
+_parent - Opens the document in the parent frame
+_top - Opens the document in the full body of the window
+
+Ex: <a href="https://www.w3schools.com/" target="_blank">Visit W3Schools!</a>
+
+-----
+
+Usando uma imagem como link:
+<a href="default.asp">
+    <img src="smiley.gif" alt="HTML tutorial" style="width:42px;height:42px;">
+</a>
+
+-----
+
+By default, a link will appear like this (in all browsers):
+
+An unvisited link is underlined and blue
+A visited link is underlined and purple
+An active link is underlined and red
+You can change the link state colors, by using CSS:
+
+<style>
+    a:link {
+    color: green;
+    background-color: transparent;
+    text-decoration: none;
+    }
+
+    a:visited {
+    color: pink;
+    background-color: transparent;
+    text-decoration: none;
+    }
+
+    a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+    }
+
+    a:active {
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+    }
+</style>
+
+
+A link can also be styled as a button, by using CSS:
+
+<style>
+    a:link, a:visited {
+    background-color: blue;
+    border-radius: 8px;
+    color: white;
+    padding: 15px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    }
+
+    a:hover, a:active {
+    background-color: red;
+    }
+</style>
+
+-----------------------------------------------&&&
+
+BOTÃO: <button></button>
+
+<button class="btn">CLIQUE AQUI</button>
+
+OU
+
+<div class="botao">
+    <a href="#">
+        <button type="submit">CLIQUE AQUI</button>
+    </a>
+</div>
+
+OU
+
+<div class="comprar">
+    <button class="comprar__button">
+        <span class="iconecompra"></span>
+        <span>CLIQUE AQUI PARA COMPRAR</span>
+    </button>
+</div>
+
+
+disabled = para desabilitar um botão
+
+
+
+-----
+
+
+A tag button vem com configurações no CSS, como:
+
+.botao {
+  text-decoration: none;
+  cursor: pointer;               
+  border: none;
+  border: 1px solid #fff;           *caso queira borda
+  color: white;
+  text-shadow: 1px 1px 1px #000;
+  padding: 16px 32px;
+  margin: 4px 2px;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bolder;
+  text-align: center;
+  transition-duration: 0.4s;
+  width: 100%;
+  align-itens: center;
+  background-image: linear-gradient(
+    to top left,
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.2) 30%,
+    rgba(0, 0, 0, 0)
+  );
+  box-shadow:
+    inset 2px 2px 3px rgba(255, 255, 255, 0.6),
+    inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+}
+
+.botao a {
+  background-color: white;
+  background-color: transparent;    *caso queira transparente
+  color: black;
+  border: 2px solid #04AA6D;
+}
+
+.botao a button:hover {                         
+  background-color: #04AA6D;
+  color: white;
+}
+
+.botao a button:active {
+  box-shadow:
+    inset -2px -2px 3px rgba(255, 255, 255, 0.6),
+    inset 2px 2px 3px rgba(0, 0, 0, 0.6);
+}
+
+
+
+------------------------------------------------&&&
+
+IMAGEM:  <img/>
+OBS: Converter primeiro imagem para WebP
+
+<body>
+    <img 
+        src="./assets/icons/logo.png"        *para um arquivo em um diretorio
+        src="https://www.w3schools.com"      *para uma url
+        alt="logo da empresa"                *texto alternativo pra imagem
+        width="104"                          *largura em pixels
+        height="142"                         *altura em pixels
+    />
+</body>
+
+------
+
+Responsivo:
+
+<picture>
+  <source srcset="img_smallflower.jpg" media="(max-width: 600px)">
+  <source srcset="img_flowers.jpg" media="(max-width: 1500px)">
+  <source srcset="flowers.jpg">
+  <img src="img_smallflower.jpg" alt="Flowers" style="width:auto;">
+</picture>
+
+Resize the browser width and the image will change at 600px and 1500px.
+
+------
+
+Imagem a esquerda ou direita do texto:
+
+<p><img src="smiley.gif" alt="Smiley face" style="float:right;width:42px;height:42px;">
+The image will float to the right of the text.</p>
+
+<p><img src="smiley.gif" alt="Smiley face" style="float:left;width:42px;height:42px;">
+The image will float to the left of the text.</p>
+
+-------
+
+Imagens com areas com links:
+Tutorial: https://www.w3schools.com/html/html_images_imagemap.asp
+
+Exemplo:
+
+<img src="workplace.jpg" alt="Workplace" usemap="#workmap">
+
+<map name="workmap">
+  <area shape="rect" coords="34,44,270,350" alt="Computer" href="computer.htm">
+  <area shape="rect" coords="290,172,333,250" alt="Phone" href="phone.htm">
+  <area shape="circle" coords="337,300,44" alt="Coffee" href="coffee.htm">
+</map>
+
+-----------------------------------------------&&&
+
+VIDEO:
+
+<video 
+    width="320" 
+    height="240" 
+    controls                         *adiciona controles, como play, pause e volume
+    autoplay
+    muted
+>
+  <source src="movie.mp4" type="video/mp4">
+  <source src="movie.ogg" type="video/ogg">
+    TEXTO QUE APARECE CASO O BROWSER NÃO SUPORTE O VIDEO.
+</video>
+
+
+
+It is a good idea to always include width and height attributes. If height and width are not set, the page might flicker while the video loads.
+
+The <source> element allows you to specify alternative video files which the browser may choose from. The browser will use the first recognized format.
+
+The text between the <video> and </video> tags will only be displayed in browsers that do not support the <video> element.
+
+
+Youtube:
+
+<iframe 
+    width="420" 
+    height="315"
+    src="https://www.youtube.com/embed/tgbNymZ7vqY">
+</iframe>
+
+
+Add mute=1 after autoplay=1 to let your video start playing automatically (but muted):
+<iframe width="420" height="315"
+src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=1&mute=1">
+</iframe>
+
+
+Add playlist=videoID and loop=1 to let your video loop forever.
+loop=0 (default) - The video will play only once.
+loop=1 - The video will loop (forever).
+<iframe width="420" height="315"
+src="https://www.youtube.com/embed/tgbNymZ7vqY?playlist=tgbNymZ7vqY&loop=1">
+</iframe>
+
+
+Add controls=0 to NOT display controls in the video player.
+controls=0 - Player controls does not display.
+controls=1 (default) - Player controls is displayed.
+<iframe width="420" height="315"
+src="https://www.youtube.com/embed/tgbNymZ7vqY?controls=0">
+</iframe>
+
+
+-----------------------------------------------&&&
+
+AUDIO:
+
+<audio 
+    controls
+    autoplay
+    muted
+    loop
+>
+  <source src="horse.ogg" type="audio/ogg">
+  <source src="horse.mp3" type="audio/mpeg">
+    TEXTO QUE APARECE CASO O BROWSER NÃO SUPORTE O AUDIO.
+</audio>
+
+The controls attribute adds audio controls, like play, pause, and volume.
+
+The <source> element allows you to specify alternative audio files which the browser may choose from. The browser will use the first recognized format.
+
+The text between the <audio> and </audio> tags will only be displayed in browsers that do not support the <audio> element.
+
+-----------------------------------------------&&&
+
+LISTAS: <ul> <li></li> </ul>
+
+Para listas não ordenadas:
+
+OBS: No VSCode, se digitar   ul>li*3    ele criará uma lista com 3 itens:
+
+<ul>
+    <li>Primeiro item</li>
+    <li>Segundo item</li>
+    <li>Terceiro item</li>
+</ul>
+
+Resultado:
+• Primeiro Item
+• Segundo Item
+• Terceiro Item
+
+
+É possível criar uma lista dentro de outra lista:
+
+<ul>
+    <li>Comercial</li>
+        <ul>
+          <li>Luiz</li>
+          <li>Carlos</li>
+        </ul>
+</ul>
+
+Resultado:
+• Comercial
+     ○ Luiz
+     ○ Carlos
+
+---
+
+Para listas ordenadas:
+<ol>
+    <li>Primeiro item</li>
+    <li>Segundo item</li>
+    <li>Terceiro item</li>
+</ol>
+
+Resultado:
+1. Primeiro Item da lista
+2. Segundo Item da lista
+3. Terceiro Item da lista
+
+----
+
+Para listas de definição:
+
+Usadas quando precisamos listar itens e atribuirmos uma descrição a eles.
+
+tag container ou tag pai = <dl>
+tag item ou tag filho = <dt>
+tag descrição = <dd>
+
+Exemplo:
+<dl>
+   <dt>Primeiro Item da lista não ordenada</dt>
+      <dd>Descrição do primeiro elemento </dd>
+   <dt>Segundo Item da lista não ordenada</dt>
+      <dd>Descrição do segundo elemento </dd>
+   <dt>Terceiro Item da lista não ordenada</dt>
+      <dd>Descrição do terceiro elemento </dd>
+</dl>
+
+Resultado:
+Primeiro Item da lista não ordenada
+      Descrição do primeiro elemento
+Segundo Item da lista não ordenada
+      Descrição do segundo elemento
+Terceiro Item da lista não ordenada
+      Descrição do terceiro elemento
+
+------------------------------------------------&&&
+
+TABELA:  <table></table>
+
+Para adicionar linhas de separação na tabela usa-se no lugar de <table>:
+<table width="100%" border="1">
+</table>
+
+O atributo border está obsoleto.
+
+Tabela simples:
+<table>
+   <tr>
+       <td>primeiro item da linha</td>
+       <td>segundo item da linha</td>
+       <td>terceiro item da linha</td>
+   </tr>
+</table>
+
+
+Tabela com titulo, cabeçalho e rodapé:
+
+<h1>Título da Tabela</h1>
+<table>
+   <thead>
+      <tr>
+         <th>Título do Cabeçalho coluna 1</th>
+         <th>Título do Cabeçalho coluna 2</th>
+     </tr>
+   </thead>
+   <tbody>
+       <tr>
+          <td>Linha 1 Coluna 1</td>
+          <td>Linha 1 Coluna 2</td>
+      </tr>
+   </tbody>
+   <tfoot>
+      <tr>
+          <th>Título do Rodapé coluna 1</th>
+          <th>Título do Rodapé coluna 2</th>
+      </tr>
+   </tfoot>
+</table>
+
+
+-----
+Para unir celulas da tabela:
+
+rowspan junta células verticalmente
+colspan junta células horizontalmente
+
+Exemplo de rowspan: (une verticalmente)
+       <tr>
+          <td rowspan="2">C1L1 + C1L2</td>
+          <td>C2L1</td>
+          <td>C3L1</td>     
+      </tr>
+       <tr>
+          <td>C2L2</td>
+          <td>C3L2</td>     
+      </tr>
+
+
+Exemplo de colspan: (une horizontalmente)
+       <tr>
+          <td colspan="2">C1L1 + C2L1</td>
+          <td>C2L1</td> 
+      </tr>
+       <tr>
+          <td>C1L2</td>
+          <td>C2L2</td>
+          <td>C3L2</td>     
+      </tr>
+
+---------------------------------------------------&&&
+
+TEXTO:
+
+Titulos:
+<h1></h1>
+<h2></h2>
+<h3></h3>
+<h4></h4>
+<h5></h5>
+<h6></h6>
+
+Paragrafo:
+<p></p>
+
+
+CSS inline:  (OBS: É melhor estilizar com CSS externo)
+<p style="color:red;">Texto em vermelho.</p>
+<p style="background-color:red;">Texto com fundo vermelho.</p>
+<p style="font-family:verdana;">Texto na fonte verdana.</p>
+<p style="font-size:30px;">Texto com tamanho 30px.</p>
+<p style="text-align:center;">Texto alinhado no centro.</p>
+
+<b> - texto em negrito
+<b>This text is bold</b>
+
+<strong> - texto importante
+<strong>This text is important!</strong>
+
+<i> - texto em italico
+<i>This text is italic</i>
+
+<em> - Emphasized text
+<em>This text is emphasized</em>
+
+<mark> - texto marcado (em amarelo)
+<p>Do not forget to buy <mark>milk</mark> today.</p>
+
+<small> - Smaller text (texto pequeno)
+<small>This is some smaller text.</small>
+
+<del> - texto riscado
+<p>My favorite color is <del>blue</del> red.</p>
+
+<ins> - Inserted text (texto fica sublinhado)
+<p>My favorite color is <del>blue</del> <ins>red</ins>.</p>
+
+<sub> - Subscript text (texto desce)
+<p>This is <sub>subscripted</sub> text.</p>
+
+<sup> - Superscript text (texto sobe)
+<p>This is <sup>superscripted</sup> text.</p>
+
+
+
+Ao usar o atributo title, ao passar o mouse por cima to texto uma caixinha aparecerá com um texto dentro:
+<p title="texto dentro da caixinha">Passe o mouse em cima deste texto.</p>
+
+-----
+
+Quebra de linha:
+<br>
+Ex:  <p>This is<br>a paragraph<br>with line breaks.</p>
+
+
+Usando a tag <pre> cada frase será colocada em uma linha diferente, não sendo preciso usar a tag <br>:
+<pre>
+  My Bonnie lies over the ocean.
+
+  My Bonnie lies over the sea.
+
+  My Bonnie lies over the ocean.
+
+  Oh, bring back my Bonnie to me.
+</pre>
+
+
+Para uma linha de separação:
+<hr>
+
+-----
+
+Texto responsivo:
+
+<h1 style="font-size:10vw">Hello World</h1>
+
+Usa a medida vw = viewport width
+
+-----------------------------------------------&&&
+
+FONT AWESOME:
+
+LINK do CDN:
+https://cdnjs.com/libraries/font-awesome
+TUTORIAL: https://www.youtube.com/embed/vYd5d5cdrPQ?autoplay=1
+
+CDN com tudo (pode ser muito pesado, então talvez seja melhor pegar apenas o CDN especifico)
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+Para incorporar dentro da tag head:
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/solid.css"
+        integrity="sha384-Tv5i09RULyHKMwX0E8wJUqSOaXlyu3SQxORObAI08iUwIalMmN5L6AvlPX2LMoSE" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/fontawesome.css"
+        integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous" />
+</head>
+
+
+
+
+Caso queira colocar um icone especifico:
+https://fontawesome.com/icons
+
+<i class="fa-solid fa-house"></i>
+
+
+
+Caso queira incorporar um kit criado por voce com apenas os icones que voce selecionou:
+<body>
+    <script src="https://kit.fontawesome.com/1d82588ad9.js" crossorigin="anonymous"></script>
+</body>
+
+
+OBS: É melhor usar icones em svg do que png
+
+--------------------------------------------------------&&&
+<FOOTER></FOOTER>
+
+Logotipo
+Redes sociais (embaixo)
+
+Newsletter:
+-Quer receber mais noticías sobre...
+-Inscreva-se na newsletter e receba as principais notícias sobre... diariamente em seu email
+-(Barra de cadastro de email)(Botão Cadastrar)
+
+Links úteis / Serviços / Institucional / Especialidades:  (Geralmente apresenta os links das seções do site)
+-Home, Loja, Produtos, Nossa equipe, Blog, Contato, Meus pedidos, etc...
+-Quem somos / Sobre nós
+
+Contato / Nossos contatos / Suporte / Onde nos encontrar:
+-Fale Conosco / Entre em contato / Envie um email / Whatsapp / Instagram
+-email, telefone, whatsapp, endereço (com icones)
+-FAQ
+-Atendimento das ... às ... / Horário de atendimento
+
+Siga-me:
+-Redes Sociais
+
+Onde estamos?
+-Endereço
+-Ver no mapa
+
+Nossas políticas:
+-Política de Privacidade 
+-Políticas de devolução e trocas
+-Políticas de Entrega e Prazo
+-Cookies (às vezes a seção de cookies está dentro da Política de Privacidade)
+
+-Termos e Serviços??
+-Programa de Integridade??
+-Portal de segurança??
+
+-Formas de pagamento
+-Loja verificada
+
+-Copyright 
+© 2025 Jovem Nerd Produção de Conteúdo LTDA.         ou         Jovem Nerd 2025 © Todos os direitos reservados   
+OBS: O símbolo de copyright não aparece em navegadores antigos, então é preciso usar &copy;  :
+<p>Jovem Nerd 2025 &copy; Todos os direitos reservados</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------&&&
+
+BARRA DE BUSCA:
+
+<main>
+    <div class="main-container">
+        <nav class="header__navigation">
+            <div class="header__search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="search-input" type="text" maxlength="800" placeholder="Buscar?" />
+            </div>
+        <nav>
+    <div>
+<main>
+
+
+No CSS:
+
+.main-container{
+    max-width: 80vw;
+    height: 100vh;
+    margin-left: 320px;
+    margin-right: 56px;
+}
+
+.header__navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    margin: 10px;
+    border-radius: 8px;
+    background-color: #121212;
+    padding: 12px;
+}
+
+.header__search {
+    display: flex;
+    align-items: center;
+    width: 364px;
+    height: 48px;
+    margin-left: 8px;
+    background-color: #242424;
+    border-radius: 500px;
+    border: 1px solid transparent;
+}
+  
+.header__search i {
+    width: 16px;
+    height: 16px;
+    margin-left: 10px;
+    color: #ffffff
+}
+  
+  .header__search input {
+    background: transparent;
+    border: none;
+    padding: 0px 100px 0 12px;
+    color: #fff;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space: nowrap;
+    outline: none;
+}
+
+--------------------------------------&&&
+
+<template></template>
+
+HTML:
+<button onclick="Mostrar()">Mostrar</button>
+
+<div id="txt"></div>
+
+<template id="template">
+	<div id="container">
+		<div id="content1">TEXTO 1</div>
+        <div id="content2">TEXTO 2</div>
+	</div>
+</template>
+
+JS:
+function Mostrar() {
+  const txt = document.getElementById("txt")
+  const template = document.getElementById("template").content.cloneNode(true);
+  txt.appendChild(template);
+}
+
+Com isso os elementos dentro da tag template serão clonados dentro da tag div com id=txt
+
+--------------
+
+Exemplo 2:
+
+HTML:
+<button onclick="Mostrar()">Mostrar</button>
+
+<div id="txt"></div>
+
+<template id="template">
+	<div id="container">
+		<div id="nome">Nome: </div>
+	</div>
+</template>
+
+
+JS:
+const usuarios = ["Renato", "Bruno", "Fernanda", "José", "Jorge", "Nilton"];
+
+function Mostrar() {
+    const template = document.getElementById("template");
+    const txt = document.getElementById("txt");
+    
+    usuarios.map( pessoa => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector("#content1").textContent = "Nome: " + pessoa;
+        txt.appendChild(clone);
+    });
+}
+
+----
+
+OU usando ForEach:
+
+const usuarios = ["Renato", "Bruno", "Fernanda", "José", "Jorge", "Nilton"];
+
+function Mostrar() {
+    const template = document.getElementById("template");
+    const txt = document.getElementById("txt");
+    
+    usuarios.forEach( pessoa => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector("#content1").textContent = "Nome: " + pessoa;
+        txt.appendChild(clone);
+    });
+}
+
+----
+
+Ou usando For:
+
+const usuarios = ["Renato", "Bruno", "Fernanda", "José", "Jorge", "Nilton"];
+
+function Mostrar() {    
+    const template = document.getElementById("template");
+    const txt = document.getElementById("txt");
+
+    for (let i = 0; i < usuarios.length; i++) {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector("#content1").textContent = "Nome: " + usuarios[i];
+        txt.appendChild(clone);
+    }    
+}
+
+
+------------------
+
+Exemplo 3:
+
+HTML:
+<button onclick="Mostrar()">Mostrar</button>
+
+<div id="txt"></div>
+
+<template id="template">
+	<div id="container">
+		<div id="content1">Nome: </div>
+		<div id="content2">Sobrenome: </div>
+	</div>
+</template>
+
+
+JS:
+const usuarios = [
+	{nome : "Renato", sobrenome: "Silva"},
+	{nome : "Maria", sobrenome: "Souza"},
+	{nome : "Bruno", sobrenome: "Campos"},
+	{nome : "Jorge", sobrenome: "Furtado"}
+]
+
+function Mostrar() {
+    const template = document.getElementById("template");
+    const txt = document.getElementById("txt");
+    
+    usuarios.map( pessoa => {
+        const clone = template.content.cloneNode(true);
+        clone.querySelector("#content1").textContent = "Nome: " + pessoa.nome;
+	    clone.querySelector("#content2").textContent = "Sobrenome: " + pessoa.sobrenome;
+        txt.appendChild(clone);
+    });
+}
+
+
+CSS:  (A estilização seria nos items dentro da tag template)
+#container {
+  margin: 0.5rem;
+}
+
+#content1 {
+  padding: 0.5rem;
+  background-color: yellow;
+  border: 1px solid;
+}
+
+#content2 {
+  padding: 0.5rem;
+  background-color: pink;
+  border: 1px solid;
+}
+
+
+-------------------------------------------------&&&
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------&&&
+
+LGPD - LEI DE PROTEÇÃO DE DADOS
+MENSAGEM PARA GUARDAR COOKIES
+
+VIDEO: https://www.youtube.com/embed/LcPfercOA2M?autoplay=1
+
+
+HTML:
+
+<div class="cookies-msg" id="cookies-msg">
+    <div class="cookies-txt">
+        <p>Este site usa cookies e tecnologias afins, que são pequenos arquivos ou pedaços de texto baixados para um aparelho quando o visitante acessa um website ou aplicativo. Ao utilizar nosso site você está de acordo com a utilização dos cookies para te proporcionar uma melhor experiência. <a href="./politica-privacidade.html">Saiba mais.</a></p>
+
+        <div class="cookies-btn">
+            <button onclick="aceito()">Aceito</button>
+        </div> 
+    </div>
+</div>
+
+
+JS:
+let msgCookies = document.getElementById('cookies-msg')
+
+function aceito(){
+    localStorage.lgpd = "sim"
+    msgCookies.classList.remove('mostrar')
+}
+
+if(localStorage.lgdp == 'sim'){ 
+    msgCookies.classList.remove('mostrar')
+}
+else{
+    msgCookies.classList.add('mostrar')
+}
+I
+
+
+CSS:
+.cookies-msg{ 
+    width: 80%;
+    background-color: #fff;
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%);
+    border-radius: 15px;
+    display: none;
+}
+
+.cookies-msg.mostrar{ 
+    display: block;
+}
+
+.cookies-msg .cookies-txt{
+    display: flex;
+    align-items: center;
+    text-align: justify;
+    padding: 20px;
+}
+.cookies-msg .cookies-btn{
+    margin-left: 30px;
+}
+.cookies-msg .cookies-btn button{
+    background-color: #000;
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 10px 40px; 
+    cursor: pointer;
+    transition: .2s;
+}
+
+.cookies-msg .cookies-btn button:hover{
+    transform: scale(0.9);
+}
+
+-----------------
+
+Outros textos de cookies:
+
+SANTANDER
+Utilizamos <a>cookies</a> para melhorar sua experiência em nosso site e direcionar conteúdos relevantes para você. Ao continuar, você concorda e aceita nossa <a>Política de Privacidade</a>. Se preferir, informe quais cookies você permite utilizarmos <a>clicando aqui</a>.
+
+EXTRA
+Nós usamos cookies e outras tecnologias semelhantes para melhorar a sua experiência em nossos serviços, personalizar publicidade e recomendar conteúdo de seu interesse. Ao utilizar nossos serviços, você está ciente dessa funcionalidade. Informamos ainda que atualizamos nosso <a>Aviso de Privacidade</a>. Conheça nosso <a>Portal da Privacidade</a> e veja o nosso novo Aviso.
+
+
+-----------------
+
+Site para gerar uma página de politicas de privacidade e termos de uso:
+VIDEO TUTORIAL: https://www.youtube.com/embed/hQahWYnWOqM?autoplay=1
+LINK DO SITE: https://viverdeadsense.com/gerador-de-politica/
+
+outro site: https://www.politicaprivacidade.com
+outro site: https://www.ramirolobo.com/gerador-de-politica-de-privacidade-lgpd/
+
+OBS: Leia o texto e realize eventuais modificações nele
+
+Para criar outros termos de uso, politica de privacidade, troca, reembolso, etc...
+LINK: https://www.nuvemshop.com.br/ferramentas/
+
+--------------
+
+COOKIES COM DATA DE VALIDADE
+VIDEO: https://www.youtube.com/embed/AuLMvRcWmss?autoplay=1
+
+HTML:
+<div id="cookies">
+    <div class="container">
+        <div class="subcontainer">
+            <div class="cookies">
+                <p>This website uses cookies to ensure you get the best experience on our website.<a href="">More info.</a></p>
+                <button id="cookies-btn">That's fine! </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+JS:
+
+setCookie = (cName, cValue, expDays) => {
+    let date = new Date();
+    date.setTime(date.getTime() + (expDays * 24 * 60 * 60 * 1000)); 
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = cName + "=" + cValue + "; " + expires + "; path=/";
+}
+
+getCookie = (cName) => {
+    const name = cName + "=";
+    const cDecoded = decodeURIComponent(document.cookie);
+    const cArr = cDecoded.split("; ");
+    let value; 
+    cArr.forEach(val => {
+        if(val.indexOf(name) === 0) value = val.substring(name.length);
+    })
+    return value;
+}
+
+
+document.querySelector("#cookies-btn").addEventListener("click", () => {
+    document.querySelector("#cookies").style.display = "none";
+    setCookie("cookie", true, 30);      //expira em 30 dias
+})
+
+cookieMessage = () => {
+    if(!getCookie("cookie"))
+        document.querySelector(#cookies).style.display = "block";
+}
+
+window.addEventListener("load", cookieMessage);
+
+
+CSS: 
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 1600px;
+    margin: auto;    
+}
+
+.subcontainer {
+    width: 85%;
+    margin: auto;    
+}
+
+#cookies{
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    color: white;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1;
+    display: none;
+}
+
+.cookies{
+    min-height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cookies a{
+    color: yellow;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+#cookies-btn{
+    border-radius: 5px;
+    padding: 8px 12px 8px 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    border: 3px solid white;
+    background-color: black;
+    color: white;
+}
+
+@media(max-width: 1600px){
+    .container{
+        width: 100%;
+    }
+}
+
+@media(max-width: 1024px){
+    .cookies{
+        padding: 10px 0;
+    }
+}
+
+
+
+
+
+----------------------------------------------------------&&&
+
+PAGINA 404 NOT FOUND:
+
+VIDEO: https://www.youtube.com/embed/kPtS4vO42II?autoplay=1
+
+Primeiro crie um arquivo html com o visual de uma página 404. 
+Ex: 404errorpage.html    ou   not-found-page.html
+
+
+
+Depois crie um arquivo chamado  .htacess           (Sim, é esse o nome seme nada antes do ponto)
+Dentro deste arquivo, escreva:
+
+ErrorDocument 404 /not-found-page.html
+
+
+Ambos os arquivos ficam na raiz do servidor (fora de outras pastas e junto com o index.html)
+
+
+
+Bons exemplos de 404:
+Video: https://www.youtube.com/embed/CpazY-6Iux0?autoplay=1
+
+Texto 1:
+
+404 - PÁGINA NÃO ENCONTRADA
+Esta página não existe ou foi deletada.
+
+*Voltar para a página principal*      (botão)
+ou
+*Voltar para a Home Page*      (botão)
+
+
+
+Texto 2:
+
+404 - PÁGINA NÃO ENCONTRADA
+Esta página não existe ou foi deletada. No entanto, você pode tentar:
+
+-Voltar para a <a>página inicial</a>
+-Mudar a url da página.
+-Usar a barra de pesquisa abaixo para procurar o que precisa.
+
+*Barra de busca*
+
+
+
+Texto 3:
+
+404         (ou Erro 404)
+Oops!       (Ou Desculpe)
+Não conseguimos achar a página que você está procurando.
+
+Talvez você consiga encontrar o que precisa abaixo?
+(HOME)   (PRODUTOS)   (CONTATOS)
+
+
+
+Site com ilustrações grátis para páginas 404:
+https://error404.fun/
+
+
+Para substituir uma palavra especifica que diversos usuários estão errando ao digitar uma url:
+VIDEO: https://www.youtube.com/embed/ugl5BUQBnXY?autoplay=1
+
+Por exemplo, digamos que vários usuários estejam escrevendo errado a url https//www.site.com/jeleia
+Seria possível adicionar um redirecionamento para a url correta https//www.site.com/geleia
+
+----------------------------------------------------------&&&
+
+SEO
+
+VIDEO: https://www.youtube.com/watch?v=R_gxu7fkBwk
+
+Ferramentas de analise de dados:
+Google Search console
+Google Analytics
+
+Testar velocidade do site:
+PageSpeed Insights
+
+Achar palavras chave:
+Google trends
+
+Limpar e organizar código:
+HTML Cleaner
+Dirty Markup
+JS Beautifier
+
+Metatitulo = entre 50 e 60 caracteres
+Metadescrição = no maximo 160 caracteres
+
+Schema Markup - Rich Snippets
+https://www.youtube.com/embed/ZIOQOMhZiY8?autoplay=1
+
+
+----------------------------------------------------------&&&
+
+FORMULARIO:
+
+        //VIDEO: https://www.youtube.com/watch?v=0oKKt4775ow
+
+        //TIPOS DE FORMULARIO
+
+        <form action="https://....." method="POST">   //*por padrão é o método GET
+
+          <fieldset> //*Para criar seções no formulário (Opcional)
+            <legend>NOME DO FORMULÁRIO</legend>      //*Serve para dar um título para uma seção fieldset de um formulário.
+
+            <div>
+                <label for="idtexto">Texto: </label>
+                <input type="text" id="idtexto" name="idtexto" minlength="3" maxlegth="10" size="10" placeholder="Texto" required />
+            </div>
+
+            <div>
+                <label for="idpassword">Senha: </label>
+                <input type="password" id="idpassword" name="idpassword" placeholder="Digite sua senha" minlength="8" required inputmode="numeric" autocomplete="off"/>
+            </div>
+            // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" => At least one  number and one uppercase and lowercase letter, and at least 8 or more characters
+            //pattern=".{8,}" => At least eight or more characters
+
+            <div>
+                <label for="idcpf">CPF: </label>
+                <input type="cpf" id="idcpf" name="idcpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" title="Digite um CPF no formato: xxx.xxx.xxx-xx" minlength="11" required />
+            </div>
+            //torne os pontos e traço opcionais aceitando a entrada só de números como válida também \d{3}\.?\d{3}\.?\d{3}-?\d{2}
+            //É possível aceitar CPF e CNPJ no mesmo campo usando pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})" 
+            //<input type="text" name="cpf"  pattern="(\d{3}\.?\d{3}\.?\d{3}-?\d{2})|(\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2})">
+
+            <div>
+                <label for="iddate">Data: </label>       //*Serve para inserir data sem fuso horário a partir de um calendário.
+                <input type="date" id="iddate" name="iddate" min="2023-01-01" max="2023-12-31" />   //*min e max são opcionais
+            </div>
+
+            <div>
+                <label for="iddatetime">Hora e data: </label>       
+                <input type="datetime-local" id="iddatetime" name="iddatetime" />
+            </div>
+
+            <div>
+                <label for="idtime">Hora: </label>      
+                <input type="time" id="idtime" name="idtime" min="09:00" max="18:00" />
+            </div>
+
+            <div>
+                <label for="idfile">Arquivo: </label>
+                <input type="file" id="idfile" name="idfile" />
+            </div>
+            //*é necessário adicionar na tag <form>: enctype="multipart/form-data"
+
+            <div>
+                <label for="idemail">Email: </label>
+                <input type="email" id="idemail" name="idemail" placeholder="Digite o seu email" minlength="5" maxlegth="30" required />
+            </div>
+            //pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" => characters@characters.domain (characters followed by an @ sign, followed by more characters, and then a "."
+
+            <div> 
+                <label for="idtel">Telefone: </label> 
+                <input type="tel" id="idtel" name="idtel" placeholder="(99) 9999-9999" pattern="(\([0-9]{2}\))\s([9]{1})?([0-9]{4})-([0-9]{4})" title="Número de telefone precisa ser no formato (99) 9999-9999" required />
+            </div>  
+
+            <div>
+                <label for="idtextarea">Caixa de texto: </label>
+                <textarea id="idtextarea" name="idtextarea" rows="5" cols="50"></textarea>
+            </div>
+
+            <div>
+                <label for="idcolor">Escolha uma cor: </label>
+                <input type="color" id="idcolor" name="idcolor" />
+            </div>
+
+            <div>
+                <label for="idnumber">Escolha um número: </label>
+                <input type="number" id="idnumber" name="idnumber" min="10" max="100" />
+            </div>
+
+            <div>
+                <label for="idurl">Digite a URL: </label>
+                <input type="url" id="idurl" name="idurl" />
+            </div>
+
+            <div> //*Pode escolher mais de uma opção
+                <label for="idcheckbox">Opções: </label> <br>
+                <label for="idcheck1">Opção 1: </label>
+                <input type="checkbox" id="idcheck1" name="idcheckbox" value="Opção 1" checked/> <br>   //*checked é opcional
+                <label for="idcheck2">Opção 2: </label>
+                <input type="checkbox" id="idcheck2" name="idcheckbox" value="Opção 2" /> <br>
+                <label for="idcheck3">Opção 3: </label>
+                <input type="checkbox" id="idcheck3" name="idcheckbox" value="Opção 3" /> <br>
+            </div>
+
+            <div> //*Só pode escolher 1 opção
+                <label for="idradio">Opções: </label> <br>
+                <label for="idradio1">Opção 1 </label>
+                <input type="radio" id="idradio1" name="idradio" value="Opção 1" /> <br>
+                <label for="idradio2">Opção 2 </label>
+                <input type="radio" id="idradio2" name="idradio" value="Opção 2" /> <br>
+                <label for="idradio3">Opção 3 </label>
+                <input type="radio" id="idradio3" name="idradio" value="Opção 3" /> <br>
+            </div>
+
+            <div> //*Só pode escolher 1 opção. Pode-se colocar o atributo multiple para escolher mais de uma opção.
+                <select id="idselect" name="idselect">
+                    <option value="option1" selected>Opção 1</option>    //*selected é opcional
+                    <option value="option2">Opção 2</option>
+                    <option value="option3">Opção 3</option>
+                </select>
+            </div>
+
+
+            <div>
+                <input type="range" id="idrange" name="idrange" min="-10" max="10" step="1" />
+            </div>
+
+            <input type="submit" value="ENVIAR" />
+
+            <input type="reset" value="LIMPAR" />
+        
+        </form>
+
+            Obs: É melhor enviar o form através de javascript no form:
+            <form onsubmit="return ENVIAR(this)">
+                .....
+            </form>
+            ou usando onclick no botão (ou um addEventListener também):
+            <input type="button" onclick="FunçãoJavascript()" value="Botão" />
+
+            Obs: É possível inserir o atributo title em um campo de input, e ele será mostrado quando não atender algum requisito:
+            <input id="example" type="text" name="text" title="Faltam requisitos" pattern="[0-9]{5}" required/>
+
+         ///////////////////////////////////////////////////////////////////////////////////////////////
+
+         VIDEO: https://www.youtube.com/watch?v=PQs8mwWmP6E
+
+////     PARA COLETAR OS DADOS DE UM FORMULÁRIO
+
+        -Coletando os dados de type="text":
+
+        HTML:
+        <label for="idnome">Nome: </label>
+        <input type="text" id="idnome" name="idnome" placeholder="Digite o seu nome" minlength="3" maxlegth="15" required />
+        <input type="button" onclick="ENVIAR()" value="Enviar" />
+
+        JS:
+        function ENVIAR() {
+            let nome = document.getElementById("idnome").value
+            console.log(nome)
+        }
+
+        //////////////////
+
+        -Coletando os dados de type="email":
+
+        HTML:
+        <label for="idemail">Email: </label>
+        <input type="email" id="idemail" name="idemail" placeholder="Digite o seu email" minlength="5" maxlegth="30" required />
+        <input type="button" onclick="ENVIAR()" value="Enviar" />
+
+        JS:
+        function ENVIAR() {
+            let email = document.getElementById("idemail").value
+            console.log(email)
+        }
+
+        /////////////////////
+
+        -Coletando os dados de type="select":
+
+        HTML:
+        <select id="idselect" name="idselect">
+            <option value="Opção 1">Opção 1</option>   
+            <option value="Opção 2">Opção 2</option>
+            <option value="Opção 3">Opção 3</option>
+        </select>
+        <input type="button" onclick="ENVIAR()" value="Enviar" />
+
+        JS:
+        function ENVIAR() {
+            let select = document.getElementById("idselect").value
+            console.log(select)
+        }
+
+        ////////////////////
+
+        -Coletando os dados de type="radio":
+
+        HTML:
+        <label for="idradio">Opções: </label> <br>
+        <label for="idradio1">Opção 1 </label>
+        <input type="radio" id="idradio1" name="idradio" value="Opção 1" /> <br>
+        <label for="idradio2">Opção 2 </label>
+        <input type="radio" id="idradio2" name="idradio" value="Opção 2" /> <br>
+        <label for="idradio3">Opção 3 </label>
+        <input type="radio" id="idradio3" name="idradio" value="Opção 3" /> <br>
+        <input type="button" onclick="ENVIAR()" value="Enviar" />
+
+        JS:
+        function ENVIAR() {
+            const radio = document.querySelector("input[name=idradio]:checked").value;
+            console.log(radio);
+        }
+
+        /////////////////////
+
+        -Coletando os dados de type="checkbox":
+
+        HTML:
+        <label for="idcheckbox">Opções: </label> <br>
+        <label for="idcheck1">Check 1: </label>
+        <input type="checkbox" id="idcheck1" name="idcheckbox" value="Opção 1" /> <br>
+        <label for="idcheck2">Check 2: </label>
+        <input type="checkbox" id="idcheck2" name="idcheckbox" value="Opção 2" /> <br>
+        <label for="idcheck3">Check 3: </label>
+        <input type="checkbox" id="idcheck3" name="idcheckbox" value="Opção 3" /> <br>
+        <input type="button" onclick="ENVIAR()" value="Enviar" />
+
+        JS: (FORMA 1 COM QUERY SELECTOR ALL)
+        function ENVIAR() {
+            let options = [];
+            let checkbox = document.querySelectorAll("[name=idcheckbox]:checked");
+            for (let i = 0 ; i < checkbox.length ; i++) {
+                options.push(checkbox[i].value);
+            }
+            console.log(options);
+        }
+
+        JS: (FORMA 2 COM GET ELEMENTS BY NAME)
+        function ENVIAR() {
+            let options = [];
+            let checkbox = document.getElementsByName("idcheckbox");
+            for (let i = 0 ; i < checkbox.length ; i++) {
+              if(checkbox[i].checked) {
+                options.push(checkbox[i].value);
+              }
+            }
+            console.log(options);
+        }
+
+////    ////////////////////////////////////////////////////////////////////////////////////////////
+        VIDEO: https://www.youtube.com/watch?v=3bGQ7s0mnHY
+
+        PARA CRIAR MASCARA DE INPUT DE CPF COM JAVASCRIPT PURO
+
+        HTML:
+        <form>
+            <div>
+                <label for="idcpf">CPF: </label>
+                <input type="text" id="idcpf" name="idcpf" placeholder="Digite seu CPF" maxlength="14" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9.-]/g, '')" required />
+            </div>
+        </form>
+
+        JS:
+        const cpf = document.getElementById("idcpf")
+
+        cpf.addEventListener("keypress" , () => {
+            let cpflength = cpf.value.length
+
+            if (cpflength === 3 || cpflength === 7) {
+                cpf.value += "."
+            }
+            else if (cpflength === 11) {
+                cpf.value += "-"
+            }
+        })
+        
+
+        ///////////////////////////////////////////////////////////////////////////////
+        VIDEO: https://www.youtube.com/watch?v=LT8eZdodA_0
+
+////    PARA CRIAR MASCARA DE INPUT DE CPF, TEL, EMAIL, ETC... COM JQUERY
+
+        -Fazer o download do jquery no site: https://jquery.com/download/   (pegar a url de Download the compressed, production jQuery ...)
+        -Instalar o jquery no html, antes do fim do < body >:
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script >
+
+        -Fazer o download do jquery mask plugin no site: https://cdnjs.com/libraries/jquery.mask
+        -Instalar o jquery mask plugin no html, antes do fim do < body >: 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script >
+
+        -Utilizar uma das máscaras disponíveis no site: https://igorescobar.github.io/jQuery-Mask-Plugin/docs.html
+        -Adicionar a máscara em um <script> antes do fim do < body > e APÓS OS SCRIPTS ACIMA:
+        
+        Exemplo:
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>
+            $('#date').mask('00/00/0000');
+            $('#time').mask('00:00:00');
+            $('#date_time').mask('00/00/0000 00:00:00');
+            $('#cep').mask('00000-000');
+            $('#phone').mask('0000-0000');
+            $('#phone_with_ddd').mask('(00) 0000-0000');
+            $('#phone_with_ddd').mask('(00) 00000-0000');    //*celular no brasil
+            $('#mixed').mask('AAA 000-S0S');
+            $('#cpf').mask('000.000.000-00', {reverse: true});
+            $('#cnpj').mask('00.000.000/0000-00', {reverse: true});
+            $('#money').mask('000.000.000.000.000,00', {reverse: true});
+            $('#money2').mask("#.##0,00", {reverse: true});
+            $('#percent').mask('##0,00%', {reverse: true});
+            $('#clear-if-not-match').mask("00/00/0000", {clearIfNotMatch: true});
+            $('#placeholder').mask("00/00/0000", {placeholder: "__/__/____"});
+            $('#selectonfocus').mask("00/00/0000", {selectOnFocus: true});
+        < /script>
+
+////    JQUERY MASK PARA CPF:
+
+        <label for="idcpf">CPF: </label>
+        <input type="cpf" id="idcpf" name="idcpf" placeholder="Digite o seu CPF" required />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>  
+            $('#idcpf').mask('000.000.000-00', {reverse: true});
+        </ script>
+
+        ////////////////////
+
+////    JQUERY MASK PARA CNPJ:
+
+        <label for="idcnpj">CNPJ: </label>
+        <input type="cpf" id="idcnpj" name="idcnpj" placeholder="Digite o seu CNPJ" required />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>  
+            $('#idcnpj').mask('00.000.000/0000-00', {reverse: true});
+        </ script>
+
+        ////////////////////
+
+////    JQUERY MASK PARA CPF E CNPJ JUNTOS:
+
+        <label for="idcpfcnpj">CPF/CNPJ: </label>
+        <input type="cpf" id="idcpfcnpj" name="idcpfcnpj" placeholder="Digite o seu CPF ou CNPJ" required />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>  
+            var options = {
+                    onKeyPress : function(cpfcnpj, e, field, options) {
+                        var masks = ['000.000.000-009', '00.000.000/0000-00'];
+                        var mask = (cpfcnpj.length > 14) ? masks[1] : masks[0];
+                        $('#idcpfcnpj').mask(mask, options);
+                    }
+            };
+
+            $('#idcpfcnpj').mask('000.000.000-009', options);
+        </ script>
+
+        ///////
+
+        Outra forma (mais trabalhosa):
+
+        <label>CPF/CNPJ</label>
+        <input type="text" name="cpfCnpj" class="form-control" />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></ script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></ script>
+        <script>
+            var CpfCnpjMaskBehavior = function (val) {
+                return val.replace(/\D/g, '').length <= 11 ? '000.000.000-009' : '00.000.000/0000-00';
+            },
+            cpfCnpjpOptions = {
+                onKeyPress: function(val, e, field, options) {
+                    field.mask(CpfCnpjMaskBehavior.apply({}, arguments), options);
+                }
+            };
+
+            $(function() {
+                $(':input[name=cpfCnpj]').mask(CpfCnpjMaskBehavior, cpfCnpjpOptions);
+            })
+        </ script>
+
+        ////////////////////
+
+////    JQUERY MASK PARA CEP:
+        
+        <label for="idcep">CEP: </label>
+        <input type="text" id="idcep" name="idcep" placeholder="Digite o seu CEP" required />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>  
+            $('#idcep').mask('00000-000');
+        </ script>
+
+        ////////////////////
+
+////    JQUERY MASK PARA TELEFONE:
+        
+        <label for="idtel">TELEFONE: </label>
+        <input type="tel" id="idtel" name="idtel" placeholder="(99) 9999-9999" required />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>  
+            $('#idtel').mask('(00) 0000-0000');
+        </ script>
+
+        ////////////////////
+
+////    JQUERY MASK PARA CELULAR:
+        
+        <label for="idcel">CELULAR: </label>
+        <input type="tel" id="idcel" name="idcel" placeholder="(99) 99999-9999" required />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>  
+            $('#idcel').mask('(00) 00000-0000');
+        </ script>
+
+        ////////////////////
+
+////    JQUERY MASK PARA VALOR EM REAL (R$):
+        
+        <label for="idvalor">VALOR: </label>
+        <input type="text" id="idvalor" name="idvalor" placeholder="R$ 0,00" maxlength="20" required />
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js">< /script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js">< /script>
+        <script>  
+            $('#idvalor').mask("#.##0,00", {reverse: true});
+        </ script>
+        
+        ////////////////////////////////////////////////////////////
+
+        PATTERNS
+        link: https://www.html5pattern.com/
+
+////    Caracteres:
+
+        -   =   -
+        .   =   \.
+        (   =   \(
+        )   =   \)
+
+        ////
+
+////    Dicionário:
+
+        [0-9]{3}  =  Significa 3 números de 0 a 9
+        [a-z]{2}  =  Significa 2 letras de "a" a "z"
+        [A-Z]{4}  =  Significa 4 letras de "A" a "Z"
+        [0-9]{3,}  =  Significa no mínimo 3 números de 0 a 9
+        \([0-9]{2}\)   =  Significa 2 números de 0 a 9 entre parenteses. Exemplo: (21)
+        [0-9a-zA-z]{5} = Significa 5 caracteres que podem ser: 0 a 9  ou  a até z  ou  A até Z
+        [0-9]{1,10} = Significa entre 1 e 20 caracteres de 0 a 9
+        [a-zA-Z]{10} [a-zA-Z]{10} = Significa 2 palavras com 10 caracteres de "A" até "Z" ou "a" até "z" com um espaço entre as duas palavras
+        ^[a-zA-Z]{2}[0-9]{2}$  = Significa que deve começar com 2 letras e terminar com 2 números
+        \w{5} = Significa 5 caracteres que pode ser: A-Z ou a-z ou 0-9 ou _
+        \d{5} = Significa 5 números
+        \d+ = Significa para 1 ou ou mais números
+        [,.] = Significa que pode usar , ou .
+
+        ////
+
+////    Tipos:
+
+        Alfanumérico com 1 ou mais caracteres = [a-zA-Z0-9]+
+        Username com 1 a 20 caracteres = ^[a-zA-Z]{1,20}$    ou    ^[a-zA-Z0-9_.]{1,20}$
+        Password (precisa ter maiúsculas, minúsculas e número) = ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$
+        Senha com 6 digitos: [a-zA-Z0-9]{6}
+        Password com no mínimo 8 caracteres (precisa ter maiúsculas, minúsculas e número/caractere especial) = (?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$
+        Número de cartão de crédito = [0-9]{13,16}
+        Número de cartão de crédito AMEX = [0-9]{4} *[0-9]{6} *[0-9]{5}
+        CEP = [0-9]{5}[\-]?[0-9]{3}
+        Data (DD.MM.AAAA) = (0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}
+        Validação completa de data (DD-MM-AAAA)= (?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))-(?:(?:0[1-9]|1[0-2])-(?:19|20)[0-9]{2}
+        Hora (hh:mm:ss) : (0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}
+        Telefone (+99(99)9999-9999) = [\+]\d{2}[\(]\d{2}[\)]\d{4}[\-]\d{4} 
+        Celular ((99)99999-9999) = \([0-9]{2}\)[9]{1}[0-9]{4}-[0-9]{4}
+        CPF (999.999.999-99) = [0-9]{3}[\.?][0-9]{3}[\.?][0-9]{3}[\-?][0-9]{2} 
+        Email (não use pattern) = <input type="email" name="" value="" required />
+        Número com ou sem decimal (Ex: 9 ou 9.9 ou 9,9) = [-+]?[0-9]*[.,]?[0-9]+
+        Preço (1.00) = \d+(\.\d{2})?
+        Preço (1,00) = \d+(,\d{2})?
+
+--------------------------------------------------------------&&&
+
+REGEX - Expressões regulares
+
+        PARA UTILIZAR O REGEX COM O SEARCH()
+        VIDEO: https://www.youtube.com/watch?v=z0EnAoH09oU
+
+        ////    Para encontrar um ou mais caracteres de uma string desconsiderando letra maiúscula ou minúscula (Case sensitive): 
+
+        var animal = "Gato Preto"
+
+        var x = animal.search(/preto/i)
+
+        console.log(x)
+        >>> 5
+
+        Obs: O modificador i no REGEX significa o não uso de case sensitive.
+
+        ////////////////////////////////////////////
+
+        ////    PARA ENCONTRAR A QUANTIDADE TOTAL DE UM CARACTERE ESPECÍFICO DE UMA STRING
+        VIDEO: https://www.youtube.com/watch?v=z0EnAoH09oU
+
+        var fruta = "banana"
+
+        var x = fruta.match(/a/g)
+
+        console.log(x)
+        >>> ['a', 'a', 'a']
+                0: "a"
+                1: "a"
+                2: "a"
+                length: 3
+
+        Obs: O modificador g no REGEX indica a pesquisa por uma quantidade de caracteres na string
+
+        Ele é case sensitive e não diferencia letra maiúscula de minúscula. Para isso é preciso usar o i no REGEX:
+
+        var fruta = "banAna"
+
+        var x = fruta.match(/a/gi)
+
+        console.log(x)
+        >>> ['a', 'A', 'a']
+                0: "a"
+                1: "A"
+                2: "a"
+                length: 3
+
+        Obs: O match com o REGEX procura a variavel globalmente
+
+        /////
+
+        ////    Para transformar o resultado em uma string:
+
+        var ano = "2023"
+
+        var x = ano.match(/2/g)
+
+        console.log(x.toString())
+        ou
+        console.log(x.toLocaleString())
+        >>> 2, 2
+
+        /////
+
+        ////    Para obter somente a quantidade:
+
+        var ano = "2011"
+
+        var x = ano.match(/1/g)
+
+        console.log(x.length)
+        >>> 2
+
+        /////
+
+        ////    Pode-se procurar sílabas, palavras ou mais de um caractere usando o match() com o REGEX:
+
+        var fruta = "banana"
+
+        var x = fruta.match(/an/g)     //*procurando os dois caracteres "an" juntos
+
+        console.log(x)
+        >>> ['an', 'an']
+                0: "an"
+                1: "an"
+                length: 2
+
+        ////
+
+        ////    Caso queira procurar a quantidade de mais de um caracter específico, é preciso colocar entre colchetes:
+
+        var animal = "girafa"
+
+        var x = animal.match(/[rfg]/g)    //*procurando os caracteres r, f e g
+
+        console.log(x)
+        >>> ['g', 'r', 'f']
+                0: "g"
+                1: "r"
+                2: "f"
+                length: 3
+
+        ////////////////////////
+
+        ////    Para procurar caracteres em um intervalo:
+
+        var nome = "Jesus de Nazaré"
+
+        var x = nome.match(/[a-m]/gi)      //*procurando os caracteres de "a" até "m"
+
+        console.log(x)
+        >>>  ['J', 'e', 'd', 'e', 'a', 'a']
+                0: "J"
+                1: "e"
+                2: "d"
+                3: "e"
+                4: "a"
+                5: "a"
+                length: 6
+
+        Obs: Note que ele não obteve o último caractere (é) pois ele possui acento.
+
+        ////
+
+        var cpf = "143.265.376-32"
+
+        var x = cpf.match(/[5-9]/g)      //*procurando os números de 5 até 9
+
+        console.log(x)
+        >>> ['6', '5', '7', '6']
+                0: "6"
+                1: "5"
+                2: "7"
+                3: "6"
+                length: 4
+
+        /////
+
+        ////    Para procurar a quantidade de mais de um intervalo de caracteres:
+
+        var email = "bruno2873@hotmail.com"
+
+        var x = email.match(/[n-z|0-4]/ig)      //*procurando de "n" até "z" e de "0" até "4"
+
+        console.log(x)
+        >>> ['r', 'u', 'n', 'o', '2', '3', 'o', 't', 'o']
+
+        Obs: As condições entre colchetes são separadas por |
+        variavel.match(/[ condição1 | condição2 | condição3 ]/gi)
+
+        ////////////////////////////////////////////////////
+
+        METACARACTERES:
+        VIDEO: https://www.youtube.com/watch?v=k-zjSh5W-Io 
+
+        ////    Para encontrar somente numerais usando o metacaractere \d :
+
+        var ano = "Ano de 2023"
+
+        var x = ano.match(/\d/g)
+
+        console.log(x)
+        >>> ['2', '0', '2', '3']
+
+        ////////
+
+        ////    Para encontrar somente espaços usando o metacaractere \s :
+
+        var ano = "Ano de 2023"
+
+        var x = ano.match(/\s/g)
+
+        console.log(x)
+        >>> [' ', ' ']
+            0: " "
+            1: " "      
+            length: 2
+
+        Há 2 espaços em branco na string
+
+        ////////
+
+        ////    Para encontrar somente letras usando o metacaractere \b :
+
+        var animal = "zebra"
+
+        var x = animal.match(/\bz/gi)      //*Procurando o caractere "z"
+
+        console.log(x)
+        >>> ['z']
+
+        Obs: O caractere escolhido é colocado após o \b
+
+        /////////////////////////////////////////////////////////////
+
+        QUANTIFICADORES
+        VIDEO: https://www.youtube.com/watch?v=k-zjSh5W-Io
+
+        ////    Para considerar caracteres repetidos na mesma palavra come se fossem 1 só coisa usando o quantificador + :
+
+        var nome = "Brunooooooo Campos"
+
+        var x = nome.match(/o+/ig)      //*Procurando o caractere "o", incluindo os repetidos
+
+        console.log(x)
+        >>> ['ooooooo', 'o']
+                0: "ooooooo"
+                1: "o"
+                length: 2
+
+        ///
+
+        var numeros = "1 , 10, 100, 1000"
+
+        var x = numeros.match(/10+/g)
+
+        console.log(x)
+        >>> ['10', '100', '1000']
+            0: "10"
+            1: "100"
+            2: "1000"
+            length: 3
+
+        ///
+
+        Outro exemplo usando mais de uma condição:
+
+        var nome = "Brunooooooo Silvaaaaa"
+
+        var x = nome.match(/o+|a+/ig)      //*Procurando os caracteres "o" e "a", incluindo os repetidos
+
+        console.log(x)
+        >>> ['ooooooo', 'aaaaa']
+
+        ////
+
+        var fruta = "Banana nova"
+
+        var x = fruta.match(/na+/ig)     //*Procurando o grupo de caracteres "na", , incluindo os repetidos
+
+        console.log(x)
+        >>> ['na', 'na']
+
+        ///////////////
+
+        ////    Para procurar 1 ou mais caracteres (grupos de caracteres + caracteres únicos) usando o quantificador * :  
+        Obs: Ele procura um grupo de caracteres, toda a sequência que tenha esse grupo, além do primeiro caractere do grupo
+
+        var nome = "Bruno Campos"
+
+        var x = nome.match(/os*|amp/gi)      //* Procurando os caracteres "o", "os" e "amp"
+
+        console.log(x)
+        >>> ['o', 'amp', 'os']
+
+        ////
+
+        var numeros = "1 , 10, 100, 1000, 2000"
+
+        var x = numeros.match(/10*|2/g)     //* Procurando os caracteres "1", "0", "10" e "2"
+
+        console.log(x)
+        >>> ['1', '10', '100', '1000', '2']
+
+        ////
+
+        var numeros = "1 , 13, 107, 180, 2030"
+
+        var x = numeros.match(/10*|2/g)     //* Procurando os caracteres "1", "0", "10" e "2"
+
+        console.log(x)
+        >>> ['1', '1', '10', '1', '20']
+
+        ////
+
+        var fruta = "Banana nova"
+
+        var x = fruta.match(/na*|va/ig)     //*Procurando o grupo de caracteres "na" e "va", além do caractere "n"
+
+        console.log(x)
+        >>> ['na', 'na', 'n', 'va']
+
+        ////////////////////
+
+        ////    Para procurar grupos de caracteres específicos usando o quantificador ? : 
+        Obs: Diferenetemente do quantificador *, o ? não retorna toda a sequência do grupo
+
+        var fruta = "Banana nova"
+
+        var x = fruta.match(/na?/ig)     //*Procurando o grupo de caracteres "na" e o "n"
+
+        console.log(x)
+        >>> ['na', 'na', 'n']
+
+        ////
+
+        var numeros = "1 , 10, 100, 1000"
+
+        var x = numeros.match(/10?/ig)     //*Procurando o grupo de caracteres "10" e o "1"
+
+        console.log(x)
+        >>> ['1', '10', '10', '10']
+
+        Obs: O quantificador "?" mostra que o caracter pode ou não ser usado, sendo muito útil para números de telefone, 
+        pois existem estados em que os números tem 9 digitos e outros que tem 8 digitos
+
+        /////////////////////////////////////////////////////////////
+
+        ////    PARA SUBSTITUIR CARACTERES EM UMA STRING IGNORANDO O CASE SENSITIVE:
+        VIDEO: https://www.youtube.com/watch?v=z0EnAoH09oU
+
+        var nome = "Bruno"
+
+        var x = nome.replace( /bruno/i , "Rafael")
+
+        console.log(x)
+        >>> Rafael
+
+        //////////////////////////////////////////////////////////////
+
+        ///     PARA PROCURAR ELEMENTOS QUE COMECEM COM CERTOS CARACTERES OU PALAVRAS
+        LINK: https://www.alura.com.br/artigos/principais-casos-uso-regex-para-tratamento-dados
+
+        SELECT * FROM filmes WHERE titulo REGEXP '^[era uma vez]';
+
+        O acento circunflexo [^] significa que a correspondência de padrão deve ser aplicada no início. 
+        Já a lista [era uma vez] sugere que apenas títulos de filmes que começam com era, uma ou vez são retornados 
+        em nosso conjunto de resultados.
+
+        /^[0-9]{3}\-?[0-9]{2}\n-?[0-9]{4}$/
+
+        ///////////////////////////////////////////////////////////
+
+        ////    PARA INDICAR QUE DEVE COMEÇAR COM ALGO
+
+        Utiliza-se o ^ no começo:
+
+        /^[0-9]{3}\-?[0-9]{2}\n-?[0-9]{4}$/
+
+        Indicando que deve começar com 3 números de 0 a 9
+
+        ////////////////////////////////////////////////////////////
+
+-------------------------------------------------------------------&&&

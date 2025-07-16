@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Georama:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georama', sans-serif;
+        }
+
+
+        body {
+            background-color: #00ff55;
+            color: white;
+        }
+
+        .container {
+            background-color: red;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+
+        /* ////////// DROPDOWN 1 ////////////// */
+
+        .dropdown1 {
+            background-color: yellow;
+            display: inline-block;
+            position: relative;
+        }
+
+        .menu1 {
+            background-color: blue;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            position: absolute;
+            display: none;
+            min-width: 20vw;
+            border-radius: 8px;
+            padding: 0.5rem; 
+            z-index: 1;
+        }
+
+
+        .dropdown1:hover .menu1 {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        .btn1 {
+            background-color: green;
+            padding: 0.3rem;
+            cursor: pointer;
+        }
+
+
+        .options1 {
+            background-color: purple;
+            text-decoration: none;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .options1:hover {
+            background-color: indianred;
+        }
+
+        /* ////////// DROPDOWN 1 ////////////// */
+
+
+
+
+
+        /* ////////// DROPDOWN 2 ////////////// */
+
+        .dropdown2 {
+            position: relative;
+            display: inline-block;
+        }
+
+        .btn2 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .menu2 {
+            display: none;
+            position: absolute;
+            background-color: green;
+            min-width: 20vw;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .options2 {
+            background-color: indianred;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .options2:hover {
+            background-color: #5eff00;
+        }
+
+        .show {
+            display: block;
+        }
+
+
+
+        /* ////////// DROPDOWN 2 ////////////// */
+
+
+
+    </style>
+
+
+</head>
+<body>
+
+    <!-- https://www.youtube.com/embed/VQWu4e6agPc?autoplay=1 -->
+    
+
+    <div class="container">
+
+        <div class="dropdown1">
+            <a class="btn1">OPÇÕES</a>
+            <div class="menu1">
+                <a href="" class="options1">OPÇÃO 1</a>
+                <a href="" class="options1">OPÇÃO 2</a>
+                <a href="" class="options1">OPÇÃO 3</a>
+            </div>
+        </div>
+
+        <div class="dropdown2">
+            <button onclick="toggleDropdown()" class="btn2">OPÇÕES</button>
+            <div id="menu2" class="menu2">
+                <a href="#" class="options2">Opção 1</a>
+                <a href="#" class="options2">Opção 2</a>
+                <a href="#" class="options2">Opção 3</a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function toggleDropdown() {
+            document.getElementById("menu2").classList.toggle("show");
+        }
+
+        // Fecha o dropdown se clicar fora dele
+        window.onclick = function(event) {
+            if (!event.target.matches('.btn2')) {
+                var dropdowns = document.getElementsByClassName("menu2");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+
+
+    </script>
+</body>
+
+</html>

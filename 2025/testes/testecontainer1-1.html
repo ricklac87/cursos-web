@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>teste</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Georama:wght@400;600;700&display=swap');
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georama', sans-serif;
+        }
+
+        
+
+        /*HORIZONTAL 1*/
+        
+        .containerhorizontal1 {
+            display: flex;
+            background-color: greenyellow;
+            padding: 0.5rem 1rem;
+            align-items: center;
+        }
+
+        .sectionh1 {
+            background-color: brown; 
+            display: flex;
+            align-items: center;
+            width: 100vw;
+            justify-content: space-between;
+        }
+
+        .sh1-1 {
+            background-color: turquoise;
+            font-size: 1rem;
+        }
+
+        .sh1-2 {
+            background-color: gold;
+            font-size: 1rem;
+            text-align: right;
+        }
+
+        .sh1-3 {
+            background-color: blueviolet;
+            font-size: 1rem;
+            text-align: right;
+        }
+
+
+
+        /*HORIZONTAL 2*/
+        
+        .containerhorizontal2 {
+            display: flex;
+            background-color: orange;
+            padding: 0.5rem 1rem;
+            /* align-items: center; */
+        }
+
+        .sectionh2 {
+            background-color: navy; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100vw;
+        }
+
+        .sh2-1 {
+            background-color: mediumslateblue;
+            font-size: 1rem;
+        }
+
+        .sh2-2 {
+            background-color: plum;
+            font-size: 1rem;
+            text-align: right;
+            display: flex;
+            flex-grow: 1;
+            justify-content: end;
+            gap: 1rem;
+            padding-right: 1rem;
+        }
+
+        .sh2-3 {
+            background-color: honeydew;
+            font-size: 1.3rem;
+        }
+
+
+        /*VERTICAL 1*/
+
+        .containervertical1 {
+            display: flex;
+            flex-direction: column;
+            background-color: yellow;
+            padding: 0.5rem 1rem;
+            align-items: center;
+        }
+
+        .sectionv1 {
+            background-color: purple;
+            text-align: center;
+            line-height: 2rem;
+        }
+
+        .sv1-1 {
+            background-color: red;
+            font-size: 1rem;
+        }
+
+        .sv1-2 {
+            background-color: green;
+            font-size: 1rem;
+        }
+
+        .sv1-3 {
+            background-color: aqua;
+            font-size: 1rem;
+        }
+
+
+
+        /*VERTICAL 2*/
+
+        .containervertical2 {
+            background-color: darkgoldenrod;
+            padding: 0.5rem 1rem;
+            align-items: center;
+        }
+
+        .sectionv2 {
+            display: flex;
+            justify-content: space-between;
+            background-color: tomato;
+            text-align: center;
+            line-height: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            /* justify-content: center; */
+        }
+
+        .sectionv2-1 {
+            display: flex;
+            flex-direction: column; 
+            background-color: hotpink;
+            width: 30vw;
+        }
+
+        .sectionv2-2 {
+            display: flex;
+            flex-direction: column;
+            background-color: hotpink;
+            width: 30vw;
+        }
+
+        .sectionv2-3 {
+            display: flex;
+            flex-direction: column;
+            background-color: hotpink;
+            width: 30vw;
+        }
+
+        .sv2-1 {
+            background-color: firebrick;
+            font-size: 1rem;
+        }
+
+        .sv2-2 {
+            background-color: khaki;
+            font-size: 1rem;
+        }
+
+        .sv2-3 {
+            background-color: lawngreen;
+            font-size: 1rem;
+        }
+
+
+        @media screen and (max-width: 767px) {
+        
+        .sectionv2 {
+            justify-content: center;
+        }
+
+        .sectionv2-1 {
+            width: 70vw;
+        }
+
+        .sectionv2-2 {
+            width: 70vw;
+        }
+
+        .sectionv2-3 {
+            width: 70vw;
+        }
+
+        }
+
+        @media screen and (max-width: 1023px) and (min-width: 768px) {
+        .sectionv2-1 {
+            width: 45vw;
+        }
+
+        .sectionv2-2 {
+            width: 45vw;
+        }
+
+        .sectionv2-3 {
+            width: 45vw;
+        }
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+    <!-- HORIZONTAL 1 -->
+
+    <section class="containerhorizontal1">
+
+        <div class="sectionh1">
+
+            <div class="sh1-1">
+                <h1>LOGOTIPO</h1>
+            </div>
+            
+            <div class="sh1-2">
+                <p>LINKS</p>
+            </div>
+            
+            <div class="sh1-3">
+                <a>BOTÃO</a>
+            </div>    
+        
+        </div>   
+    
+    </section>
+
+    <!-- HORIZONTAL 2 -->
+
+    <section class="containerhorizontal2">
+
+        <div class="sectionh2">
+
+            <div class="sh2-1">
+                <h1>LOGOTIPO</h1>
+            </div>
+            
+            <div class="sh2-2">
+                <p>HOME</p>
+                <p>LOJA</p>
+                <p>CONTATO</p>
+                <p>SOBRE</p>
+            </div>
+            
+            <div class="sh2-3">
+                <a>☰</a>
+            </div>    
+        
+        </div>   
+    
+    </section>
+
+
+    <!-- VERTICAL 1-->
+
+    <section class="containervertical1">
+
+        <div class="sectionv1">
+
+            <div class="sv1-1">
+                <h1>TITULO</h1>
+            </div>
+            
+            <div class="sv1-2">
+                <p>Texto de descrição</p>
+            </div>
+            
+            <div class="sv1-3">
+                <a>BOTÃO</a>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- VERTICAL 2-->
+
+    <section class="containervertical2">
+
+      <div class="sectionv2">
+
+        <div class="sectionv2-1">
+
+            <div class="sv2-1">
+                <h1>TITULO</h1>
+            </div>
+            
+            <div class="sv2-2">
+                <p>Texto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descrição</p>
+            </div>
+            
+            <div class="sv2-3">
+                <a>BOTÃO</a>
+            </div>
+
+        </div>
+
+        <div class="sectionv2-2">
+
+            <div class="sv2-1">
+                <h1>TITULO</h1>
+            </div>
+            
+            <div class="sv2-2">
+                <p>Texto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descrição</p>
+            </div>
+            
+            <div class="sv2-3">
+                <a>BOTÃO</a>
+            </div>
+ 
+        </div>
+
+        <div class="sectionv2-3">
+
+            <div class="sv2-1">
+                <h1>TITULO</h1>
+            </div>
+            
+            <div class="sv2-2">
+                <p>Texto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descriçãoTexto de descrição</p>
+            </div>
+            
+            <div class="sv2-3">
+                <a>BOTÃO</a>
+            </div>
+ 
+        </div>
+
+      </div> 
+
+    </section>
+
+
+
+
+    <script>
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Georama:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georama', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+
+        body {
+            background-color: #6c5ce7;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* padding: 1.5rem 10%; */
+            padding: 1rem 5%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .active {
+            border-bottom: 3px solid white;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* padding: 2rem 5%; */
+            padding: 1rem 2rem 1rem 2rem;
+            /* gap: 4rem; */
+            min-height: 80vh;
+            /* min-height: calc(100vh - 70px); */
+        }
+
+
+        .hero-content {
+            flex: 1;
+            padding: 1rem; 
+        }
+
+        .hero h1 {
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2rem; 
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: white;
+            color: #6c5ce7;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: right;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                padding: 4rem 10%;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .menu-button {
+                display: block;
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background-color: #6c5ce7;
+                flex-direction: column;
+                padding: 2rem;
+                text-align: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .nav-links a {
+                font-size: 1.5rem;
+                color: #6c5ce7;
+            }
+
+            .nav-links a:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+                background-color: white;
+            }
+
+            .hero-image {
+                order: -1;
+                margin-bottom: 2rem;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="#">LOGOTIPO</a></div>
+        <button class="menu-button">☰</button>
+        <div class="nav-links">
+            <a href="#home" class="active">Home</a>
+            <a href="#sobre">Sobre nós</a>
+            <a href="#contato">Contato</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>More than authentication.<br>Complete user management.</h1>
+            <p>Clerk is more than a "sign-in-box". Integrate complete user management and APIs, purpose-built for React, Next.js and the Modern Web.</p>
+            <a href="#" class="cta-button">Start Building for Free</a>
+        </div>
+        <div class="hero-image">
+            <img src="https://picsum.photos/500/400" alt="Hero Image">
+        </div>
+    </section>
+
+    <script>
+        const menuButton = document.querySelector('.menu-button');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuButton.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('nav')) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

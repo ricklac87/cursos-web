@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.center {
+    max-width: 1170px; 
+    margin: 0 auto;
+    padding: 0 2%;
+    display: flex;
+    flex-wrap: wrap;   
+}
+
+
+
+
+
+
+
+.pt1-header {
+    background-color: red;
+    padding: 5px 0;
+    flex-wrap: wrap;
+}
+
+.imagem1 {
+    width: 40%;
+}
+
+.imagem1 img {
+    width: 125px;
+}
+
+.links-header {
+    width: 60%;
+    text-align: right;
+
+}
+
+.links-header a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 18px;
+    font-family: "Oswald";
+}
+
+.links-header a:hover {
+    color: rgb(212, 212, 212);
+}
+
+
+
+
+.menu-hamburguer {
+    display: none;
+}
+.menu-itens {
+    background-color: rgb(243, 243, 243);
+    width: 100%;
+    font-family: "Oswald";
+    border-bottom: 1px solid gray;
+    position: absolute;
+    left: 0;
+    top: 37px;
+    text-align: center;
+    display: block;
+    opacity: 0; /*opcional*/
+    transition: 0.3s; /*opcional*/
+}
+.menu-itens a {
+    display: block;
+    text-decoration: none;
+    color: red;
+}
+.menu-itens.show {
+    opacity: 1; /*opcional*/
+}
+.menu-itens.hidde {
+    opacity: 0; /*opcional*/
+}
+
+
+
+@media screen and (max-width: 768px) {
+
+    .links-header {
+        display: none;
+    }
+
+    .imagem1 {
+        width: 40%;
+    }
+
+    .imagem1 img {
+        width: 125px;
+    }
+
+
+
+
+    .menu-hamburguer {
+        display: block;
+        text-align: right;
+        width: 60%;
+        padding: 6px;
+    }
+
+
+    
+
+
+    .pt1-header {
+        background-color: red;
+        padding: 3px 0;
+        flex-wrap: wrap;
+    }
+
+    .center {
+        margin: 0 auto;
+        padding: 0 2%;
+        display: flex;
+        flex-wrap: wrap;   
+    }
+
+}

@@ -1,0 +1,224 @@
+
+////////////////////////////////////////////////////////// &&& ###
+VIDEO: https://www.youtube.com/embed/192HgwRgOYE
+
+Instalação no windows:
+git-scm.com
+
+Standalone Installer
+Git for Windows/x64 Setup.
+
+Em "choosing the default editor used by Git", escolha o VSCode (ou bloco de notas) ao invés do Vim
+
+Para saber se o git foi realmente instalado e saber a versão instalada, digite no prompt de comando do windows (cmd):
+git --version
+
+Outra forma é abrir o git bash e digitar o mesmo codigo acima.
+
+----------------------------- ###
+
+Criando um repositório git:
+
+-Crie uma pasta do projeto.
+-No terminal do windows, vá até o diretório da pasta: cd C:\Diretorio\...\Nomedapasta
+-Digite no terminal: git init
+Será criada a pasta .git (que fica oculta do sistema)
+
+Abra a pasta do projeto no VSCode e adicione o arquivo teste.html.
+
+Entre o arquivo e o repositório .git está uma área chamada stage
+arquivo => stage => .git
+Para adicionar o arquivo no stage é usado o git add
+Para mover o arquivo do stage para o .git é usado o git commit
+
+Então é necessário mover o arquivo primeiro para o stage e depois para o .git
+
+O comando git status mostra quantos commits da pasta do projeto tem dentro do git. 
+Além disso, ele mostra a quantidade de arquivos que estão dentro da pasta do projeto, mas ainda não estão no .git
+
+OBS: 
+Para visualizar todos os arquivos em um diretorio, digite: dir
+Para limpar (clear) o terminal de coisas antigas, digite: cls
+
+
+------------------------------ ###
+
+Adicionando arquivos no stage:
+
+Para adicionar o arquivo criado teste.html no stage digite no terminal:
+git add teste.html
+
+Caso tenha mais de 1 arquivo para adicionar, pode-se usar o comando: git add .
+Com isso, todos os arquivos que ainda não foram adicionados serão então 
+
+------------------------------ ###
+
+Criando um usuario e email:
+
+Antes do mover o arquivo para o .git, é necessário criar um usuário para que cada versão alterada do código possua uma identificação
+
+Para criar um usuario, digite no terminal:
+git config --global user.name Ricardo
+(o git só armazenará o primeiro nome, então não adianta colocar o sobrenome)
+
+Para criar um email:
+git config --global user.email nomedoemail@gmail.com
+
+Para ver as configurações e todos os usuarios e senhas cadastradas:
+git config --list
+
+Para alterar o nome do usuario ou email é só digitar novamente:
+git config --global user.name Thiago
+
+------------------------------- ###
+
+Adicionando arquivos do stage para o .git:
+
+Para mover o arquivo criado teste.html do stage para o .git, digite no terminal:
+git commit -m "Descrição da alteração no arquivo"
+
+Por exemplo:
+git commit -m "Alterando a imagem do logo no site"
+
+Atenção!!!
+Caso faça alterações no arquivo teste.html, é preciso sempre primeiro enviar para o stage e depois para o .git:
+1o = git add teste.html        (ou git add .)
+2o = git commit -m "Alterando o título no site"
+
+----------------------------------- ###
+
+Para saber as versões de arquivos armazenadas no .git:
+git log
+
+Aparecerá o autor e o email, além da data de cada versão e a mensagem
+
+A versão mais atual estará com a identificação (HEAD -> master)
+
+---------------------------------- ###
+
+Para voltar para uma versão anterior gravada:
+
+Copie os 6 primeiros caracteres da versão que quer retornar e digite no terminal:
+git checkout 6CARACTERES
+
+
+Por exemplo, digamos que queira voltar para a versão 1-1:
+
+commit e2dba2f35477dcd5df36ee1461eaf22e3ad6ae84 (HEAD -> master)
+Author: Ricardo <ricklac87@gmail.com>
+Date:   Wed Jul 16 11:37:05 2025 -0300
+
+    teste git v1-2
+
+commit 211c0ce8876d224a3b82e170a891ac6310740f18
+Author: Ricardo <ricklac87@gmail.com>
+Date:   Wed Jul 16 11:29:23 2025 -0300
+
+    teste git v1-1
+
+No terminal será digitado:
+git checkout 211c0c
+
+Atenção!!!
+Só volte em versões anteriores se já tiver feito commit nas alterações (adicione ao stage e depois mande pro .git)
+
+Para retornar de volta para a versão mais recente:
+git checkout master
+(ou caso dê erro: git checkout main)  
+
+OBS: Muito em breve a versão atual chamada de master passará a se chamar main. Então será preciso usar git checkout main
+
+--------------------------------- ###
+CRIANDO BRANCHES (ramificações)
+
+Digite no terminal:
+git branch nome-do-branch
+
+Ex: git branch pagina-de-contatos
+
+OBS: NÃO UTILIZE ESPAÇOS E NEM CARACTERES ESPECIAIS. Apenas - no lugar de espaços
+
+Para ir para o branch criado ou mudar de branch, digite:
+git checkout nome-do-branch
+
+Isso serviria para sair do master/main (ou outro branch) e ir para o branch escolhido
+
+Não esqueça de fazer commits de alterações pendentes antes de mudar de branch
+
+O novo padrão é que a linha principal que era chamada de master passará a ser chamada de main.
+Então caso não haja um main, pode ser criado um branch principal chamado main digitando:
+git branch main
+
+Com isso, será criado o branch main, que é o novo padrão a ser utilizado no lugar de master. 
+Caso exista um master e ele seja o branch principal, não há necessidade de mudar para main, a não ser que o chefe do projeto queira.
+Em algumas empresas o nome do branch principal pode variar para release, deploy, etc...
+
+ATENÇÃO!!!
+Só é recomendado criar o branch main ao iniciar um repositório do zero. Normalmente quem faz isso é o dono/chefe do projeto.
+
+----------------------------- ###
+
+MERGE (FUSÃO/FUNDIR) PARA A BRANCH PRINCIPAL
+
+No terminal, vá para a branch principal:
+git checkout master
+(ou git checkout main)
+
+Para fundir o(s) arquivo(s) que você estava trabalhando com a branch principal, digite:
+git merge nome-da-branch
+
+Por exemplo, digamos que esteja trabalhando no arquivo contatos.html que esteja na branch pagina-de-contatos. Então primeiramente vá para a branch principal (git checkout main) e depois faça o merge (git merge pagina-de-contatos).
+
+---------------------------------- ###
+
+GITHUB
+
+Criar um novo repositório
+(https://github.com/ricklac87/cursos-web.git)
+
+Sugestões do github:
+
+-To create a new repository on the command line:
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/ricklac87/cursos-web.git
+git push -u origin main
+
+-To push an existing repository from the command line:
+git remote add origin https://github.com/ricklac87/cursos-web.git
+git branch -M main
+git push -u origin main
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////// &&&
+VIDEO:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
