@@ -190,7 +190,7 @@ Dentro deste branch criado, toda vez que um arquivo for alterado ou for criado u
 git add .
 git commit -m "nome do commit"
 
-Após isso, deve-se fazer o push para jogar para o github:
+Após isso, deve-se fazer o push para jogar o branch para o github:
 git push origin ramo-v1
 
 E depois para mandar para o branch principal:
