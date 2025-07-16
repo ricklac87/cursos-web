@@ -176,22 +176,27 @@ GITHUB
 Criar um novo repositório
 (https://github.com/ricklac87/cursos-web.git)
 
-Sugestões do github:
 
--To create a new repository on the command line:
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/ricklac87/cursos-web.git
-git push -u origin main
-
--To push an existing repository from the command line:
+-Para adicionar os arquivos no github:
 git remote add origin https://github.com/ricklac87/cursos-web.git
 git branch -M main
 git push -u origin main
 
+Então, toda vez que um arquivo for alterado ou for criado um novo arquivo, deve fazer:
+git checkout nome-da-branch           (ou git checkout main)
+git add .
+git commit -m "nome do commit"
 
+------------------------------------ ###
+
+Para clonar um repositorio:
+
+Copie a url de um repositorio no github
+
+Digite no terminal:
+git clone https://url.git
+
+------------------------------------ ###
 
 
 
