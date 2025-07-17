@@ -1,0 +1,101 @@
+
+
+
+
+
+
+////////////////////////////////////////////////////// &&& ###
+SEÇÃO 9
+
+Instalando o npm:
+npm init
+ou 
+npm init -y
+
+Será gerado o arquivo package.json
+
+----------- ###
+BABEL
+
+Instalando o babel:
+npm install --save-dev @babel/cli @babel/preset-env @babel/core
+
+Babel serve para traduzir codigos não suportados por certos navegadores para javascript antigo
+
+Exemplo: 
+Crie um arquivo em javascript e digite alguns codigos (Ex: main.js)
+Digite no terminal:  npx babel main.js -o bundle.js --presets=@babel/env
+Será criado um arquivo bundle.js com o codigo traduzido para javascript antigo para funcionar em navegadores mais antigos
+
+------------ ###
+WEBPACK
+
+Instalando o babel e o WEBPACK
+npm install --save-dev @babel/cli @babel/preset-env @babel/core babel-loader webpack webpack-cli regenerator-runtime core-js
+
+O --save-dev é opcional para instalar os modulos em devDependencies ao invés de dependencies
+
+Crie um arquivo chamado webpack.config.js na raiz. Dentro do arquivo, digite:
+
+const path = require('path');
+
+module.exports = {
+	mode: 'development',
+	entry: './src/index.js',
+	output: {
+		path: path.resolve(__dirname, 'public', 'assets', 'js'),
+		filename: 'bundle.js'
+	},
+	module: {
+		rules: [{
+			exclude: /node_modules/,
+			test: /\.js$/,
+			use: {
+				loader: 'babel-loader',
+				options: {
+					presets: ['@babel/env']
+				}
+			}
+		}]
+	},
+	devtool: 'source-map'
+};
+
+
+-No arquivo package.json, adicione o script:
+...
+	"scripts": {
+		"gera": "webpack -w"
+	}
+...
+
+
+No terminal, digite:
+npm run gera
+
+Com isso, serão gerados os arquivos bundle.js e bundle.js.map e o webpack começará a observar o arquivo bundle.js
+
+Estrutura das pastas e arquivos:
+public
+	assets
+		js
+			bundle.js
+			bundle.js.map
+	index.html
+src
+	index.js
+.gitignore
+package-lock.json
+package.json
+webpack.config.js
+
+
+-Dentro da pasta index.html dentro de public:
+
+...
+<body>
+	<script src="./assets/js/bundle.js"></script>
+</body>
+</html>
+
+Com isso, ao colocar codigos no arquivo index.js dentro de src, ele será traduzido pelo babel para javascript antigo
