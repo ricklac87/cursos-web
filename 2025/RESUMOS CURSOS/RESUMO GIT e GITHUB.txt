@@ -51,6 +51,9 @@ git add teste.html
 Caso tenha mais de 1 arquivo para adicionar, pode-se usar o comando: git add .
 Com isso, todos os arquivos que ainda não foram adicionados serão então 
 
+outra forma:
+git add -A            (para adcionar no stage apenas os que não forma adicionados)
+
 ------------------------------ ###
 
 Criando um usuario e email:
@@ -204,10 +207,17 @@ git pull main
 
 RESUMO
 
+Iniciando um projeto. Dentro da pasta do projeto, para criar uma pasta .git:
+git init
+
+Para clonar uma pasta do github:
+git clone https://url 
+ou caso não tenha sido criada a pasta do projeto ainda:
+git clone https://url nomedapasta
+
 Primeiro, vá para o ultimo commit mais atualizado baixando os arquivos mais recentes no github:
 cd nome-do-projeto
 git pull main
-
 
 Ao começar a criar algo novo, primeiro crie um branch e depois mude para ele:
 git branch ramo-v1
