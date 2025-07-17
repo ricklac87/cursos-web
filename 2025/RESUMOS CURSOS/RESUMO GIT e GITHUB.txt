@@ -59,10 +59,13 @@ Antes do mover o arquivo para o .git, é necessário criar um usuário para que 
 
 Para criar um usuario, digite no terminal:
 git config --global user.name Ricardo
-(o git só armazenará o primeiro nome, então não adianta colocar o sobrenome)
+(o git só armazenará o primeiro nome)
+
+Então a melhor forma de se fazer é colocar entre aspas:
+git config --global user.name "Ricardo Lacorte"
 
 Para criar um email:
-git config --global user.email nomedoemail@gmail.com
+git config --global user.email "nomedoemail@gmail.com"
 
 Para ver as configurações e todos os usuarios e senhas cadastradas:
 git config --list
@@ -93,6 +96,8 @@ git log
 Aparecerá o autor e o email, além da data de cada versão e a mensagem
 
 A versão mais atual estará com a identificação (HEAD -> master)
+
+Caso dê um problema ao mostrar o log, aperte a tecla q para sair
 
 ---------------------------------- ###
 
