@@ -42,6 +42,7 @@ Para limpar (clear) o terminal de coisas antigas, digite: cls
 
 
 ------------------------------ ###
+STAGE
 
 Adicionando arquivos no stage:
 
@@ -62,6 +63,9 @@ git restore teste.html
 
 Para descobrir as diferenças entre a versão do arquivo staged e a atual:
 git diff --staged
+
+Voltando atrás após fazer um stage:
+git reset --hard HEAD
 
 ------------------------------ ###
 
@@ -88,6 +92,7 @@ Para alterar o nome do usuario ou email é só digitar novamente:
 git config --global user.name "Thiago Campos"
 
 ------------------------------- ###
+COMMIT
 
 Adicionando arquivos do stage para o .git:
 
@@ -169,6 +174,16 @@ Date:   Wed Jul 16 11:29:23 2025 -0300
 No terminal será digitado:
 git checkout 211c0c
 
+--------
+
+Outra forma:
+git revert codigodocommit
+
+por exemplo:
+git revert 211c0ce8876d224a3b82e170a891ac6310740f18
+
+------
+
 Atenção!!!
 Só volte em versões anteriores se já tiver feito commit nas alterações (adicione ao stage e depois mande pro .git)
 
@@ -177,6 +192,14 @@ git checkout master
 (ou caso dê erro: git checkout main)  
 
 OBS: Muito em breve a versão atual chamada de master passará a se chamar main. Então será preciso usar git checkout main
+
+-----------
+
+Desfazendo o ultimo commit que foi realizado:
+git reset --hard HEAD~1
+
+Consertando um commit na hora:
+git commit --amend
 
 --------------------------------- ###
 CRIANDO BRANCHES (ramificações)
@@ -192,6 +215,9 @@ Para ir para o branch criado ou mudar de branch, digite:
 git checkout nome-do-branch
 
 Isso serviria para sair do master/main (ou outro branch) e ir para o branch escolhido
+
+Para criar um branch novo e automaticamente ir para ele:
+git checkout -b nome-do-branch
 
 Não esqueça de fazer commits de alterações pendentes antes de mudar de branch
 
@@ -211,6 +237,9 @@ git branch -D nomedobranch
 
 Para renomear o branch em que está:
 git branch -m nomenovo
+
+Para desfazer uma alteração e voltar para o ultimo ponto de um branch (voltando os dados a como estavam antes):
+git checkout -- teste.html
 
 ----------------------------- ###
 
@@ -241,12 +270,26 @@ git remote add origin https://github.com/ricklac87/cursos-web.git
 git branch -M main     
 git push -u origin main
 
+
+Para remover arquivos do github:
+git remote remove origin
+
+Para ver detalhes do repositorio no github (como url, branch):
+git remote show origin
+
+Para trocar a url vinculada do github:
+git remote set-url origin https://url...
+
 -------------------------- ###
 
 PEGANDO A VERSÃO MAIS RECENTE DOS ARQUIVOS NO GITHUB:
 
 No terminal:
 git pull main
+ou
+git pull origin main
+
+É recomendado fazer o pull antes de fazer o push
 
 
 ---------------------------- ###
@@ -266,19 +309,22 @@ cd nome-do-projeto
 git pull main
 
 Ao começar a criar algo novo, primeiro crie um branch e depois mude para ele:
-git branch ramo-v1
-git checkout ramo-v1
+git branch ramo1
+git checkout ramo1                       (ou git checkout -b ramo1)
 
 Dentro deste branch criado, toda vez que um arquivo for alterado ou for criado um novo arquivo, deve fazer:
 git add .
-git commit -m "nome do commit"
+git commit -m "nome do commit"                (ou git commit -a -m "nome do commit" )
+
+Antes de fazer o push, atualize os seus arquivos pegando os dados mais atuais do github:
+git pull origin main
 
 Após isso, deve-se fazer o push para jogar o branch para o github:
-git push origin ramo-v1
+git push origin ramo1
 
 E depois para mandar para o branch principal:
 git checkout main
-git merge ramo-v1
+git merge ramo1
 git push origin main
 
 ------------------------------------ ###
@@ -338,6 +384,67 @@ VIDEO: https://www.youtube.com/embed/ts-H3W1uLMM
 
 Para pegar as diferenças entre uma versao do arquivo que foi pro stage e outra mais atual com mudanças:
 git diff teste.html
+
+------------------- ###
+
+Para salvar dados ja digitados se quiser mudar de branch:
+git stash
+
+Para aplicar os dados salvos no stash em um branch:
+git stash apply
+ou 
+git stash pop
+
+apply = atualiza e ainda mantem os dados no stash
+pop = atualiza e esvazia o stash
+
+------------------ ###
+
+MERGE x REBASE
+
+O merge cria um novo commit, diferentemente do rebase
+O rebase muda a base para a última versão mais atualizada
+
+Para usar o rebase:
+git checkout nova_feature
+git rebase main
+
+Com isso, a branch nova_feature será atualizada com a ultima commit da main
+
+É possível escolher a quantidade de commits que quer atualizar a branch:
+git rebase -i HEAD~3
+(Com isso, será atualizada com apenas os 3 ultimos commits)
+
+-------------------- ###
+
+Criando tags:
+Usada para marcar versões de lançamento (v1.0, v1.3, v2.0, etc...)
+
+Existem tags leves e anotadas
+
+Tags leves = é um ponteiro para um commit especifico e não tem informações detalhadas, como autor, mensagens ou data
+Tags anotadas = são mais detalhadas, contendo metadados como autor, data e mensagem. É recomendado para lançamentos
+
+Para criar uma tag leve, digite:
+git tag v2025
+
+Para criar uma tag anotada, digite:
+git tag -s v2025 -m "Tag criada versão 2025"
+
+Para remover uma tag:
+git tag -d v2025
+
+Para mostrar informações de uma tag:
+git show v2025
+
+Para enviar uma tag pro github:
+git push origin v2025
+
+Para remover uma tag do github:
+git push origin --delete v2025
+
+--------------------- ###
+
 
 
 
