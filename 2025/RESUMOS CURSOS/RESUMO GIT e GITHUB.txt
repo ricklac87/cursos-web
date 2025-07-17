@@ -54,6 +54,15 @@ Com isso, todos os arquivos que ainda não foram adicionados serão então
 outra forma:
 git add -A            (para adcionar no stage apenas os que não forma adicionados)
 
+Para remover um arquivo do stage:
+git reset teste.html
+
+Para restaurar:
+git restore teste.html
+
+Para descobrir as diferenças entre a versão do arquivo staged e a atual:
+git diff --staged
+
 ------------------------------ ###
 
 Criando um usuario e email:
@@ -93,6 +102,9 @@ Caso faça alterações no arquivo teste.html, é preciso sempre primeiro enviar
 1o = git add teste.html        (ou git add .)
 2o = git commit -m "Alterando o título no site"
 
+Se quiser alterar a mensagem do ultimo commit enviado:
+git commit --amend -m "Mudando o titulo no site"
+
 ----------------------------------- ###
 
 Para saber as versões de arquivos armazenadas no .git:
@@ -103,6 +115,34 @@ Aparecerá o autor e o email, além da data de cada versão e a mensagem
 A versão mais atual estará com a identificação (HEAD -> master)
 
 Caso dê um problema ao mostrar o log, aperte a tecla q para sair
+
+Para fazer um log reduzido:
+git shortlog
+Será mostrado somente os autores e seus respectivos commits
+
+Para mostrar o shortlog apenas os autores e o numero de commits:
+git shortlog -sn
+
+Para resumir as infos do log em 1 linha:
+git log --oneline
+
+Para resumir as infos do log em 5 linhas:
+git log --oneline -5
+
+Para filtrar por autor:
+git log --author="Ricardo Lacorte"
+
+Para filtrar por data:
+git log --before="YYYY-MM-DD"
+
+Para filtrar por pasta:
+git log -- Nomedapasta/
+
+Log mostrando os checkouts, clones, commits:
+git reflog
+
+Extensão no VSCode para visualizar melhor os logs:
+Git Graph
 
 ---------------------------------- ###
 
@@ -165,6 +205,12 @@ Em algumas empresas o nome do branch principal pode variar para release, deploy,
 
 ATENÇÃO!!!
 Só é recomendado criar o branch main ao iniciar um repositório do zero. Normalmente quem faz isso é o dono/chefe do projeto.
+
+Para excluir uma branch:
+git branch -D nomedobranch
+
+Para renomear o branch em que está:
+git branch -m nomenovo
 
 ----------------------------- ###
 
@@ -290,7 +336,8 @@ git sub modules  = para ter um repositorio git dentro de outro
 ////////////////////////////////////////////////////////// &&&
 VIDEO: https://www.youtube.com/embed/ts-H3W1uLMM
 
-
+Para pegar as diferenças entre uma versao do arquivo que foi pro stage e outra mais atual com mudanças:
+git diff teste.html
 
 
 
