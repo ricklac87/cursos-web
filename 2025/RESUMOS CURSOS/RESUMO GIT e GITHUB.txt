@@ -277,21 +277,8 @@ Para ignorar todos os arquivos que tenham uma extensao especifica:
 Outras coisas:
 git sub modules  = para ter um repositorio git dentro de outro
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ////////////////////////////////////////////////////////// &&&
-VIDEO:
+VIDEO: https://www.youtube.com/embed/ts-H3W1uLMM
 
 
 
