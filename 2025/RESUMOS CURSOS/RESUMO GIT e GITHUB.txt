@@ -69,9 +69,11 @@ git config --global user.email "nomedoemail@gmail.com"
 
 Para ver as configurações e todos os usuarios e senhas cadastradas:
 git config --list
+ou
+git config --global --list               (aparece apenas o username e email)
 
 Para alterar o nome do usuario ou email é só digitar novamente:
-git config --global user.name Thiago
+git config --global user.name "Thiago Campos"
 
 ------------------------------- ###
 
