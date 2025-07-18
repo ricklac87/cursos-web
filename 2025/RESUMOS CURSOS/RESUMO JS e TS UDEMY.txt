@@ -99,3 +99,77 @@ webpack.config.js
 </html>
 
 Com isso, ao colocar codigos no arquivo index.js dentro de src, ele será traduzido pelo babel para javascript antigo
+
+------------------------------------------ ###
+
+IMPORTANDO E EXPORTANDO MODULOS
+
+-Arquivo modulo1.js:
+
+const nome = "Luiz"
+const sobrenome = "Carlos"
+
+const soma = (x, y) => {
+  return x + y
+} 
+
+export {nome, sobrenome, soma}
+
+-Arquivo index.js:
+
+import {nome, sobrenome, soma} from "./modulo1"
+
+console.log(nome)
+console.log(sobrenome)
+console.log(soma(5,5))
+
+--------
+
+Importando um modulo com outro nome:
+
+import {nome as nome2} from "./modulo1"
+
+console.log(nome2)
+
+--------
+
+Exportando ao criar um modulo:
+
+export const nome = "Carlos"
+
+---------
+
+Importando todos os modulos ao mesmo tempo:
+
+import * as Modulos from "./modulo1"
+
+console.log(Modulos.nome)
+console.log(Modulos.sobrenome)
+console.log(Modulos.soma)
+
+----------
+
+Exportando modulo como default:
+(Só pode 1 por arquivo!!!)
+
+-No arquivo modulo1.js:
+
+const nome = "Carlos"
+
+export default nome
+
+-No arquivo index.js:
+
+import nome from './modulo1.js'
+
+console.log(nome)
+
+OBS: Ao exportar um modulo como default, não é necessario colocar entre {} ao importar
+
+-Se for mais de um modulo para exportar:
+
+export {nome as default, sobrenome, soma}
+
+E no arquivo que importará os módulos:
+
+import nome, {sobrenome, soma} from './modulo1'

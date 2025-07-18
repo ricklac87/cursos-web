@@ -47,6 +47,23 @@ Arquivo globals.css:      //Ou vars.css
 
 ---------------
 
+Transformando rem em pixels:
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.6rem;           //é o equivalente a 16 pixels
+}
+
+h1 {
+  font-size: 6rem;             //é o equivalente a 60 pixels
+}
+
+---------------
+
 Criar um arquivo chamado reset.css e importá-lo dentro da tag head:
 <head>
     <title>TITULO</title>
@@ -237,9 +254,11 @@ img {
 -CSS para um container e uma section:
 
 
-.container {
-    max-width: 80vw;        *largura ocupa 80% da tela
-    height: 60vh;           *altura ocupa 60% da tela
+.container {                 //ou main-container / main-content
+    max-width: 80vw;         //largura ocupa 80% da tela
+    max-width: 1200px;       // largura ocupa 1200px
+    height: 60vh;            //altura ocupa 60% da tela
+    margin: 0 auto;          //caso não tenha no reset.css
 }
 
 .section {
