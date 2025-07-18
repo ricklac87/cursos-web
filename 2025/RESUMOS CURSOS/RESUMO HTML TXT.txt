@@ -162,6 +162,54 @@ Selecione o trecho e digite Ctrl + ;
 
 Ctrl K + Ctrl C     (tambem funciona)
 
+---------------------------------------------------- &&&
+FAVICON
+VIDEO: https://www.youtube.com/embed/SAnLQABTF5A
+
+...
+</head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>TITULO</title>       *TITULO DO SITE
+
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">   
+
+</head>
+...
+
+
+Gere o favicon em SVG no tamanho 1024x1024:
+1024x1024.svg
+
+Entre no site realfavicongenerator.net 
+Faça o upload da imagem e ele gerará várias versões do favicon, inclusive para darkmode
+
+Substitua 2 linhas por essas abaixo:
+<link rel="icon" href="/favicon.ico" sizes="48x48" >
+<link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
+
+Adicione o codigo <style> abaixo no favicon.svg:
+<svg ...>
+<style>
+    path {
+        color: black;
+    }
+    @media (prefers-color-scheme: dark) {
+        path {
+            color: white;
+        }
+    }
+</style>
+<path ...>
+</svg>
+
+https://dev.to/masakudamatsu/favicon-nightmare-how-to-maintain-sanity-3al7
+
+Favicons são salvos na pasta public
+
 ---------------------------------------------------&&&
 
 BARRA DE NAVEGAÇÃO: <nav></nav>
