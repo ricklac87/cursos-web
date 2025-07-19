@@ -339,3 +339,72 @@ const axios = require('axios')
 axios('https://...')
 	.then(response => console.log(response.data))
 	.catch(e => console.log(e))
+
+---------------------- ### 
+
+__dirname = nome da pasta atual
+__filename = nome do arquivo atual
+
+console.log(__dirname)     //retornará o nome da pasta atual. Ex: C:\WEB\NODEJS
+console.log(__filename)     //retornará o nome do arquivo atual. Ex: C:\\WEB\NODEJS\teste2.js
+
+----------------------- ###
+
+Modulo path é um modulo que já vem no Node
+
+const path = require('path')
+
+console.log(path.resolve(__dirname))                 //retornará o nome da pasta atual. Ex: C:\WEB\NODEJS
+console.log(path.resolve(__dirname, '..'))                   //Dois pontos volta 1 pasta. Ex: C:\WEB\
+console.log(path.resolve(__dirname, 'curso', 'aula1'))       //Colocará em outras pastas. Ex: C:\WEB\NODEJS\curso\aula1
+
+----------------------- ###
+
+NPM comandos:
+
+npm init = gera o arquivo package.json
+
+npm install OU npm i = instala os módulo descritos dentro do arquivo package.json
+
+npm install axios = instala um modulo/dependencies (neste exemplo instala o axios)
+
+npm install axios --save-dev  = move o axios de dependencies para um devDependencies (usada apenas para desenvolvimento)
+
+npm install axios --save-prod  = move de volta para dependencies
+
+npm install express@2.1.0  = instala exatamente a versão 2.1.0 do express
+
+OBS: versão 2.1.0 significa: 
+2 (major) . 1 (minor) . 0 (patch)
+patch = para correções
+minor = para recursos novos
+major = pode quebrar a compatibilidade se atualizar para a versão mais atualizada
+
+"dependencies": {
+	"express": "^2.1.0"   //O ^ significa que pode atualizar o patch e o minor, mas não o major
+}
+Se não quiser o ^ pode usar:  npm install express@2.1.0 -E
+
+"dependencies": {
+	"express": "~2.1.0"   //O ~ significa que pode atualizar o patch, mas não o major e minor
+}
+
+npm install express@4.x   = instala a versão mais atualizada da versão 4
+
+npm update = atualiza as dependencies instaladas
+
+npm outdated = lista as dependencies desatualizadas
+
+npm uninstall express   = desinstala o express
+
+npm ls   = lista todas as dependencies instaladas
+npm ls --depth=0    = lista apenas as dependencies que você instalou
+
+
+node arquivo.js = executa no terminal o arquivo
+
+node --version   = para saber a versão do node
+npm --version   = para saber a versão do npm
+
+npm start = roda o app.js
+npm run script = roda algum script criado no package.json (Ex: npm run dev)

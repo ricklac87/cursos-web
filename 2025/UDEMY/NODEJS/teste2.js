@@ -1,3 +1,3 @@
-const modulo1 = require('./teste1') 
+const path = require('path')
 
-console.log(modulo1.idade)
+console.log(path.resolve(__dirname, 'curso', 'aula1'))
