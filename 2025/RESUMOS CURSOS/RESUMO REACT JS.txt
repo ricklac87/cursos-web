@@ -6360,7 +6360,273 @@ export default function App() {
   );
 }
 
+////////////////////////////////////////////////////////////////&&&
+ARMAZENANDO COOKIES COM JS-COOKIES
+VIDEO: 
 
+Cookie da forma tradicional: (Não indicado)
+
+Criar cookie:
+document.cookie = "nome_do_cookie = valor_do_cookie; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/";
+
+Deletar cookie:
+document.cookie = nome_do_cookie + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+
+path=/    Define o caminho para o qual o cookie é válido. Então só aparecerá, por exemplo, na url https://localhost:3000/
+
+Exemplo:
+
+export default function App() {
+
+  const saveCookie = () => {
+    document.cookie = "biscoito=chocolate; expires=Thu, 18 Dec 2025 12:00:00 UTC; path=/";
+  }
+
+  const getCookie = (name) => {
+     const cookieString = document.cookie;
+     const cookies = cookieString.split(';');
+     for (let i = 0; i < cookies.length; i++) {
+       const cookie = cookies[i].trim();
+       if (cookie.startsWith(name + '=')) {
+         alert(cookie.substring(name.length + 1));
+       }
+     }
+     return null;
+   }
+
+  const removeCookie = (name) => {
+     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  }
+
+  return (
+    <div>
+      <button onClick={saveCookie}>SALVAR COOKIE</button>
+      <button onClick={() => getCookie("biscoito")}>LER COOKIE</button>
+      <button onClick={() => removeCookie("biscoito")}>DELETAR COOKIE</button>
+    </div>
+  )
+
+}
+
+--------------- ###
+
+COOKIES COM JS-COOKIE
+
+instalação:
+npm install js-cookie
+
+importar:
+import Cookies from 'js-cookie';
+
+
+Criar cookie:   Cookies.set(name, value, options)
+Cookies.set('nomeDoCookie', 'valorDoCookie', { expires: 7, path: '/' });      // Expira em 7 dias
+
+Ler cookie:    Cookies.get(name)
+const meuCookie = Cookies.get('nomeDoCookie');
+
+Deletar cookie:    Cookies.remove(name, options)
+Cookies.remove('nomeDoCookie', { path: '/' });
+
+----- ###
+
+Exemplo:
+
+import Cookies from 'js-cookie';
+
+export default function App() {
+
+  const saveCookie = () => {
+    Cookies.set('biscoito', 'chocolate', { expires: 7, path: '/' });
+  }
+
+  const getCookie = (name) => {
+    const meuCookie = Cookies.get('biscoito');
+    alert(meuCookie);
+  }
+
+  const removeCookie = (name) => {
+     Cookies.remove('biscoito', { path: '/' });
+  }
+
+  return (
+    <div>
+      <button onClick={saveCookie}>SALVAR COOKIE</button>
+      <button onClick={() => getCookie("biscoito")}>LER COOKIE</button>
+      <button onClick={() => removeCookie("biscoito")}>DELETAR COOKIE</button>
+    </div>
+  )
+
+}
+
+-------- ###
+
+import Cookies from 'js-cookie';
+import {useState} from 'react'
+
+export default function App() {
+
+  const [cookieName, setCookieName] = useState('')
+  const [cookieValor, setCookieValor] = useState('')
+
+  const saveCookie = () => {
+    Cookies.set(cookieName, cookieValor, { expires: 7, path: '/' });
+  }
+
+  const getCookie = () => {
+    const meuCookie = Cookies.get(cookieName);
+    alert(meuCookie);
+  }
+
+  const removeCookie = () => {
+     Cookies.remove(cookieName, { path: '/' });
+  }
+
+  return (
+    <div>
+      <input onChange={(e) => setCookieName(e.target.value)}></input>
+      <input onChange={(e) => setCookieValor(e.target.value)}></input>
+      <button onClick={saveCookie}>SALVAR COOKIE</button>
+      <button onClick={getCookie}>LER COOKIE</button>
+      <button onClick={removeCookie}>DELETAR COOKIE</button>
+    </div>
+  )
+
+}
+
+------ ###
+
+import Cookies from 'js-cookie';
+import {useState} from 'react'
+
+export default function App() {
+
+  const [user, setUser] = useState('')
+  const [password, setPassword] = useState('')
+
+  const saveCookie = () => {
+    Cookies.set("Login",`${user}=${password}`, { expires: 7, path: '/' });
+  }
+
+  return (
+    <div>
+      <input onChange={(e) => setUser(e.target.value)} placeholder='Digite o username'></input>
+      <input onChange={(e) => setPassword(e.target.value)} placeholder='Digite a senha'></input>
+      <button onClick={saveCookie}>SALVAR COOKIE</button>
+    </div>
+  )
+
+}
+
+--------- ###
+
+import Cookies from 'js-cookie';
+import {useState} from 'react'
+
+export default function Testes1() {
+
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    const token = password;
+    
+    Cookies.set('authToken', token, { 
+      expires: 7,
+      secure: true,                           // apenas HTTPS
+      sameSite: 'strict'                      // proteção CSRF
+    });
+  };
+
+  const handleLogout = () => {
+    Cookies.remove('authToken');
+  };
+
+  return (
+    <div>
+      <input onChange={(e) => setPassword(e.target.value)} placeholder='Digite a senha'></input>
+      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  )
+
+}
+
+------------- ###
+
+import Cookies from 'js-cookie';
+import {useState, useEffect} from 'react';
+
+const useAuthToken = () => {
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {                                  //Para checar se existe o cookie salvo
+    const savedToken = Cookies.get('authToken');
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
+
+  const saveToken = (newToken) => {
+    Cookies.set('authToken', newToken, { 
+      expires: 7,                             //OU   maxAge: 7 * 24 * 60 * 60 * 1000
+      secure: true,                           // apenas HTTPS
+      sameSite: 'strict',                     // proteção CSRF
+      httpOnly: true                          // para cookies sensíveis (configurado no backend)
+    });
+    setToken(newToken);
+  };
+
+  const removeToken = () => {
+    Cookies.remove('authToken');
+    setToken(null);
+  };
+
+  return { token, saveToken, removeToken };
+};
+
+export default function Testes1() {
+
+  const { token, saveToken, removeToken } = useAuthToken();
+
+  return (
+    <div>
+      {token ? (
+        <button onClick={removeToken}>Logout</button>
+      ) : (
+        <button onClick={() => saveToken('novo_token')}>Login</button>
+      )}
+    </div>
+  )
+
+}
+
+---------------- ###
+
+
+
+
+
+
+
+
+
+
+
+
+BASE
+////////////////////////////////////////////////////////////////&&&
+
+VIDEO: 
+
+import React from 'react';
+
+export default function App() {
+
+  return (
+    <>
+    </>
+  );
+}
 
 
 

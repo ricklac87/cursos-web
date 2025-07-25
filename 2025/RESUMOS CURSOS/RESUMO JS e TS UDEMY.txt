@@ -408,3 +408,336 @@ npm --version   = para saber a versão do npm
 
 npm start = roda o app.js
 npm run script = roda algum script criado no package.json (Ex: npm run dev)
+
+----------------------- ###
+RECURSÃO MUTUA, fs e path
+
+-Listando arquivos com fs:
+
+const fs = require('fs').promises;
+const path = require('path');
+
+fs.readdir(path.resolve(__dirname))
+	.then(files => console.log(files));
+	.catch(e => console.log(e));
+
+-----
+
+Outra forma com função:
+
+const fs = require('fs').promises;
+const path = require('path');
+
+async function readdir(rootDir) {
+	rootDir = rootDir || path.resolve(__dirname);
+	const files = await fs.readdir(rootDir);
+	walk(files);
+}
+
+function walk(files) {
+	for (let file of files) {
+		console.log(file);
+	}
+}
+
+readdir();      // Ou readdir('/diretorio/nomedapasta')
+
+----------------------- ###
+
+Escrevendo e lendo arquivos
+
+-Arquivo escrever.js:
+
+const fs = require('fs').promises;
+const path = require('path')
+const caminhoArquivo = path.resolve(__dirname, '..', 'teste.txt')    // '..' = volta uma pasta (opcional)
+
+fs.writeFile(caminhoArquivo, 'Frase 1', {flag: 'w'})  
+
+
+OBS: flag: 'w' = substitui o conteúdo
+     flag: 'a' = adiciona o conteúdo
+
+fs.writeFile(caminhoArquivo, 'Frase 1\n', {flag: 'a'}) 
+
+---------
+
+Criando um arquivo json:
+
+const fs = require('fs').promises;
+const path = require('path')
+const caminhoArquivo = path.resolve(__dirname, '..', 'teste.json')
+
+const pessoas = [
+  { nome: 'João' },
+  { nome: 'Maria' },
+  { nome: 'Eduardo' },
+  { nome: 'Luiza' },
+];
+const ArquivoJSON = JSON.stringify(pessoas);    //para ficar mais organizado: (pessoas, '', 2)
+
+fs.writeFile(caminhoArquivo, ArquivoJSON, {flag: 'w'}) 
+
+---------
+
+Separando em módulos:
+
+-Arquivo escrever.js:
+
+const fs = require('fs').promises;
+
+module.exports = (caminho, dados) => {
+  fs.writeFile(caminho, dados, { flag: 'w', encoding: 'utf8' });
+};
+
+
+-Arquivo ler.js:
+
+const fs = require('fs').promises;
+
+module.exports = (caminho) => fs.readFile(caminho, 'utf8');
+
+
+-Arquivo App.js:
+
+const path = require('path');
+const caminhoArquivo = path.resolve(__dirname, 'teste.json');
+const escreve = require('./modules/escrever');
+const ler = require('./modules/ler');
+
+const pessoas = [
+  { nome: 'João' },
+  { nome: 'Maria' },
+  { nome: 'Eduardo' },
+  { nome: 'Luiza' },
+];
+const json = JSON.stringify(pessoas, '', 2);
+escreve(caminhoArquivo, json);
+
+async function leArquivo(caminho) {
+  const dados = await ler(caminho);
+  renderizaDados(dados);
+}
+
+function renderizaDados(dados) {
+  dados = JSON.parse(dados);
+  dados.forEach(val => console.log(val.nome));
+}
+leArquivo(caminhoArquivo);
+
+
+
+-Arquivo teste.json:
+
+[
+  {
+    "nome": "João"
+  },
+  {
+    "nome": "Maria"
+  },
+  {
+    "nome": "Eduardo"
+  },
+  {
+    "nome": "Luiza"
+  }
+]
+
+------------------------ ###
+
+EXPRESS e NODEMON
+
+crie uma pasta do projeto
+Dentro da pasta, no terminal, digite: npm init -y
+Será gerado o package.json
+Instale o Express: npm i express
+
+Instale o nodemon para não precisar ficar atualizando a página sempre:
+npm install nodemon --save-dev
+OBS: --save-dev  = para instalar como dependencia de desenvolvimento apenas
+
+No arquivo package.json, adicione o script:
+...
+  "scripts": {
+    "dev": "nodemon server.js",
+		...
+  },
+...
+
+Para rodar o arquivo server.js usando o nodemon, digite:
+npm run dev
+
+Outra forma:
+
+...
+  "scripts": {
+    "start": "nodemon server.js",
+		...
+  },
+...
+
+Para rodar o arquivo server.js usando o nodemon, digite:
+npm start
+
+----
+
+Para importar o express:
+const express = require('express');
+
+Para usar o express:
+const app = express();
+
+-----
+
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+	res.send('TEXTO DE EXEMPLO')
+})
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+----
+
+OBS: Para enviar dados:
+
+app.post('/', (req, res) => {
+	res.send("ENVIADO!!!")
+})
+
+--------------------------------- ###
+
+EXPRESS
+req.params / req.query / req.body
+
+Parametros na url:
+
+const express = require('express');
+const app = express();
+
+app.get('/users/:idUser', (req, res) => {
+	console.log(req.params);                                         
+	res.send("Conteudo da url http://localhost:3000/users/12345")
+})
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+-O console.log retornará { idUser: '12345' }
+
+Outra forma:
+
+app.get('/users/:idUser', (req, res) => {                                      
+	res.send(req.params.idUser)
+})
+
+-Na tela aparecerá o parametro na url. Por exemplo:
+URL: http://localhost:3000/users/204
+Irá aparecer na tela: 204
+
+------
+
+Porém os exemplos acima apresentariam a seguinte mensagem na url: http://localhost:3000/users/
+Cannot GET /users/
+
+Para contornar isso, é necessário usar uma ? no codigo do parametro:
+
+app.get('/users/:idUser?', (req, res) => {
+	...
+})
+
+Infelizmente só funciona até o express 4.21:
+npm uninstall express
+npm install express@4.21
+
+Se quiser usar o express atual, teria que criar duas rotas:
+
+app.get('/users', (req, res) => {
+	console.log(req.params);
+	res.send("Lista de todos os usuários")
+});
+
+app.get('/users/:idUser', (req, res) => {
+	console.log(req.params);
+	res.send("Conteudo da url http://localhost:3000/users/12345")
+});
+
+-------------
+
+Adicionando parametros:
+
+app.get('/users/:parametro1/:parametro2/:parametro3', (req, res) => {
+	console.log(req.params);
+	res.send("Conteudo da url")
+});
+
+Se digitar a url http://localhost:3000/users/P1/P2/P3 será retornado no console:
+{
+  parametro1: 'P1',
+  parametro2: 'P2',
+  parametro3: 'P3'
+}
+
+---------------
+
+Adicionando query strings e obtendo com req.query:
+
+app.get('/users/:parametros', (req, res) => {
+	res.send(req.query)
+});
+
+Se entrar na url http://localhost:3000/users/?nome=Luiz&sobrenome=Miranda&idade=30   (Versão do express até 4.21)
+Se entrar na url http://localhost:3000/users/search?nome=Luiz&sobrenome=Miranda&idade=30   (Versão atual do express)
+
+Aparecerá na tela:
+{"nome":"Luiz","sobrenome":"Miranda","idade":"30"}
+
+
+Se quiser especificamente o valor de um parametro:
+
+res.send(req.query.nome)      // mostrará Luiz
+
+--------
+
+Usando o método post com req.body:
+
+OBS: Para enviar dados:
+
+const express = require('express');
+const app = express();
+
+app.use(express.urlencoded({extended: true}))       //Para tratar o que é enviado no POST e não vir undefined
+
+app.get('/', (req, res) => {   //Simulando um formulario
+	res.send(`
+		<form action="/" method="POST">
+			<input type="text" name="nome">
+			<button>Enviar</button>
+		</form>
+	`)
+})
+
+app.post('/', (req, res) => {
+	console.log(req.body)
+	res.send(`Foi enviado o nome ${req.body.nome} `)
+})
+
+app.listen(3000, () => {
+  console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+
+
+
+
+

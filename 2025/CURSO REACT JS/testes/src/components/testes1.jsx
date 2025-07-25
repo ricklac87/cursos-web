@@ -1,18 +1,45 @@
-import styled from 'styled-components'
+import Cookies from 'js-cookie';
+import {useState, useEffect} from 'react';
 
-const Titulo = styled("h1")`               
-  color: blue;
-  font-size: 2rem;
-  font-family: sans-serif;
-  font-weight: bold;
-`;
+const useAuthToken = () => {
+  const [token, setToken] = useState(null);
 
+  useEffect(() => {                                  //Para checar se existe o cookie salvo
+    const savedToken = Cookies.get('authToken');
+    if (savedToken) {
+      setToken(savedToken);
+    }
+  }, []);
 
-export default function App() {
+  const saveToken = (newToken) => {
+    Cookies.set('authToken', newToken, { 
+      expires: 7,
+      secure: true,                           // apenas HTTPS
+      sameSite: 'strict',                     // proteção CSRF
+      httpOnly: true                          // para cookies sensíveis (configurado no backend)
+    });
+    setToken(newToken);
+  };
+
+  const removeToken = () => {
+    Cookies.remove('authToken');
+    setToken(null);
+  };
+
+  return { token, saveToken, removeToken };
+};
+
+export default function Testes1() {
+
+  const { token, saveToken, removeToken } = useAuthToken();
 
   return (
     <div>
-      <Titulo>TITULO AZUL</Titulo> 
+      {token ? (
+        <button onClick={removeToken}>Logout</button>
+      ) : (
+        <button onClick={() => saveToken('novo_token')}>Login</button>
+      )}
     </div>
   )
 
