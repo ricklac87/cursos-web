@@ -736,6 +736,1118 @@ app.listen(3000, () => {
 	console.log("Servidor executando na porta 3000")
 })
 
+------------------------------------- ###
+
+ROTAS E CONTROLLERS COM EXPRESS (MVC)
+
+Os controllers definem quais são o Model (banco de dados) e views (o que o usuario vê)
+
+Crie uma pasta chamada Controllers. Dentro dela, crie o arquivo homeController.js:
+
+exports.paginaInicial = (req, res) => {
+	res.send("Conteúdo da página Home")
+}
+
+¨¨¨¨¨
+-Arquivo routes.js:
+
+const express = require('express');
+const route = express.Router();
+const homeController = require('./controllers/homeController')
+
+route.get('/', homeController.paginaInicial)
+
+module.exports = routes
+
+¨¨¨¨¨
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+const routes = require('./routes')
+
+app.use(express.urlencoded({extended: true}))   
+
+app.use(routes)
+
+app.listen(3000, () => {
+  console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+----------------------------
+
+Com mais de 1 rota:
+
+-Arquivo homeController.js:
+
+exports.paginaInicial = (req, res) => {
+	res.send(`
+		<form action="/" method="POST">
+			<input type="text" name="nome">
+			<button>Enviar</button>
+		</form>
+	`)
+}
+
+exports.trataPost = (req, res) => {
+	res.send("Rota de POST")
+}
+
+exports.contatoController = (req, res) => {
+	res.send("Conteúdo da página Contato")
+}
+ 
+¨¨¨¨¨
+-Arquivo routes.js:
+
+const express = require('express');
+const route = express.Router();
+const homeController = require('./controllers/homeController');
+const contatoController = require('./controllers/contatoController')
+
+route.get('/', homeController.paginaInicial);
+route.post('/', homeController.trataPost);
+
+route.get('/contato', contatoController.paginaInicial)
+
+module.exports = routes;
+
+¨¨¨¨¨
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+const routes = require('./routes');
+
+app.use(express.urlencoded({extended: true}));   
+
+app.use(routes);
+
+app.listen(3000, () => {
+  console.log("URL: http://localhost:3000/");
+	console.log("Servidor executando na porta 3000");
+})
+
+------------------------ ###
+
+VIEWS COM EXPRESS: (MVC)
+
+Instale o modulo ejs para o express poder renderizar HTML:
+npm install ejs
+
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+const routes = require('./routes');
+const path = require('path');
+
+app.use(express.urlencoded({extended: true}));  
+
+app.set('views', path.resolve(__dirname, 'src', 'views'));
+app.set('view engine', 'ejs');
+
+app.use(routes);
+
+app.listen(3000, () => {
+  console.log("URL: http://localhost:3000/");
+	console.log("Servidor executando na porta 3000");
+})
+
+¨¨¨¨¨¨
+Crie uma pasta chamada views. Dentro dela, crie o arquivo index.ejs: 
+
+<html>
+	<head>
+		...
+	</head>
+	<body>
+		<h1>Conteúdo da página</h1>
+	</body>
+</html>
+
+¨¨¨¨¨¨
+-Arquivo homeController.js:
+
+exports.paginaInicial = (req, res) => {
+	res.render('index')
+}
+
+¨¨¨¨¨¨
+
+-Arquivo routes.js:
+
+const express = require('express');
+const route = express.Router();
+const homeController = require('./controllers/homeController');
+
+route.get('/', homeController.paginaInicial);
+
+module.exports = routes;
+
+------------------------------- ###
+
+Injetando conteúdo na camada View:
+
+-Arquivo homeController.js dentro da pasta Controllers:
+
+exports.paginaInicial = (req, res) => {
+	res.render('index', {
+		titulo: "Este é o titulo da pagina",
+		numeros: [1, 2, 3, 4, 5]
+	})
+	return;
+}
+
+¨¨¨¨¨¨¨¨
+Arquivo index.ejs dentro da pasta views: 
+
+<html>
+	<head>
+		...
+	</head>
+	<body>
+		<section class="container">
+			<h1>
+				<%= titulo %>
+			</h1>
+		</section>
+	</body>
+</html>
+
+¨¨¨¨¨¨¨
+
+OBS: Caso seja escrito tags html dentro do conteudo, é necessário trocar o simbolo de = por - 
+
+exports.paginaInicial = (req, res) => {
+	res.render('index', {
+		titulo: "Este é o <span>titulo<span> da pagina",               //tag html na mensagem
+		numeros: [1, 2, 3, 4, 5]
+	})
+	return;
+}
+
+<html>
+	<head>
+		...
+	</head>
+	<body>
+		<section class="container">
+			<h1>
+				<%- titulo %>                       //ao invés de <%= titulo %>
+			</h1>
+		</section>
+	</body>
+</html>
+
+
+<%- titulo %> = será mostrado "Este é o titulo da pagina"
+<%= titulo %> = será mostrado "Este é o <span>titulo<span> da pagina"
+
+------------------------------ ###
+
+Usando javascript dentro do html no ejs:
+(coloque o codigo javascript entre <% ... %>)
+
+<html>
+	<head>
+		...
+	</head>
+	<body>
+		<section class="container">
+			<h1>
+				<% if(typeof titulo !== 'undefined') {  %>
+					<%= titulo %>
+				<% } else { %>
+					O titulo não foi enviado
+				<% } %>                      
+			</h1>
+		</section>
+	</body>
+</html>
+
+OU
+
+<h1>
+	<%- typeof titulo !== "undefined" ? title : undefined %>
+</h1>
+
+----------------
+
+Incluindo (importar) arquivos no ejs
+
+Exemplo incluindo um arquivo chamado header.ejs:
+
+<html>
+	<head>
+		...
+	</head>
+	<body>
+		<section class="container">
+			<div>
+				<%- include('components/header') %>                      
+			</div>
+		</section>
+	</body>
+</html>
+
+
+
+------------------------------ ###
+
+Pasta para arquivos estáticos:
+
+Dentro da pasta public fica os arquivos estáticos (favicon, bundles)
+
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+const routes = require('./routes');
+const path = require('path');
+
+app.use(express.urlencoded({extended: true}));  
+
+app.use(express.static(path.resolve(__dirname, 'public')));
+
+app.use(routes);
+
+app.listen(3000, () => {
+  console.log("URL: http://localhost:3000/");
+	console.log("Servidor executando na porta 3000");
+})
+
+-Digamos que tenha um arquivo chamado teste.txt na pasta public. Caso entre na url http://localhost:3000/teste.txt
+aparecerá o conteúdo do arquivo.
+
+-------------------------------- ###
+
+EXPRESS MIDDLEWARES
+
+-Arquivo routes.js:
+
+const express = require('express');
+const route = express.Router();
+const homeController = require('./controllers/homeController');
+
+function meuMiddleware(req, res, next){
+	console.log();
+	console.log('Passe no seu middleware');
+	console.log();
+	next();          //para executar o proximo middleware
+}
+
+route.get('/', meuMiddleware, homeController.paginaInicial);
+
+module.exports = routes;
+
+¨¨¨¨¨¨
+-Arquivo homeController.js:
+
+exports.paginaInicial = (req, res, next) => {
+	res.send("Conteudo da página");
+}
+
+OU
+
+exports.paginaInicial = (req, res) => {
+	res.send("Conteudo da página");
+	return;
+}
+
+------------------------------------ ### &&&
+
+MONGO DB (Camada Model da MVC)
+
+Crie uma conta no mongoDB Atlas (ou faça login com email do google)
+Escolha o plano Free
+Digite o nome do cluster (para fins didáticos, cluster = curso)
+Escolha o nome do username e password (para fins didáticos, username = root e password = senha)
+
+Escolha como driver o Nodejs
+
+Copie a url de conexão. No meu caso foi:
+mongodb+srv://root:senha@curso.l1xujce.mongodb.net/?retryWrites=true&w=majority&appName=curso
+(Atenção para o caso da url não aparecer a senha, pois ela deve aparecer)
+
+O padrão da url de conexão é:
+mongodb+srv://NOME_DO_USUARIO:NOME_DA_SENHA@NOME_DO_CLUSTER.l1xujce.mongodb.net/?retryWrites=true&w=majority&appName=NOME_DO_CLUSTER
+ou 
+mongodb+srv://NOME_DO_USUARIO:NOME_DA_SENHA@NOME_DO_CLUSTER.l1xujce.mongodb.net/NOME_DA_COLLECTION?retryWrites=true&w=majority&appName=NOME_DO_CLUSTER
+
+OBS: Para rever essa tela e checar outros metodos de conexão com drivers, na home do Atlas, vá em Clusters e clique em Connect.
+
+Em network Acess, clique em edit e altere o Access List Entry para 0.0.0.0/0 (para permitir acesso de qualquer lugar, para fins didáticos)
+
+Para criar um usuario:
+Em Database Acess, clique em Add New Database User.
+Escolha Password como Authentication Method. Digite um nome de usuario e senha 
+
+-----
+
+Para criar um banco de dados e uma tabela:
+Vá clusters. Clique em Browse Collections.
+
+Digite o nome do Database (Schema no MySQL)
+Digite o Collection (Tabela)
+
+-----
+
+Instalação do mongoose:
+npm install mongoose
+
+Instalação do dotenv:
+npm install dotenv
+
+Crie um arquivo chamado .env no root do projeto. Dentro dele, digite a url de conexão com o banco de dados:
+CONNECTIONSTRING = mongodb+srv://root:senha@curso.l1xujce.mongodb.net/?retryWrites=true&w=majority&appName=curso
+
+OBS: Adicione o arquivo .env no arquivo .gitignore
+
+¨¨¨¨
+Conectando no MongoDB pelo mongoose:
+
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+
+require('dotenv').config();
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.CONNECTIONSTRING)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+app.get('/', (req, res) => {
+	res.send("Conteúdo da página")
+})
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+--------------------- ###
+CONEXÃO MONGOOSE x MongoDB
+
+MongoDB:
+
+const { MongoClient } = require('mongodb');
+
+const client = new MongoClient(process.env.DATABASE);
+
+async function connectToMongoDB() {
+	try {
+		await client.connect();
+		console.log("Connected to MongoDB!");
+		const db = client.db("yourDatabaseName");
+		// Perform database operations here
+	} catch (error) {
+		console.error("Error connecting to MongoDB:", error);
+	} finally {
+		await client.close();
+	}
+}
+
+connectToMongoDB();
+
+¨¨¨¨¨¨
+Mongoose:
+
+const mongoose = require('mongoose');
+
+async function connectToMongoDB() {
+	try {
+		await mongoose.connect(process.env.DATABASE);
+		console.log("Connected to MongoDB using Mongoose!");
+		// You can now define schemas and models and interact with the database
+	} catch (error) {
+		console.error("Error connecting to MongoDB with Mongoose:", error);
+	}
+}
+
+connectToMongoDB();
+
+-------------------- ###
+
+Conexão com MongoDB Local pelo mongoose:
+
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://127.0.0.1:27017/mydatabase')
+	.then(() => console.log('Connected to MongoDB'))
+	.catch(err => console.error('Error connecting to MongoDB:', err));¨
+
+Note: Use 127.0.0.1 instead of localhost if you encounter connection issues. 
+
+¨¨¨¨¨¨
+Conexão com Atlas pelo mongoose:
+
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+	.then(() => console.log('Connected to MongoDB Atlas'))
+	.catch(err => console.error('Error connecting to MongoDB Atlas:', err));
+
+--------------------- ###
+
+Resolvendo problemas de conexão:
+
+const mongoose = require('mongoose');
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', function() {
+	console.log('MongoDB connection opened!');
+});
+db.on('disconnected', function() {
+	console.log('MongoDB disconnected!');
+});
+
+--------------------- ###
+Fechando a conexão:
+
+mongoose.connection.close()
+	.then(() => console.log('MongoDB connection closed'))
+	.catch(err => console.error('Error closing MongoDB connection:', err));
+
+--------------------- ###
+
+Trabalhando com versões do Mongoose anteriores à versão 6:
+
+const mongoose = require('mongoose');
+
+// For Mongoose versions older than v6
+mongoose.connect('mongodb://url...', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error(err));
+
+With Mongoose versions 6 and above, useNewUrlParser is no longer necessary and has no effect. Mongoose versions 6 and later always behave as if useNewUrlParser, useUnifiedTopology, and useCreateIndex are true, and useFindAndModify is false. 
+
+-------------------- ###
+Para criar um schema,tabela e inserir dados no MongoDB:
+
+const express = require('express');
+const app = express();
+
+require('dotenv').config();
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.CONNECTIONSTRING)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+const HomeSchema = new mongoose.Schema({                 //Criou um schema chamado test e uma tabela com titulo e descricao
+	titulo: {type: String, required: true},
+	descricao: String
+})
+
+const HomeModel = mongoose.model('Home', HomeSchema)        //Criou um modelo (tabela) chamado Home
+
+HomeModel.create({                                      //Criou uma tabela chamada homes e atribuiu valor nas colunas
+	titulo: "Texto do titulo",
+	descricao: "Texto da descrição"
+})
+	.then(dados => console.log(dados))
+	.catch(e => console.log(e))
+
+app.get('/', (req, res) => {
+	res.send("Conteúdo da página")
+})
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+OBS: Para criar um nome de uma collection personalizada ao invés de test, altere a url de conexão para:
+mongodb+srv://root:senha@curso.l1xujce.mongodb.net/NOMEDACOLLECTION?retryWrites=true&w=majority&appName=curso 
+
+Substitua NOMEDACOLLECTION pelo nome que quiser
+
+----------------- ###
+
+Para achar dados no MongoDB pelo Mongoose:
+
+const express = require('express');
+const app = express();
+
+const mongoose = require('mongoose')
+
+//Altere o NOMEDOSCHEMA, USUARIO, SENHA e NOMEDODB
+const CONNECTIONSTRING = "mongodb+srv://USUARIO:SENHA@NOMEDODB.l1xujce.mongodb.net/NOMEDOSCHEMA?retryWrites=true&w=majority&appName=curso" 
+
+mongoose.connect(CONNECTIONSTRING)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+const nomeSchema = mongoose.Schema();
+
+const Tabela = mongoose.model('nomeCollection', nomeSchema);                //Altere o nomeCollection 
+
+Tabela.find({chave:"valor"})
+	.then(dados => console.log(dados))
+	.catch(e => console.log(e))
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+OBS: Caso queira listar os 5 primeiros items de uma collection:
+Tabela.find().limit(5)
+
+-------
+
+Exemplo usando a collection users no schema sample_mflix que já vem no MongoDB Atlas:
+
+const express = require('express');
+const app = express();
+
+const mongoose = require('mongoose')
+
+const CONNECTIONSTRING = "mongodb+srv://root:senha@curso.l1xujce.mongodb.net/sample_mflix?retryWrites=true&w=majority&appName=curso" 
+
+mongoose.connect(CONNECTIONSTRING)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+const nomeSchema = mongoose.Schema();
+
+const Tabela = mongoose.model('user', nomeSchema);          
+
+Tabela.find({name:"Ned Stark"})
+	.then(dados => console.log(dados))
+	.catch(e => console.log(e))
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+---------------
+
+Versão completa:
+
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+
+app.use(express.json());
+
+require('dotenv').config();
+
+const userSchema = new mongoose.Schema();
+
+const Tabela = mongoose.model('users', userSchema);
+
+async function initializeDatabase() {
+    try {
+        await mongoose.connect(process.env.DB_CLUSTER, {dbName: 'sample_mflix'});
+        
+        console.log("Conectado à base de dados com Mongoose");
+        
+        // Start server only after database is connected
+        app.listen(3000, () => {
+            console.log("URL: http://localhost:3000/");
+            console.log("Servidor executando na porta 3000");
+        });
+        
+    } catch (error) {
+        console.error("Erro ao conectar à base de dados:", error);
+        process.exit(1);
+    }
+}
+
+app.get('/', async (req, res) => {
+    try {
+        const query = await Tabela.findOne({ name: "Ned Stark" });
+        
+        if (query) {
+            res.json(query);
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+        
+    } catch (error) {
+        console.error("Erro na consulta:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Additional route to get all users (optional)
+app.get('/users', async (req, res) => {
+    try {
+        const query = await Tabela.find({});
+        res.json(query);
+    } catch (error) {
+        console.error("Erro ao buscar usuários:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Handle graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Shutting down gracefully...');
+    await mongoose.connection.close();
+    process.exit(0);
+});
+
+// Handle mongoose connection events
+mongoose.connection.on('connected', () => {
+    console.log('Mongoose connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('Mongoose connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('Mongoose disconnected');
+});
+
+// Initialize the database connection and start server
+initializeDatabase();
+
+
+---------------
+
+Achar dados sem precisar criar um schema:
+
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+
+const app = express();
+
+app.use(express.json());
+
+mongoose.connect(process.env.DB_MFLIX)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+app.get('/', async (req, res) => {
+	try {
+		const database = mongoose.connection.db;
+		const collection = database.collection('users');
+		const query = await collection.find().toArray();
+		res.json(query[0].name);
+	} catch (err) {
+		console.log(err);
+		res.status(500).json({ error: 'Erro interno do servidor' });
+	}
+});
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+-------------------- ###
+
+Para achar dados no MongoDB pelo Mongodb:
+
+
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+require('dotenv').config();
+
+const { MongoClient } = require('mongodb');
+
+const client = new MongoClient(process.env.DB_CLUSTER);
+
+async function connectToMongoDB() {
+	try {
+		await client.connect();
+		console.log("Connected to MongoDB!");
+		const database = client.db("sample_mflix");              //Nome do database (Schema no MySQL)
+		const collection = database.collection("users");         //Nome da collection (Tabela no MySQL)
+		// Perform database operations here
+		const user = await collection.findOne({name: "Ned Stark"});
+		console.log(user.name)                                        //Ou console.log(user)
+	} catch (error) {
+		console.error("Error connecting to MongoDB:", error);
+	} finally {
+		await client.close();
+	}
+}
+
+connectToMongoDB();
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+---------------
+
+Forma completa:
+
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+require('dotenv').config();
+
+const { MongoClient } = require('mongodb');
+
+const client = new MongoClient(process.env.DB_CLUSTER);
+
+let database, collection;
+
+// Initialize database connection
+async function initializeDatabase() {
+    try {
+        await client.connect();
+        console.log("Conectado à base de dados");
+        
+        database = client.db("sample_mflix");
+        collection = database.collection("users");
+        
+        // Start server only after database is connected
+        app.listen(3000, () => {
+            console.log("URL: http://localhost:3000/");
+            console.log("Servidor executando na porta 3000");
+        });
+        
+    } catch (error) {
+        console.error("Erro ao conectar à base de dados:", error);
+        process.exit(1);
+    }
+}
+
+app.get('/', async (req, res) => {
+    try {
+        // Check if database is initialized
+        if (!collection) {
+            return res.status(500).json({ error: "Database not initialized" });
+        }
+        
+        const user = await collection.findOne({name: "Ned Stark"});
+        
+        if (user) {
+            res.json(user.name);
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+        
+    } catch (error) {
+        console.error("Erro na consulta:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Handle graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Shutting down gracefully...');
+    await client.close();
+    process.exit(0);
+});
+
+// Initialize the database connection and start server
+initializeDatabase();
+
+
+------------------- ###
+
+Para criar um schema e tabela no MongoDB através de um arquivo Model:
+
+Crie uma pasta chama Models e dentro crie o arquivo HomeModel.js:
+
+const mongoose = require('mongoose');
+
+const HomeSchema = new mongoose.Schema({
+	titulo: {type: String, required: true},
+	descricao: String
+})
+
+const HomeModel = mongoose.model('Home', HomeSchema)
+
+module.exports = HomeModel
+
+¨¨¨¨¨¨
+-Arquivo homeController.js:
+
+const HomeModel = require('../models/HomeModel')
+
+HomeModel.create({
+	titulo: "Texto do titulo",
+	descricao: "Texto da descrição"
+})
+	.then(dados => console.log(dados))
+	.catch(e => console.log(e))
+
+exports.paginaInicial = (req, res) => {
+	res.render('index')
+}
+
+
+¨¨¨¨¨¨
+-Arquivo server.js
+
+const express = require('express');
+const app = express();
+
+require('dotenv').config();
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.CONNECTIONSTRING)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+app.get('/', (req, res) => {
+	res.send("Conteúdo da página")
+})
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+----------------------------------------- ###
+
+EXPRESS SESSION e Flash Messages
+
+Instalação do express-session:
+npm install express-session
+
+Instalação do connect-mongo:
+npm install connect-mongo
+
+Instalação do connect-flash:
+npm install connect-flash
+
+¨¨¨¨¨¨¨¨
+Para guardar dados nos cookies:
+
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+
+require('dotenv').config();
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.CONNECTIONSTRING)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+
+const sessionOptions = session({
+	secret: "senha_secreta",
+	store: MongoStore.create({ mongoUrl: process.env.CONNECTIONSTRING }),         //salvará o cookie no banco de dados
+	resave: false,                                 // Don't save session if unmodified
+	saveUninitialized: false,                      // Don't create session until something stored
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 24 * 7,             // por 7 dias
+		httpOnly: true,                              // Prevents client-side JavaScript from accessing the cookie
+		secure: process.env.NODE_ENV === 'production',      // Use secure cookies in production (requires HTTPS)
+		sameSite: 'strict'
+	}
+});
+
+app.use(sessionOptions);
+
+app.get('/', (req, res) => {
+	req.session.usuario = {nome: 'Luiz', logado: true};
+	console.log(req.session.usuario)
+	res.send("Conteúdo da página");
+});
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+
+¨¨¨¨¨¨¨¨¨¨
+
+Para criar mensagens flash:   (Não é mais necessário este metodo ao usar React)
+
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+
+require('dotenv').config();
+const mongoose = require('mongoose')
+
+mongoose.connect(process.env.CONNECTIONSTRING)
+	.then(() => {
+		console.log("Conectado à base de dados")
+	})
+	.catch(e => console.log(e))
+
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const flash = require('connect-flash');
+
+const sessionOptions = session({
+	secret: "senha_secreta",
+	store: MongoStore.create({ mongoUrl: process.env.CONNECTIONSTRING }),
+	resave: false,
+	saveUninitialized: false,
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 24 * 7,      // por 7 dias
+		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
+		sameSite: 'strict'
+	}
+});
+
+app.use(sessionOptions);
+app.use(flash());
+
+// Middleware to make flash messages available to all routes
+app.use((req, res, next) => {
+	res.locals.messages = {
+		success: req.flash('success'),
+		error: req.flash('error'),
+		info: req.flash('mensagem')
+	};
+	next();
+});
+
+app.get('/', (req, res) => {
+	req.session.usuario = {nome: 'Luiz', logado: true};
+	console.log(req.session.usuario)
+	req.flash('mensagem', 'Conteúdo da mensagem');
+	req.flash('error', 'Deu erro');
+	req.flash('success', 'Deu certo');
+	
+	// Flash messages are consumed when accessed, so store them before displaying
+	const successMessages = req.flash('success');
+	const errorMessages = req.flash('error');
+	const infoMessages = req.flash('mensagem');
+	
+	console.log('Success messages:', successMessages);
+	console.log('Error messages:', errorMessages);
+	console.log('Info messages:', infoMessages);
+	
+	res.send(`
+		<h1>Conteúdo da página</h1>
+		<p>Usuário: ${req.session.usuario ? req.session.usuario.nome : 'Não logado'}</p>
+		<div>
+			<h3>Mensagens:</h3>
+			${successMessages.length > 0 ? `<p style="color: green;">Success: ${successMessages.join(', ')}</p>` : ''}
+			${errorMessages.length > 0 ? `<p style="color: red;">Error: ${errorMessages.join(', ')}</p>` : ''}
+			${infoMessages.length > 0 ? `<p style="color: blue;">Info: ${infoMessages.join(', ')}</p>` : ''}
+		</div>
+	`);
+});
+
+app.listen(3000, () => {
+	console.log("URL: http://localhost:3000/")
+	console.log("Servidor executando na porta 3000")
+})
+
+------------------------------------------------ ###
+
+EXPRESS HELMET E CSRF 
+
+Helmet is a collection of middleware functions that set various HTTP headers to enhance security. 
+-Reduces XSS and clickjacking attacks: By setting appropriate headers, Helmet helps prevent attackers from injecting malicious scripts or framing your site within their own. 
+-Mitigates MIME-sniffing: It helps prevent browsers from incorrectly interpreting the content type of your responses, which could lead to security issues. 
+
+CSRF (Cross-Site Request Forgery) attacks involve tricking users into unknowingly performing actions on your site through malicious websites. 
+CSRF protection involves generating unique tokens for each user session and requiring these tokens to be present in all sensitive requests (e.g., form submissions, API calls). 
+
+Instalação do csurf:
+npm install csurf
+
+OBS: O CSURF está deprecated pois o mundo agora é "SPA" (react, angular, etc)
+
+----------
+
+-Arquivo middleware.js:
+
+exports.checkCsrfError = (err, req, res) => {
+	if(err && err.code === 'EBADCSRFTOKEN') {
+		return res.send('BAD CSRF')
+	}
+}
+
+exports.csrfMiddleware = (req, res, next) => {
+	res,locals.csrfToken = req.csrfToken()
+	next()
+}
+
+¨¨¨¨¨¨
+-Arquivo server.js:
+
+...
+const {checkCsrfError, csrfMiddleware} = require('./src/middlewares/middleware')
+
+const helmet = require('helmet')
+const csrf = require('csurf')
+
+app.use(helmet())
+app.use(csurf())
+
+app.use(checkCsrfError)
+app.use(csrfMiddleware)
+...
+
+¨¨¨¨¨¨
+-Arquivo index.js:
+
+...
+<form action="/" method="post">
+	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+	<label>Cliente:</label>
+	<input type="text" name="cliente">
+	<button>Submit</button>
+</form>
+...
+
+------------------------------ ###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

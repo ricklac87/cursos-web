@@ -1,0 +1,998 @@
+////////////////////////////////////////////////////////////////&&&
+CRUD USANDO MONGOOSE e POSTMAN
+VIDEO: https://www.youtube.com/embed/K5QaTfE5ylk
+
+No terminal, digite:
+npm init -y
+
+instale as dependencias:
+npm install express nodemon mongoose
+
+Crie o arquivo index.js:     (ou server.js)
+
+No arquivo package.json adicione o script:
+"start": "nodemon ./index.js localhost:3000"
+
+¨¨¨¨¨¨
+-Arquivo index.js:
+
+const express = require('express')
+const app = express()
+
+app.use(                              //Aparentemente não é necessário
+  express.urlencoded({
+    extended: true,
+  }),
+)
+
+app.use(express.json())
+
+app.get('/', (req, res) => {
+  res.json({message: "Mensagem"})
+})
+
+app.listen(3000)
+
+¨¨¨¨¨¨
+No Postman, crie uma collection e faça uma nova request
+No GET, coloque a url http://localhost:3000
+
+Ao clicar em SEND a mensagem será recebida
+
+Como a url pode mudar ao longo da vida, é necessário fazer uma mudança.
+Clique na API criada e vá em variables. Adicione uma variavel chamada URL. 
+Inicial value = http://localhost:3000
+Current value = http://localhost:3000
+Salve as alterações.
+
+Agora em New Request a url será {{URL}}
+
+Atenção!!!
+Tenha cuidado ao adicionar uma variavel.
+Se a url salva na variavel for http://localhost:3000 então ficará {{URL}}/api/usuarios
+Se a url salva na variavel for http://localhost:3000/ então ficará {{URL}}api/usuarios
+
+---------------------
+Conectando ao MongoDB
+
+No Atlas, crie o Cluster e o database (collection)
+Para fins didaticos, coloque Network Acess para a url 0.0.0.0/0 para que qualquer um consiga acessar
+
+Copie a url de conexão
+mongodb+srv://root:senha@curso.l1xujce.mongodb.net/?retryWrites=true&w=majority&appName=curso
+
+Padrão:
+mongodb+srv://NOME_DO_USUARIO:SENHA_DO_USUARIO@NOME_DO_CLUSTER.l1xujce.mongodb.net/NOME_DA_COLLECTION?retryWrites=true&w=majority&appName=NOME_DO_CLUSTER
+
+Instale o dotenv:
+npm i dotenv
+
+Crie o arquivo .env na pasta root e adicione a url de conexão:
+
+DB_CONNECTION = mongodb+srv://NOME_DO_USUARIO:SENHA_DO_USUARIO@NOME_DO_CLUSTER.l1xujce.mongodb.net/NOME_DA_COLLECTION?retryWrites=true&w=majority&appName=NOME_DO_CLUSTER
+
+¨¨¨¨
+Outra forma também seria separar o nome do usuario, senha, cluster e collection. 
+
+-No arquivo .env:
+
+DB_PORT = 3000
+DB_USER = root
+DB_PASSWORD = senha
+DB_CLUSTER = curso                        //opcional
+DB_COLLECTION = person                    //opcional
+
+-No arquivo de conexão ao banco de dados:
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+
+const mongoose = require('mongoose')
+require("dotenv").config();
+
+const DB_USER = process.env.DB_USER
+const DB_PASSWORD = encodeURIComponent(process.env.DB_PASSWORD)
+const DB_CLUSTER = process.env.DB_CLUSTER
+const DB_COLLECTION = process.env.DB_COLLECTION
+const DB_PORT = process.env.DB_PORT
+
+const DB_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER}.l1xujce.mongodb.net/${DB_COLLECTION}?retryWrites=true&w=majority&appName=${DB_CLUSTER}`
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log("Conectado ao MongoDB")
+    app.listen(3000, () => {
+      console.log(`Servidor conectado na porta ${DB_PORT}`);
+    });
+  })
+  .catch((err) => console.log('Erro ao conectar no MongoDB:', err))
+
+-------------
+
+Crie uma pasta chamada models. Dentro crie o arquivo Person.js:
+
+const mongoose = require('mongoose')
+
+const Person = mongoose.model('Person', {
+  name: String,
+  age: Number
+})
+
+module.exports = Person
+
+------------
+
+Conectando usando o mongoose:
+
+const express = require('express')
+const app = express()
+
+const mongoose = require('mongoose')
+
+require('dotenv').config();
+
+const Person = require('./models/Person')
+
+app.use(                                //Aparentemente não é necessário
+  express.urlencoded({
+    extended: true,
+  }),
+)
+
+app.use(express.json())
+
+app.post('/person', async (req, res) => {
+
+  const {name, age} = req.body
+
+  if(!name || !age) {
+    res.status(422).json({error: "O nome e idade são obrigatórios"})
+  }
+
+  const person = {
+    name, 
+    age
+  }
+
+  try {
+    await Person.create(person)
+    res.status(201).json({message: "Pessoa inserida no sistema com sucesso"})
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
+
+mongoose.connect(process.env.DB_CONNECTION)
+  .then(() => {
+    console.log("Conectado ao MongoDB")
+    app.listen(3000)
+  })
+  .catch((err) => console.log(err))
+
+------------
+
+No postman, crie um requisição POST e adicione a url {{URL}}/person  
+
+Selecione Body. 
+Selecione Raw.
+Ao invés de Text, selecione JSON.
+
+Digite o codigo JSON:
+
+{
+  "name": "Carlos",
+  "age": 30
+}
+
+Digite Send para enviar os dados
+
+---------------
+
+Separando a camada de rotas:
+
+Crie um arquivo chamado personRoutes.js dentro da pasta routes. 
+Usando o Router do express, mova a rota de GET, POST, PUT e DELETE para lá.
+Importe o models também (Person.js).
+
+-Arquivo personRoutes.js:
+
+const router = require('express').Router()
+
+const Person = require('../models/Person')
+
+router.post('/', async (req, res) => {                   //o caminho passa a ser '/' ao invés de '/person'
+
+  const {name, age} = req.body
+
+  if(!name) {
+    res.status(422).json({error: "O nome é obrigatório"})           // Ou status 400
+    return
+  }
+
+  const person = {
+    name, 
+    age
+  }
+
+  try {
+    await Person.create(person)
+    res.status(201).json({message: "Pessoa inserida no sistema com sucesso"})
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
+
+module.exports = router
+
+------
+
+Importando o modulo de rotas no arquivo de conexão ao banco de dados: (index.js ou server.js)
+
+const express = require('express')
+const app = express()
+const mongoose = require('mongoose')
+require('dotenv').config();
+app.use(express.json())
+
+const personRoutes = require('./routes/personRoutes')
+
+app.use('/person', personRoutes)
+
+mongoose.connect(process.env.DB_CONNECTION)
+  .then(() => {
+    console.log("Conectado ao MongoDB")
+    app.listen(3000)
+  })
+  .catch((err) => console.log(err))
+
+-------
+
+Adicionando uma requisição GET para obter os dados cadastrados:
+
+-Arquivo personRoutes.js:
+
+const router = require('express').Router()
+
+const Person = require('../models/Person')
+
+router.post('/', async (req, res) => {                   
+  ...
+})
+
+router.get('/', async (req, res) => {
+  try {
+    const people = await Person.find()
+    res.status(200).json(people)
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
+
+module.exports = router
+
+--------
+
+Criando uma rota dinamica com GET:
+
+-Arquivo personRoutes.js:
+
+const router = require('express').Router()
+
+const Person = require('../models/Person')
+
+router.post('/', async (req, res) => {                   
+  ...
+})
+
+router.get('/', async (req, res) => {
+  ...
+})
+
+router.get('/:id', async (req, res) => {
+  const id = req.params.id                              //OU const {id} = req.params
+
+  try {
+    const person = await Person.findById(id)           //OU const person = await Person.findOne({ _id: id })
+
+    if(!person){
+      res.status(422).json({message: "O usuário não foi encontrado"})      //Ou status 404
+      return
+    }
+
+    res.status(200).json(person)
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
+
+module.exports = router
+
+-----------
+
+PUT ou PATCH?
+Escolha o PUT se o que você pretende é fazer uma atualização completa do seu recurso ou o PATCH se você quiser atualizar apenas um subconjunto dos dados do seu recurso.
+
+import axios from 'axios'
+
+axios.patch('/users/1', {
+  phone: '(81) 98116-9490'
+})
+
+axios.put('/users/1', {
+  name: 'Gabriel Rufino',
+  email: 'contato@gabrielrufino.com',
+  phone: '(81) 98116-9490'
+})
+
+-----------
+
+Adicionando um metodo PATCH para atualizar dados:
+
+-Arquivo personRoutes.js:
+
+const router = require('express').Router()
+
+const Person = require('../models/Person')
+
+router.post('/', async (req, res) => {                   
+  ...
+})
+
+router.get('/', async (req, res) => {
+  ...
+})
+
+router.get('/:id', async (req, res) => {
+  ...
+})
+
+router.patch('/:id', async (req, res) => {
+  const id = req.params.id                              //OU const {id} = req.params
+
+  const {name, age} = req.body
+
+  const person = {name, age}
+
+  try {
+    const updatedPerson = await Person.updateOne({ _id: id}, person)           
+
+    if(updatedPerson.matchedCount === 0){                                  //OU if(!updatedPerson)
+      res.status(422).json({message: "O usuário não foi encontrado"})      //Ou status 404
+      return
+    }
+
+    res.status(200).json({message: "Dados atualizados"})                   //OU res.status(200).json(person)  
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
+
+module.exports = router
+
+-----------------
+
+Adicionando o método DELETE:
+
+-Arquivo personRoutes.js:
+
+const router = require('express').Router()
+
+const Person = require('../models/Person')
+
+router.post('/', async (req, res) => {                   
+  ...
+})
+
+router.get('/', async (req, res) => {
+  ...
+})
+
+router.get('/:id', async (req, res) => {
+  ...
+})
+
+router.patch('/:id', async (req, res) => {
+  ...
+})
+
+router.delete('/:id', async (req, res) => {
+
+  const id = req.params.id                              //OU const {id} = req.params
+
+  const person = await Person.findOne({ _id: id })
+
+  if (!person) {
+    res.status(422).json({ message: "Usuário não encontrado"})
+    return
+  }
+
+  try {
+    const deletedPerson = await Person.deleteOne({ _id: id })                //OU  await Person.findByIdAndDelete(id)
+
+    if (!deletedPerson) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' })
+    }
+
+    res.status(200).json({ 
+      message: 'Pessoa deletada com sucesso',
+      person: deletedPerson 
+    })                  
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
+
+module.exports = router
+
+///////////////////////////////////////////////// &&&
+
+CRUD com mongoose e postman 2
+VIDEO: https://www.youtube.com/embed/ygVP3ItS8AE?autoplay=1
+
+Forma simples:
+
+const express = require('express')
+const app = express()
+require("dotenv").config();
+const mongoose = require('mongoose')
+const DB_CONNECTION = process.env.DB_CONNECTION
+
+app.use(express.json())
+
+const PersonSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    age: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+  },
+  {
+    timestamps: true,
+  }
+)
+
+const Person = mongoose.model('Person', PersonSchema)
+
+app.get('/api/person', async (req, res) => {
+  try {
+    const people = await Person.find({})
+    res.status(200).json(people)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar pessoas' })
+  }
+})
+
+app.post('/api/person', async (req, res) => {
+  try {
+    const { name, age } = req.body
+    const person = new Person({ name, age })
+    await person.save()
+    res.status(201).json(person)
+  } catch (error) {
+    res.status(400).json({ error: 'Erro ao criar pessoa' })
+  }
+})
+
+app.put('/api/person/:id', async (req, res) => {
+  try {
+    const {id} = req.params
+    const person = await Person.findByIdAndUpdate(id, req.body)
+    const UpdatedPerson = await Person.findById(id)
+    res.status(200).json(UpdatedPerson)
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: 'Dados inválidos', details: error.message })
+    } else {
+      res.status(500).json({ error: 'Erro ao atualizar pessoa' })
+    }
+  }
+})
+
+app.delete('/api/person/:id', async (req, res) => {
+  try {
+    const {id} = req.params
+    const person = await Person.findByIdAndDelete(id)
+    res.status(200).json(person)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao deletar pessoa' })
+  }
+})
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log("Conectado ao MongoDB")
+    app.listen(3000, () => {
+      console.log('Servidor conectado na porta 3000');
+    });
+  })
+  .catch((err) => console.log('Erro ao conectar no MongoDB:', err))
+
+-------------------- 
+
+Forma mais completa:
+
+const express = require('express')
+const app = express()
+require("dotenv").config();
+const mongoose = require('mongoose')
+const DB_CONNECTION = process.env.DB_CONNECTION
+
+app.use(express.json())
+
+// Schema com validações
+const PersonSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    age: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 150
+    },
+  },
+  {
+    timestamps: true,            //cria timestamps de quando foi criado ou atualizado
+  }
+)
+
+const Person = mongoose.model('Person', PersonSchema)
+
+// GET - Buscar todas as pessoas
+app.get('/api/person', async (req, res) => {
+  try {
+    const people = await Person.find({})
+    res.status(200).json(people)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar pessoas' })
+  }
+})
+
+// GET - Buscar pessoa por ID
+app.get('/api/person/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID inválido' })
+    }
+    
+    const person = await Person.findById(id)
+    
+    if (!person) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' })
+    }
+    
+    res.status(200).json(person)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar pessoa' })
+  }
+})
+
+// POST - Criar nova pessoa
+app.post('/api/person', async (req, res) => {
+  try {
+    const { name, age } = req.body
+    
+    // Validação básica
+    if (!name || !age) {
+      return res.status(400).json({ error: 'Nome e idade são obrigatórios' })
+    }
+    
+    const person = new Person({ name, age })
+    await person.save()                                
+    res.status(201).json(person)
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: 'Dados inválidos', details: error.message })
+    } else {
+      res.status(500).json({ error: 'Erro ao criar pessoa' })
+    }
+  }
+})
+
+// PUT - Atualizar pessoa por ID
+app.put('/api/person/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const { name, age } = req.body
+    
+    // Validar ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID inválido' })
+    }
+    
+    // Validação básica dos dados
+    if (!name || !age) {
+      return res.status(400).json({ error: 'Nome e idade são obrigatórios' })
+    }
+    
+    const updatedPerson = await Person.findByIdAndUpdate(
+      id,
+      { name, age },
+      { 
+        new: true, // Retorna o documento atualizado
+        runValidators: true // Executa as validações do schema
+      }
+    )
+    
+    if (!updatedPerson) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' })
+    }
+    
+    res.status(200).json(updatedPerson)
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: 'Dados inválidos', details: error.message })
+    } else {
+      res.status(500).json({ error: 'Erro ao atualizar pessoa' })
+    }
+  }
+})
+
+// DELETE - Deletar pessoa por ID
+app.delete('/api/person/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    
+    // Validar ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID inválido' })
+    }
+    
+    const deletedPerson = await Person.findByIdAndDelete(id)
+    
+    if (!deletedPerson) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' })
+    }
+    
+    res.status(200).json({ 
+      message: 'Pessoa deletada com sucesso',
+      person: deletedPerson 
+    })
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao deletar pessoa' })
+  }
+})
+
+// Middleware para rotas não encontradas
+app.use('*', (req, res) => {
+  res.status(404).json({ error: 'Rota não encontrada' })
+})
+
+// Conectar ao MongoDB e iniciar servidor
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log("Conectado ao MongoDB")
+    app.listen(3000, () => {
+      console.log('Servidor conectado na porta 3000');
+    });
+  })
+  .catch((err) => console.log('Erro ao conectar no MongoDB:', err))
+
+------------------- 
+
+POST create() vs save()
+The main difference between using the create and save methods in Mongoose is that create is a convenience method that automatically calls new Model() and save() for you, while save is a method that is called on a Mongoose document instance.
+
+app.post('/api/person', async (req, res) => {
+  try {
+    const { name, age } = req.body
+    ...
+    const person = new Person({ name, age })
+    await person.save()                                 
+    res.status(201).json(person)              //OU res.status(201).json({message: "Pessoa criada com sucesso!"})
+  } catch (error) {
+    ...
+  }
+})
+
+OU
+
+app.post('/api/person', async (req, res) => {
+  try {
+    const { name, age } = req.body
+    ...
+    const person = { name, age }
+    await Person.create(person)                                 
+    res.status(201).json(person)            //OU res.status(201).json({message: "Pessoa criada com sucesso!"})
+  } catch (error) {
+    ...
+  }
+})
+
+
+-----------------------
+
+Fazendo teste no POSTMAN:
+
+Criando a variavel:
+variavel = URL
+initial value = http://localhost:3000/
+current value = http://localhost:3000/
+
+Add request:
+
+GET:
+{{URL}}api/person
+
+¨¨¨¨
+POST:
+{{URL}}api/person
+
+Body -> Raw -> JSON
+{
+    "name":"Carlos",
+    "age": 30
+}
+
+Será gerado o JSON:
+[
+    {
+        "_id": "68862f3c63d28bb0abbc3e90",
+        "name": "Carlos",
+        "age": 30,
+        "createdAt": "2025-07-27T13:53:00.471Z",
+        "updatedAt": "2025-07-27T13:53:00.471Z",
+        "__v": 0
+    }
+]¨
+
+¨¨¨¨¨¨
+PUT:
+{{URL}}api/person/68862f3c63d28bb0abbc3e90
+
+Body -> Raw -> JSON
+{
+    "name":"Pedro",
+}
+
+Atualizará o JSON:
+{
+    "_id": "68862f3c63d28bb0abbc3e90",
+    "name": "Pedro",
+    "age": 30,
+    "createdAt": "2025-07-27T13:53:00.471Z",
+    "updatedAt": "2025-07-27T14:34:13.466Z",
+    "__v": 0
+}
+
+¨¨¨¨¨¨
+DELETE:
+{{URL}}api/person/68862f3c63d28bb0abbc3e90
+
+----------------------------
+Separando o parte Model:
+
+-Arquivo Person_Model.js dentro da pasta model:
+
+const mongoose = require('mongoose')
+
+const PersonSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    age: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 150
+    },
+  },
+  {
+    timestamps: true,            
+  }
+)
+
+const Person = mongoose.model('Person', PersonSchema)
+
+module.exports = Person
+
+-É necessário importar o modulo Person no arquivo com conexão ao banco de dados:
+
+const Person = require('./model/Person_Model')
+
+-----
+
+Outra forma de criar o schema e modelo:
+
+const mongoose = require('mongoose')
+
+const Person = mongoose.model('Person', {
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    age: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 150
+    },
+  },
+  {
+    timestamps: true,            
+  }
+})
+
+module.exports = Person
+
+
+----------------------------
+Separando o parte Controller:
+
+-Arquivo Person_Controller.js dentro da pasta controller:
+
+const Person = require('../model/Person_Model')
+
+const findPerson = async (req, res) => {
+  try {
+    const people = await Person.find({})
+    res.status(200).json(people)
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar pessoas' })
+  }
+}
+
+const createPerson = async (req, res) => {
+  try {
+    const { name, age } = req.body
+
+    if (!name || !age) {
+      return res.status(400).json({ error: 'Nome e idade são obrigatórios' })
+    }
+    
+    const person = new Person({ name, age })
+    await person.save()
+    res.status(201).json(person)
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: 'Dados inválidos', details: error.message })
+    } else {
+      res.status(500).json({ error: 'Erro ao criar pessoa' })
+    }
+  }
+}
+
+const updatePerson = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { name, age } = req.body
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID inválido' })
+    }
+
+    if (!name || !age) {
+      return res.status(400).json({ error: 'Nome e idade são obrigatórios' })
+    }
+    
+    const updatedPerson = await Person.findByIdAndUpdate(
+      id,
+      { name, age },
+      { 
+        new: true, 
+        runValidators: true 
+      }
+    )
+    
+    if (!updatedPerson) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' })
+    }
+    
+    res.status(200).json(updatedPerson)
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ error: 'Dados inválidos', details: error.message })
+    } else {
+      res.status(500).json({ error: 'Erro ao atualizar pessoa' })
+    }
+  }
+}
+
+const deletePerson = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'ID inválido' })
+    }
+    
+    const deletedPerson = await Person.findByIdAndDelete(id)
+    
+    if (!deletedPerson) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' })
+    }
+    
+    res.status(200).json({ 
+      message: 'Pessoa deletada com sucesso',
+      person: deletedPerson 
+    })
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao deletar pessoa' })
+  }
+}
+
+module.exports = {
+  findPerson,
+  createPerson,
+  updatePerson,
+  deletePerson
+}
+
+-----
+E dentro do arquivo com conexão ao banco de dados ficaria:
+
+const {findPerson, createPerson, updatePerson, deletePerson} = require('./controller/Person_Controller')
+
+app.get('/api/person', findPerson)
+
+app.post('/api/person', createPerson)
+
+app.put('/api/person/:id', updatePerson)
+
+app.delete('/api/person/:id', deletePerson)
+
+-------
+Seria possível também criar rotas:
+
+-Arquivo Person_Routes.js dentro da pasta routes:
+
+const {findPerson, createPerson, updatePerson, deletePerson} = require('../controller/Person_Controller')
+
+const express = require('express')
+
+const Person_router = express.Router()
+
+Person_router.get("", findPerson)
+
+Person_router.post("", createPerson)
+
+Person_router.put("/:id", updatePerson)
+
+Person_router.delete(":id", deletePerson)
+
+module.exports = Person_router
+
+¨¨¨¨ 
+-E no arquivo com conexão ao banco de dados:
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+
+const DB_CONNECTION = process.env.DB_PERSON
+require("dotenv").config();
+
+const mongoose = require('mongoose')
+
+const Person_router = require('./routes/Person_router')
+app.use("/api/person", Person_router)
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log("Conectado ao MongoDB")
+    app.listen(3000, () => {
+      console.log('Servidor conectado na porta 3000');
+    });
+  })
+  .catch((err) => console.log('Erro ao conectar no MongoDB:', err))
+
+
+///////////////////////////////////////////////////////////////////// &&&
+

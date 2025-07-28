@@ -6600,7 +6600,50 @@ export default function Testes1() {
 
 }
 
----------------- ###
+////////////////////////////////////////////////////////////////&&&
+EDITOR CONFIG
+
+Instale a extensão Editor Config for VS Code.
+
+Clique com o botão direito e escolha generate .editorconfig
+
+Dentro do arquivo .editorconfig digite:
+
+root = true
+
+[*]
+
+end_of_line = lf
+indent_style = space
+indent_size = 2
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+////////////////////////////////////////////////////////////////&&&
+PRETTIER
+
+instalação:
+npm install prettier --save-dev
+
+Na pasta root, crie o arquivo prettierrc.json
+
+{
+  "semi": true,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "tabWidth": 2,
+  "endOfLine": "auto"
+}
+
+Para que o prettier sobreponha os codigos do eslint, digite no terminal:
+npm install --save-dev eslint prettier eslint-config-prettier eslint-pluggin-prettier
+
+
+
+---
 
 
 
