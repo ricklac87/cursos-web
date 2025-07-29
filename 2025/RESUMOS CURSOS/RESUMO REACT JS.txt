@@ -6675,7 +6675,6 @@ Copie a ID do cliente:
 529365505045-74rr1nhupl98b1sjs86dbe1fr60ffgso.apps.googleusercontent.com
 
 Copie a chave secreta do cliente
-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
 
 Vá em Publico alvo
 Adicione um Usuários de teste colocando um email google
