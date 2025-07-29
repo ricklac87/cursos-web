@@ -6672,7 +6672,6 @@ Origens JavaScript autorizadas =>
    URL2 = http://localhost:5173         (porta do vite)  
 
 Copie a ID do cliente:
-529365505045-74rr1nhupl98b1sjs86dbe1fr60ffgso.apps.googleusercontent.com
 
 Copie a chave secreta do cliente
 
