@@ -6642,8 +6642,44 @@ Para que o prettier sobreponha os codigos do eslint, digite no terminal:
 npm install --save-dev eslint prettier eslint-config-prettier eslint-pluggin-prettier
 
 
+////////////////////////////////////////////////////////////////&&&
+OAUTH2 - LOGIN COM GOOGLE
+VIDEO: https://www.youtube.com/embed/GuHN_ZqHExs?autoplay=1
+VIDEO: https://www.youtube.com/embed/9uGfs-IqMR4?autoplay=1
 
----
+instalação:
+npm install @react-oauth/google@latest
+
+Entre no seu google cloud:
+console.cloud.google.com
+
+Crie um projeto.
+Vá para APIs and Services.
+Clique em credentials.
+Clique em criar credenciais.
+Clique em ID do cliente do OAuth
+
+De um nome pro App
+Selecione um email pro suporte de usuario
+Publico: EXTERNO
+Dados de contato: mesmo email
+Concluir
+
+Criar um cliente Oauth
+Tipo de aplicativo: aplicativo da web
+Origens JavaScript autorizadas => 
+   URL1 = http://localhost  
+   URL2 = http://localhost:5173         (porta do vite)  
+
+Copie a ID do cliente:
+529365505045-74rr1nhupl98b1sjs86dbe1fr60ffgso.apps.googleusercontent.com
+
+Copie a chave secreta do cliente
+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
+
+Vá em Publico alvo
+Adicione um Usuários de teste colocando um email google
+
 
 
 

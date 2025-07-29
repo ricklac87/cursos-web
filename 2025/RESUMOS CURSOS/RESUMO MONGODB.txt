@@ -108,6 +108,21 @@ mongoose.connect(DB_CONNECTION)
   })
   .catch((err) => console.log('Erro ao conectar no MongoDB:', err))
 
+--------
+
+Conectando usando async/await:
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.DB_CONNECTION);
+    console.log("Conectado ao MongoDB");
+  } catch (err) {
+    console.log('Erro ao conectar no MongoDB:', err);
+  }
+};
+
+connectDB();
+
 -------------
 
 Crie uma pasta chamada models. Dentro crie o arquivo Person.js:
@@ -127,20 +142,20 @@ Conectando usando o mongoose:
 
 const express = require('express')
 const app = express()
+app.use(express.json())
 
 const mongoose = require('mongoose')
+require("dotenv").config();
 
-require('dotenv').config();
+const DB_USER = process.env.DB_USER
+const DB_PASSWORD = encodeURIComponent(process.env.DB_PASSWORD)
+const DB_CLUSTER = process.env.DB_CLUSTER
+const DB_COLLECTION = process.env.DB_COLLECTION
+const DB_PORT = process.env.DB_PORT
+
+const DB_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@${DB_CLUSTER}.l1xujce.mongodb.net/${DB_COLLECTION}?retryWrites=true&w=majority&appName=${DB_CLUSTER}`
 
 const Person = require('./models/Person')
-
-app.use(                                //Aparentemente não é necessário
-  express.urlencoded({
-    extended: true,
-  }),
-)
-
-app.use(express.json())
 
 app.post('/person', async (req, res) => {
 
@@ -156,19 +171,38 @@ app.post('/person', async (req, res) => {
   }
 
   try {
-    await Person.create(person)
-    res.status(201).json({message: "Pessoa inserida no sistema com sucesso"})
+    const newPerson = await Person.create(person)
+    res.status(201).json({
+      message: "Pessoa inserida no sistema com sucesso",
+      data: newPerson
+    })
   } catch (err) {
     res.status(500).json({error: err})
   }
 })
 
-mongoose.connect(process.env.DB_CONNECTION)
+mongoose.connect(DB_CONNECTION)
   .then(() => {
     console.log("Conectado ao MongoDB")
-    app.listen(3000)
+    app.listen(DB_PORT)
   })
   .catch((err) => console.log(err))
+
+----------
+
+Forma simples do post:
+
+app.post('/person', async (req, res) => {
+  try {
+    const newPerson = await Person.create(req.body);
+    res.status(201).json({
+      message: "Pessoa inserida no sistema com sucesso",
+      data: newPerson
+    })
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
 
 ------------
 
@@ -370,6 +404,26 @@ router.patch('/:id', async (req, res) => {
 
 module.exports = router
 
+--------------
+
+Forma simples do PUT:
+
+app.put('/person/:id', async (req, res) => {
+  try {
+    const updatePerson = await Person.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {new: true}           //para que updatePerson mostre o dado atualizado
+    );
+    res.status(201).json({
+      message: "Pessoa atualizada no sistema com sucesso",
+      data: updatePerson
+    })
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
+
 -----------------
 
 Adicionando o método DELETE:
@@ -424,6 +478,24 @@ router.delete('/:id', async (req, res) => {
 })
 
 module.exports = router
+
+---------------
+
+Forma simples do DELETE:
+
+app.delete('/person/:id', async (req, res) => {
+  try {
+    const deletedPerson = await Person.findByIdAndDelete(
+      req.params.id
+    );
+    res.status(201).json({
+      message: "Pessoa removida no sistema com sucesso",
+      data: deletedPerson
+    })
+  } catch (err) {
+    res.status(500).json({error: err})
+  }
+})
 
 ///////////////////////////////////////////////// &&&
 
@@ -993,6 +1065,1498 @@ mongoose.connect(DB_CONNECTION)
   })
   .catch((err) => console.log('Erro ao conectar no MongoDB:', err))
 
+////////////////////////////////////////////////////////////////////// &&&
+SIMPLE CRUD COM MONGOOSE
+
+const express = require('express');
+const mongoose = require('mongoose'); 
+const app = express();
+const port = 3000;
+
+mongoose.connect('mongodb://localhost/your_database', { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const ItemSchema = new mongoose.Schema({
+    name: String,
+    age: Number
+});
+const Item = mongoose.model('Item', ItemSchema);
+
+app.get('/items', async (req, res) => {
+    const items = await Item.find();
+    res.send(items);
+});
+
+app.get('/items/:id', async (req, res) => {
+    const item = await Item.findById(req.params.id);
+    res.send(item);
+});
+
+app.post('/items', async (req, res) => {
+    const newItem = new Item(req.body);
+    await newItem.save();
+    res.status(201).send(newItem);
+});
+
+app.put('/items/:id', async (req, res) => {
+    const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.send(updatedItem);
+});
+
+app.delete('/items/:id', async (req, res) => {
+    await Item.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+});
+
+app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+});
+
+-------------------
+
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+require('dotenv').config();
+
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const { body, param, validationResult } = require('express-validator');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/your_database';
+
+// Middleware de segurança
+app.use(helmet());
+app.use(cors());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 requests por IP
+  message: 'Muitas requisições deste IP, tente novamente em 15 minutos.'
+});
+app.use(limiter);
+
+// Middleware para parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Conexão com MongoDB com tratamento de erro
+const connectDB = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('Conectado ao MongoDB com sucesso');
+  } catch (error) {
+    console.error('Erro ao conectar ao MongoDB:', error.message);
+    process.exit(1);
+  }
+};
+
+// Schema com validações
+const ItemSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Nome é obrigatório'],
+    trim: true,
+    minlength: [2, 'Nome deve ter pelo menos 2 caracteres'],
+    maxlength: [100, 'Nome não pode ter mais de 100 caracteres']
+  },
+  age: {
+    type: Number,
+    required: [true, 'Idade é obrigatória'],
+    min: [0, 'Idade não pode ser negativa'],
+    max: [150, 'Idade não pode ser maior que 150']
+  }
+}, {
+  timestamps: true // Adiciona createdAt e updatedAt automaticamente
+});
+
+const Item = mongoose.model('Item', ItemSchema);
+
+// Middleware para tratamento de erros de validação
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Dados inválidos',
+      errors: errors.array()
+    });
+  }
+  next();
+};
+
+// Middleware para capturar erros assíncronos
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+// Validações
+const itemValidation = [
+  body('name')
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Nome deve ter entre 2 e 100 caracteres'),
+  body('age')
+    .isInt({ min: 0, max: 150 })
+    .withMessage('Idade deve ser um número entre 0 e 150')
+];
+
+const idValidation = [
+  param('id')
+    .isMongoId()
+    .withMessage('ID inválido')
+];
+
+// Rotas
+
+// GET /items - Listar todos os itens com paginação
+app.get('/items', asyncHandler(async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const items = await Item.find()
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+  
+  const total = await Item.countDocuments();
+
+  res.json({
+    success: true,
+    data: items,
+    pagination: {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit)
+    }
+  });
+}));
+
+// GET /items/:id - Buscar item por ID
+app.get('/items/:id', 
+  idValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const item = await Item.findById(req.params.id);
+    
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: 'Item não encontrado'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: item
+    });
+  })
+);
+
+// POST /items - Criar novo item
+app.post('/items',
+  itemValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const newItem = new Item(req.body);
+    const savedItem = await newItem.save();
+    
+    res.status(201).json({
+      success: true,
+      message: 'Item criado com sucesso',
+      data: savedItem
+    });
+  })
+);
+
+// PUT /items/:id - Atualizar item
+app.put('/items/:id',
+  idValidation,
+  itemValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const updatedItem = await Item.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { 
+        new: true,
+        runValidators: true
+      }
+    );
+
+    if (!updatedItem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Item não encontrado'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Item atualizado com sucesso',
+      data: updatedItem
+    });
+  })
+);
+
+// DELETE /items/:id - Deletar item
+app.delete('/items/:id',
+  idValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const deletedItem = await Item.findByIdAndDelete(req.params.id);
+
+    if (!deletedItem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Item não encontrado'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Item deletado com sucesso'
+    });
+  })
+);
+
+// Middleware de tratamento de erros
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  // Erro de validação do Mongoose
+  if (err.name === 'ValidationError') {
+    const errors = Object.values(err.errors).map(e => e.message);
+    return res.status(400).json({
+      success: false,
+      message: 'Erro de validação',
+      errors
+    });
+  }
+
+  // Erro de cast (ID inválido)
+  if (err.name === 'CastError') {
+    return res.status(400).json({
+      success: false,
+      message: 'ID inválido'
+    });
+  }
+
+  // Erro genérico
+  res.status(500).json({
+    success: false,
+    message: 'Erro interno do servidor'
+  });
+});
+
+// Rota 404
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Rota não encontrada'
+  });
+});
+
+// Inicializar servidor
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando em http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('Erro ao iniciar servidor:', error);
+    process.exit(1);
+  }
+};
+
+// Tratamento de sinais de processo
+process.on('SIGTERM', async () => {
+  console.log('Recebido SIGTERM, fechando servidor graciosamente...');
+  await mongoose.connection.close();
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  console.log('Recebido SIGINT, fechando servidor graciosamente...');
+  await mongoose.connection.close();
+  process.exit(0);
+});
+
+startServer();
+
+
+--------
+
+Codigo usando MySQL:
+
+const express = require('express');
+const mysql = require('mysql2/promise');
+const helmet = require('helmet');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const { body, param, validationResult } = require('express-validator');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Configuração do pool de conexões MySQL
+const dbConfig = {
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'password',
+  database: process.env.DB_NAME || 'your_database',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  acquireTimeout: 60000,
+  timeout: 60000,
+  reconnect: true
+};
+
+let pool;
+
+// Middleware de segurança
+app.use(helmet());
+app.use(cors());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 requests por IP
+  message: 'Muitas requisições deste IP, tente novamente em 15 minutos.'
+});
+app.use(limiter);
+
+// Middleware para parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Conexão com MySQL
+const connectDB = async () => {
+  try {
+    pool = mysql.createPool(dbConfig);
+    
+    // Testar conexão
+    const connection = await pool.getConnection();
+    console.log('Conectado ao MySQL com sucesso');
+    connection.release();
+    
+    // Criar tabela se não existir
+    await createItemsTable();
+  } catch (error) {
+    console.error('Erro ao conectar ao MySQL:', error.message);
+    process.exit(1);
+  }
+};
+
+// Criar tabela items
+const createItemsTable = async () => {
+  try {
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS items (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        age INT NOT NULL CHECK (age >= 0 AND age <= 150),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_name (name),
+        INDEX idx_created_at (created_at)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `;
+    
+    await pool.execute(createTableQuery);
+    console.log('Tabela items criada/verificada com sucesso');
+  } catch (error) {
+    console.error('Erro ao criar tabela:', error.message);
+    throw error;
+  }
+};
+
+// Middleware para tratamento de erros de validação
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Dados inválidos',
+      errors: errors.array()
+    });
+  }
+  next();
+};
+
+// Middleware para capturar erros assíncronos
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+// Validações
+const itemValidation = [
+  body('name')
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('Nome deve ter entre 2 e 100 caracteres')
+    .matches(/^[a-zA-ZÀ-ÿ\s]+$/)
+    .withMessage('Nome deve conter apenas letras e espaços'),
+  body('age')
+    .isInt({ min: 0, max: 150 })
+    .withMessage('Idade deve ser um número entre 0 e 150')
+];
+
+const idValidation = [
+  param('id')
+    .isInt({ min: 1 })
+    .withMessage('ID deve ser um número inteiro positivo')
+];
+
+// Funções de banco de dados
+const itemQueries = {
+  // Buscar todos com paginação
+  findAll: async (offset, limit) => {
+    const [rows] = await pool.execute(
+      'SELECT id, name, age, created_at, updated_at FROM items ORDER BY created_at DESC LIMIT ? OFFSET ?',
+      [limit, offset]
+    );
+    return rows;
+  },
+
+  // Contar total de registros
+  count: async () => {
+    const [rows] = await pool.execute('SELECT COUNT(*) as total FROM items');
+    return rows[0].total;
+  },
+
+  // Buscar por ID
+  findById: async (id) => {
+    const [rows] = await pool.execute(
+      'SELECT id, name, age, created_at, updated_at FROM items WHERE id = ?',
+      [id]
+    );
+    return rows[0] || null;
+  },
+
+  // Criar novo item
+  create: async (name, age) => {
+    const [result] = await pool.execute(
+      'INSERT INTO items (name, age) VALUES (?, ?)',
+      [name, age]
+    );
+    return await itemQueries.findById(result.insertId);
+  },
+
+  // Atualizar item
+  update: async (id, name, age) => {
+    const [result] = await pool.execute(
+      'UPDATE items SET name = ?, age = ? WHERE id = ?',
+      [name, age, id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return null;
+    }
+    
+    return await itemQueries.findById(id);
+  },
+
+  // Deletar item
+  delete: async (id) => {
+    const item = await itemQueries.findById(id);
+    if (!item) {
+      return null;
+    }
+    
+    const [result] = await pool.execute('DELETE FROM items WHERE id = ?', [id]);
+    return result.affectedRows > 0 ? item : null;
+  }
+};
+
+// Rotas
+
+// GET /items - Listar todos os itens com paginação
+app.get('/items', asyncHandler(async (req, res) => {
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+  const offset = (page - 1) * limit;
+
+  const [items, total] = await Promise.all([
+    itemQueries.findAll(offset, limit),
+    itemQueries.count()
+  ]);
+
+  res.json({
+    success: true,
+    data: items,
+    pagination: {
+      page,
+      limit,
+      total,
+      pages: Math.ceil(total / limit)
+    }
+  });
+}));
+
+// GET /items/:id - Buscar item por ID
+app.get('/items/:id', 
+  idValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const item = await itemQueries.findById(req.params.id);
+    
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: 'Item não encontrado'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: item
+    });
+  })
+);
+
+// POST /items - Criar novo item
+app.post('/items',
+  itemValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const { name, age } = req.body;
+    const newItem = await itemQueries.create(name.trim(), parseInt(age));
+    
+    res.status(201).json({
+      success: true,
+      message: 'Item criado com sucesso',
+      data: newItem
+    });
+  })
+);
+
+// PUT /items/:id - Atualizar item
+app.put('/items/:id',
+  idValidation,
+  itemValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const { name, age } = req.body;
+    const updatedItem = await itemQueries.update(
+      req.params.id, 
+      name.trim(), 
+      parseInt(age)
+    );
+
+    if (!updatedItem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Item não encontrado'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Item atualizado com sucesso',
+      data: updatedItem
+    });
+  })
+);
+
+// DELETE /items/:id - Deletar item
+app.delete('/items/:id',
+  idValidation,
+  handleValidationErrors,
+  asyncHandler(async (req, res) => {
+    const deletedItem = await itemQueries.delete(req.params.id);
+
+    if (!deletedItem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Item não encontrado'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Item deletado com sucesso',
+      data: deletedItem
+    });
+  })
+);
+
+// Middleware de tratamento de erros
+app.use((err, req, res, next) => {
+  console.error('Erro:', err);
+
+  // Erro de conexão MySQL
+  if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+    return res.status(503).json({
+      success: false,
+      message: 'Conexão com banco de dados perdida'
+    });
+  }
+
+  // Erro de sintaxe SQL
+  if (err.code && err.code.startsWith('ER_')) {
+    return res.status(400).json({
+      success: false,
+      message: 'Erro na operação do banco de dados'
+    });
+  }
+
+  // Erro de constraint (chave estrangeira, unique, etc.)
+  if (err.code === 'ER_DUP_ENTRY') {
+    return res.status(409).json({
+      success: false,
+      message: 'Registro duplicado'
+    });
+  }
+
+  // Erro genérico
+  res.status(500).json({
+    success: false,
+    message: 'Erro interno do servidor'
+  });
+});
+
+// Rota 404
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Rota não encontrada'
+  });
+});
+
+// Inicializar servidor
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Servidor rodando em http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error('Erro ao iniciar servidor:', error);
+    process.exit(1);
+  }
+};
+
+// Tratamento de sinais de processo
+const gracefulShutdown = async (signal) => {
+  console.log(`Recebido ${signal}, fechando servidor graciosamente...`);
+  
+  if (pool) {
+    await pool.end();
+    console.log('Pool de conexões MySQL fechado');
+  }
+  
+  process.exit(0);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Tratamento de erros não capturados
+process.on('unhandledRejection', (err) => {
+  console.error('Erro não tratado:', err);
+  gracefulShutdown('unhandledRejection');
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Exceção não capturada:', err);
+  gracefulShutdown('uncaughtException');
+});
+
+startServer();
 
 ///////////////////////////////////////////////////////////////////// &&&
+AUTENTICAÇÃO COM MONGOOSE E JWT E BCRYPT
+VIDEO: https://www.youtube.com/embed/qEBoZ8lJR3k
+
+instalação:
+npm i dotenv bcrypt express jsonwebtoken mongoose
+
+------
+Conectando ao banco de dados:
+
+-Arquivo server.js: (ou index.js)
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+const mongoose = require('mongoose')
+require("dotenv").config()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const DB_CONNECTION = process.env.DB_TABELA
+const PORT = process.env.DB_PORT
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log(`Conectado ao MongoDB: http://localhost:${PORT}`)
+    app.listen(PORT)
+  })
+  .catch((err) => console.log(err))
+
+---------------
+
+Crie um arquivo User.js dentro da pasta models:
+
+const mongoose = require('mongoose')
+
+const User = mongoose.model('User', {
+  name: String,
+  email: String,
+  password: String
+})
+
+export.modules = User
+
+---------------
+
+Adicionando um metodo POST para registrar usuario.
+
+-Arquivo server.js:
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+const mongoose = require('mongoose')
+require("dotenv").config()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const DB_CONNECTION = process.env.DB_TABELA
+const PORT = process.env.DB_PORT
+
+const User = require('./models/User')
+
+app.post('/auth/register', async (req, res) => {
+
+  const {name, email, password, confirmpassword} = req.body;
+
+  if(!name) {
+    return res.status(422).json({msg: "O nome é obrigatório!"})
+  }
+
+  if(!email) {
+    return res.status(422).json({msg: "O email é obrigatório!"})
+  }
+
+  if(!password) {
+    return res.status(422).json({msg: "A senha é obrigatória!"})
+  }
+
+  if(password !== confirmpassword) {
+    return res.status(422).json({msg: "As senhas não conferem!"})
+  }
+
+  //Check if user exists
+  const userExists = await User.findOne({ email: email})
+
+  if(userExists){
+    return res.status(422).json({msg: "Usuário já cadastrado com este email!"})
+  }
+
+  //create password
+  const salt = await bcrypt.genSalt(12)
+  const passwordHash = await bcrypt.hash(password, salt)
+
+  //create user
+  const user = new User({
+    name,
+    email,
+    password: passwordHash,
+  })
+
+  try {
+    const newUser = await user.save();
+    res.status(201).json({
+      message: "Usuário criado com sucesso!",
+      data: newUser
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({msg: "Aconteceu um erro no servidor. Tente mais tarde!"})
+  }
+
+})
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log(`Conectado ao MongoDB: http://localhost:${PORT}`)
+    app.listen(PORT)
+  })
+  .catch((err) => console.log(err))
+
+---------------
+
+Adicionando um metodo POST para login usuario.
+
+-Arquivo server.js:
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+const mongoose = require('mongoose')
+require("dotenv").config()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const DB_CONNECTION = process.env.DB_TABELA
+const PORT = process.env.DB_PORT
+
+const User = require('./models/User')
+
+app.post('/auth/register', async (req, res) => {   
+  ...
+})
+
+app.post('/auth/login', async (req, res) => {   
+
+  const {email, password} = req.body;
+
+  if(!email) {
+    return res.status(422).json({msg: "O email é obrigatório!"})
+  }
+
+  if(!password) {
+    return res.status(422).json({msg: "A senha é obrigatória!"})
+  }
+
+  //Check if user exists
+  const user = await User.findOne({ email: email})
+  if(!user){
+    return res.status(404).json({msg: "Usuário não encontrado!"})
+  }
+
+  //Check if password match
+  const checkPassword = await bcrypt.compare(password, user.password)
+  if(!checkPassword) {
+    return res.status(422).json({msg: "Senha inválida!"})
+  }
+
+  //Authentication
+  try{
+    const jwt_secret = process.env.JWT_SECRET
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      jwt_secret,
+    )
+
+    res.status(200).json({
+      msg: "Autenticação realizada com sucesso!", token
+    })
+  } catch (err){
+    console.log(err)
+    res.status(500).json({msg: "Aconteceu um erro no servidor. Tente mais tarde!"})
+  }
+
+})
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log(`Conectado ao MongoDB: http://localhost:${PORT}`)
+    app.listen(PORT)
+  })
+  .catch((err) => console.log(err))
+
+-------------
+
+Criando uma rota protegida:
+
+-Arquivo server.js:
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+const mongoose = require('mongoose')
+require("dotenv").config()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const DB_CONNECTION = process.env.DB_TABELA
+const PORT = process.env.DB_PORT
+
+const User = require('./models/User')
+
+//Private Route
+app.get('/user/:id', checkToken, async (req, res) => {
+  const id = req.params.id
+
+  //Check if user exists
+  const user = await User.findById(id, '-password')
+  if(!user){
+    return res.status(404).json({msg: "Usuário não encontrado!"})
+  }
+
+  res.status(200).json({user})
+})
+
+function checkToken(req, res, next){
+  const authHeader = req.headers['authorization']
+
+  const token = authHeader && authHeader.split(" ")[1]
+
+  if (!token) {
+    return res.status(401).json({msg: "Acesso negado!"})
+  }
+
+  try {
+    const jwt_secret = process.env.JWT_SECRET
+    jwt.verify(token, jwt_secret)
+    next()
+  } catch(err) {
+    res.status(400).json({msg: "Token inválido!"})
+  }
+}
+
+
+app.post('/auth/register', async (req, res) => {   
+  ...
+})
+
+app.post('/auth/login', async (req, res) => {   
+  ...
+})
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log(`Conectado ao MongoDB: http://localhost:${PORT}`)
+    app.listen(PORT)
+  })
+  .catch((err) => console.log(err))
+
+------------------------
+
+Metodo GET caso necessário:
+
+app.get('/user', async (req, res) => {
+  try {
+    const users = await User.find()
+    res.status(200).json({msg: users})
+  } catch (err) {
+    res.status(500).json({msg: "Aconteceu um erro no servidor. Tente mais tarde!"})
+  }
+})
+
+------------------------
+
+Para testar a rota privada e o token no Postman ou Reqbin:
+
+Copie o token gerado ao fazer login com algum usuario teste.
+
+Salve esse token em uma variavel chamada TOKEN
+
+No GET, faça uma requisição para a url {{URL}}/user/yfiyf89w9923u900     (esse é o id do usuario teste)
+
+Clique em Authorization.
+Em Type, escolha Bearer Token.
+Coloque a variavel {{TOKEN}}
+
+Clique em SEND
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////// &&&
+
+CRUD COM MYSQL E POSTMAN
+LINK: https://udara-dananjaya.medium.com/building-a-basic-crud-application-with-node-js-express-and-mysql-5339ae535b4a
+
+Iniciar:
+npm init -y
+
+Instalação das dependencias:
+npm install express mysql2 axios cors
+
+-------
+
+Conectando:
+
+const express = require('express');
+
+const app = express();
+
+app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send('TESTE');
+});
+
+app.listen(3000, () => {
+    console.log('Server listening at http://localhost:5000');
+});
+
+--------
+
+Arquivo .env:
+
+DB_HOST = localhost
+DB_USER = root
+DB_PASSWORD = password
+DB_DATABASE = world
+DB_PORT = 3000
+
+---------
+Conectando ao MySQL:
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+
+const mysql = require('mysql2');
+require("dotenv").config();
+
+const PORT = process.env.DB_PORT
+
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+});
+
+db.connect((err) => {                                   
+  if (err) {                                                 //OU if (err) throw err;
+    console.error('Erro ao conectar ao MySQL:', err);
+    return;
+  }
+  console.log('Conectado ao MySQL');
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+---------
+
+Fazendo um teste GET com a tabela city do schema world no MySQL:
+(Sem async)
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+
+const mysql = require('mysql2');
+require("dotenv").config();
+
+const PORT = process.env.DB_PORT
+
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+});
+
+db.connect((err) => {                                   
+  if (err) {                                                 //OU if (err) throw err;
+    console.error('Erro ao conectar ao MySQL:', err);
+    return;
+  }
+  console.log('Conectado ao MySQL');
+});
+
+app.get('/city', (req, res) => {
+  const sql = 'SELECT * FROM city';                
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.json({message: err});
+      return; 
+    }
+    res.status(200).json(result[0].Name);                                  
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+
+-----------
+
+Com async:
+
+app.get('/city', async (req, res) => {
+  try {
+    const sql = 'SELECT * FROM city';
+    db.query(sql, (err, result) => {
+      if (err) {
+        res.status(500).json({ message: err.message });
+        return;
+      }
+        res.status(200).json(result[0].Name);
+    });
+  } catch (err) {
+    res.status(500).json({message: err.message});
+  }
+});
+
+OU
+
+app.get('/city', async (req, res) => {
+  try {
+    const sql = 'SELECT * FROM city';
+    const [result] = await db.promise().query(sql);
+    res.status(200).json(result[0].Name);
+    return;
+  } catch (err) {
+    res.status(500).json({message: err.message});
+  }
+});
+
+OU
+
+app.get('/city', async (req, res) => {
+  const sql = 'SELECT * FROM city';
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).json({ message: err.message});
+      return;
+    }
+    res.status(200).json(result[0].Name);
+  })
+});
+
+
+¨¨¨¨
+Sem async:
+
+app.get('/city', (req, res) => {
+  const sql = 'SELECT * FROM city';                
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.status(500).json({message: err});
+      return; 
+    }
+      res.status(200).json(result[0].Name);                                 
+  });
+});
+
+
+----------
+
+Criando a tabela no MySQL:
+
+CREATE DATABASE user;
+
+USE user;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE
+);
+
+--------
+
+-Arquivo server.js:
+
+const express = require('express');
+const app = express();
+app.use(express.json());
+const mysql = require('mysql2');
+
+const db = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+});
+
+const PORT = process.env.DB_PORT;
+
+db.connect((err) => {                                   
+  if (err) {                                                 //OU if (err) throw err;
+    console.error('Erro ao conectar ao MySQL:', err);
+    return;
+  }
+  console.log('Conectado ao MySQL');
+});
+
+app.get('/users', async (req, res) => {
+  try{
+    const sql = 'SELECT * FROM users';
+    db.query(sql, (err, results) => {
+    if (err) {
+      console.log(err);
+    }
+    res.send(results);
+    });
+  }
+  catch{
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
+app.post('/users', (req, res) => {
+    const { name, email } = req.body;
+    const sql = 'INSERT INTO users (name, email) VALUES (?, ?)';
+    db.query(sql, [name, email], (err, result) => {
+        if (err) throw err;
+        res.status(201).send({ id: result.insertId, name, email });
+    });
+});
+
+app.put('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, email } = req.body;
+    const sql = 'UPDATE users SET name = ?, email = ? WHERE id = ?';
+    db.query(sql, [name, email, id], (err, result) => {
+        if (err) throw err;
+        if (result.affectedRows === 0) {
+            return res.status(404).send('User not found');
+        }
+        res.send({ id, name, email });
+    });
+});
+
+app.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'DELETE FROM users WHERE id = ?';
+    db.query(sql, [id], (err, result) => {
+        if (err) throw err;
+        if (result.affectedRows === 0) {
+            return res.status(404).send('User not found');
+        }
+        res.send('User deleted');
+    });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+////////////////////////////////////////////////////////////////////// &&&
+
+CRUD MYSQL MVC:
+LINK: https://dev-to.translate.goog/manthanank/building-a-crud-application-with-nodejs-express-and-mysql-4d2m?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=pt&_x_tr_pto=tc
+
+Iniciar:
+npm init -y
+
+Instalação: 
+npm install express mysql2 dotenv 
+npm install --save-dev nodemon
+
+------
+
+ESTRUTURA:
+
+crud-nodejs
+├── config
+│   └── database.js
+├── controllers
+│   └── todoController.js
+├── middleware
+│   └── errorMiddleware.js
+├── models
+│   └── todo.js
+├── routes
+│   └── todoRoutes.js
+├── .env.example
+├── index.js
+└── package.json
+
+--------
+
+Arquivo .env:
+
+PORT = 3000
+DB_HOST = localhost
+DB_USER = root
+DB_PASSWORD = password
+DB_DATABASE = nome_do_schema
+
+---------
+
+Conectando ao MySQL:
+
+-Arquivo database.js dentro da pasta config:
+
+const mysql = require('mysql2');
+
+require('dotenv').config();
+
+const connection = mysql.createConnection({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE
+});
+
+connection.connect((err) => {
+    if (err) throw err;
+    console.log('Connected to MySQL database');
+});
+
+module.exports = connection;
+
+-----------
+
+Criando e configurando o Servidor e definindo as rotas e o middleware de tratamento de erros:
+
+-Arquivo index.js (ou server.js):
+
+const express = require('express');
+const todoRoutes = require('./routes/todoRoutes');
+const errorMiddleware = require('./middleware/errorMiddleware');
+
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+
+// Routes
+app.use('/todos', todoRoutes);
+
+// Error middleware
+app.use(errorMiddleware);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+-------------
+
+Definindo o modelo de tarefas para definir as funções para interagir com o banco de dados MySQL
+
+-Arquivo todo.js, dentro da pasta models:
+
+const db = require('../config/database');
+
+exports.getAllTodos = function(callback) {
+    db.query('SELECT * FROM todos', callback);
+};
+
+exports.getTodoById = function(id, callback) {
+    db.query('SELECT * FROM todos WHERE id = ?', [id], callback);
+};
+
+exports.createTodo = function(newTodo, callback) {
+    db.query('INSERT INTO todos SET ?', newTodo, callback);
+};
+
+exports.updateTodo = function(id, updatedTodo, callback) {
+    db.query('UPDATE todos SET ? WHERE id = ?', [updatedTodo, id], callback);
+};
+
+exports.deleteTodo = function(id, callback) {
+    db.query('DELETE FROM todos WHERE id = ?', [id], callback);
+};
+
+--------------
+
+Criando o Controlador para definir a lógica para lidar com operações CRUD:
+
+const Todo = require('../models/todo');
+
+exports.getAllTodos = function(req, res) {
+    Todo.getAllTodos((err, todos) => {
+        if (err) throw err;
+        res.json(todos);
+    });
+};
+
+exports.getTodoById = function(req, res) {
+    Todo.getTodoById(req.params.id, (err, todo) => {
+        if (err) throw err;
+        res.json(todo);
+    });
+};
+
+exports.createTodo = function(req, res) {
+    const newTodo = {
+        title: req.body.title,
+        completed: req.body.completed
+    };
+
+    Todo.createTodo(newTodo, (err, result) => {
+        if (err) throw err;
+        res.json({ message: 'Todo created successfully' });
+    });
+};
+
+exports.updateTodo = function(req, res) {
+    const updatedTodo = {
+        title: req.body.title,
+        completed: req.body.completed
+    };
+
+    Todo.updateTodo(req.params.id, updatedTodo, (err, result) => {
+        if (err) throw err;
+        res.json({ message: 'Todo updated successfully' });
+    });
+};
+
+exports.deleteTodo = function(req, res) {
+    Todo.deleteTodo(req.params.id, (err, result) => {
+        if (err) throw err;
+        res.json({ message: 'Todo deleted successfully' });
+    });
+};
+
+----------------
+
+Definindo Rotas:
+
+-Arquivo todoRoutes.js dentro da pasta routes:
+
+const express = require('express');
+const router = express.Router();
+const todoController = require('../controllers/todoController');
+
+router.get('/', todoController.getAllTodos);
+router.get('/:id', todoController.getTodoById);
+router.post('/', todoController.createTodo);
+router.put('/:id', todoController.updateTodo);
+router.delete('/:id', todoController.deleteTodo);
+
+module.exports = router;
+
+----------------
+
+Middleware de tratamento de erros:
+
+-Arquivo errorMiddleware.js dentro da pasta middleware:
+
+module.exports = function errorHandler(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+};
+
+////////////////////////////////////////////////////////////////////// &&&
+
+
+
+
+
+
+
 
