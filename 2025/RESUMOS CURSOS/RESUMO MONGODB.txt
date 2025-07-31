@@ -1782,7 +1782,7 @@ process.on('uncaughtException', (err) => {
 startServer();
 
 ///////////////////////////////////////////////////////////////////// &&&
-AUTENTICAÇÃO COM MONGOOSE E JWT E BCRYPT
+AUTENTICAÇÃO COM MONGOOSE E JWT E BCRYPT (SEM REFRESH TOKEN)
 VIDEO: https://www.youtube.com/embed/qEBoZ8lJR3k
 
 instalação:
@@ -2072,11 +2072,2221 @@ Coloque a variavel {{TOKEN}}
 
 Clique em SEND
 
+-------------------------
+
+Adicionando refresh token: (ClaudeAI) MAIS SIMPLES
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+const mongoose = require('mongoose')
+require("dotenv").config()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const DB_CONNECTION = process.env.DB_TABELA
+const PORT = process.env.DB_PORT
+
+// Modelo do usuário com refresh token
+const User = mongoose.model('User', {
+    name: String,
+    email: String,
+    password: String,
+    refreshToken: String                   // Adicionar campo para refresh token
+})
+
+// Private Route
+app.get('/user/:id', checkToken, async (req, res) => {
+    const id = req.params.id
+    
+    // Check if user exists
+    const user = await User.findById(id, '-password -refreshToken')
+    if(!user){
+        return res.status(404).json({msg: "Usuário não encontrado!"})
+    }
+    
+    res.status(200).json({user})
+})
+
+function checkToken(req, res, next){
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+    
+    if (!token) {
+        return res.status(401).json({msg: "Acesso negado!"})
+    }
+    
+    try {
+        const jwt_secret = process.env.JWT_SECRET
+        const decoded = jwt.verify(token, jwt_secret)           //ADD CODE
+        req.userId = decoded.id                                 //ADD CODE
+        next()
+    } catch(err) {
+        res.status(401).json({msg: "Token inválido!"})
+    }
+}
+
+app.post('/auth/register', async (req, res) => {
+    const {name, email, password, confirmpassword} = req.body;
+    
+    if(!name) {
+        return res.status(422).json({msg: "O nome é obrigatório!"})
+    }
+    if(!email) {
+        return res.status(422).json({msg: "O email é obrigatório!"})
+    }
+    if(!password) {
+        return res.status(422).json({msg: "A senha é obrigatória!"})
+    }
+    if(password !== confirmpassword) {
+        return res.status(422).json({msg: "As senhas não conferem!"})
+    }
+    
+    // Check if user exists
+    const userExists = await User.findOne({ email: email})
+    if(userExists){
+        return res.status(422).json({msg: "Usuário já cadastrado com este email!"})
+    }
+    
+    // Create password
+    const salt = await bcrypt.genSalt(12)
+    const passwordHash = await bcrypt.hash(password, salt)
+    
+    // Create user
+    const user = new User({
+        name,
+        email,
+        password: passwordHash,
+    })
+    
+    try {
+        const newUser = await user.save();
+        res.status(201).json({ 
+            message: "Usuário criado com sucesso!", 
+            data: { id: newUser._id, name: newUser.name, email: newUser.email }          //OU data: newUser
+        })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({msg: "Aconteceu um erro no servidor. Tente mais tarde!"})
+    }
+})
+
+app.post('/auth/login', async (req, res) => {
+    const {email, password} = req.body;
+    
+    if(!email) {
+        return res.status(422).json({msg: "O email é obrigatório!"})
+    }
+    if(!password) {
+        return res.status(422).json({msg: "A senha é obrigatória!"})
+    }
+    
+    // Check if user exists
+    const user = await User.findOne({ email: email})
+    if(!user){
+        return res.status(404).json({msg: "Usuário não encontrado!"})
+    }
+    
+    // Check if password match
+    const checkPassword = await bcrypt.compare(password, user.password)
+    if(!checkPassword) {
+        return res.status(422).json({msg: "Senha inválida!"})
+    }
+    
+    // Authentication
+    try{
+        const jwt_secret = process.env.JWT_SECRET
+        const jwt_refresh_secret = process.env.JWT_REFRESH_SECRET              //ADD CODE
+        
+        // Access token (curta duração - 15 minutos)                           //ADD BLOCK CODE
+        const accessToken = jwt.sign(
+            { id: user._id },
+            jwt_secret,
+            { expiresIn: '15m' }
+        )
+        
+        // Refresh token (longa duração - 7 dias)                             //ADD BLOCK CODE
+        const refreshToken = jwt.sign(
+            { id: user._id },
+            jwt_refresh_secret,
+            { expiresIn: '7d' }
+        )
+        
+        // Salvar refresh token no banco                   
+        await User.findByIdAndUpdate(user._id, { refreshToken })             //ADD CODE  
+        
+        res.status(200).json({
+            msg: "Autenticação realizada com sucesso!",
+            accessToken,                                                     //ADD CODE
+            refreshToken,                                                    //ADD CODE
+            user: {                                                          //ADD CODE
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        })
+    } catch (err){
+        console.log(err)
+        res.status(500).json({msg: "Aconteceu um erro no servidor. Tente mais tarde!"})
+    }
+})
+
+// Rota para renovar access token
+app.post('/auth/refresh', async (req, res) => {                                //ADD BLOCK CODE
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+        return res.status(401).json({msg: "Refresh token é obrigatório!"})
+    }
+    
+    try {
+        const jwt_refresh_secret = process.env.JWT_REFRESH_SECRET
+        const decoded = jwt.verify(refreshToken, jwt_refresh_secret)
+        
+        // Verificar se o refresh token existe no banco
+        const user = await User.findOne({ 
+            _id: decoded.id, 
+            refreshToken: refreshToken 
+        })
+        
+        if (!user) {
+            return res.status(403).json({msg: "Refresh token inválido!"})
+        }
+        
+        // Gerar novo access token
+        const jwt_secret = process.env.JWT_SECRET
+        const newAccessToken = jwt.sign(
+            { id: user._id },
+            jwt_secret,
+            { expiresIn: '15m' }
+        )
+        
+        res.status(200).json({
+            accessToken: newAccessToken,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        })
+        
+    } catch (err) {
+        res.status(403).json({msg: "Refresh token inválido!"})
+    }
+})
+
+// Rota para logout                                           //ADD BLOCK CODE
+app.post('/auth/logout', async (req, res) => {
+    const { refreshToken } = req.body;
+    
+    if (refreshToken) {
+        // Remover refresh token do banco
+        await User.updateOne(
+            { refreshToken: refreshToken },
+            { $unset: { refreshToken: 1 } }
+        )
+    }
+    
+    res.status(200).json({msg: "Logout realizado com sucesso!"})
+})
+
+app.get('/user', async (req, res) => {
+    try {
+        const findUser = await User.find({}, '-password -refreshToken')            //ADD CODE
+        res.status(200).json({msg: findUser})
+    } catch (err) {
+        res.status(500).json({msg: "Usuário não encontrado"})
+    }
+})
+
+mongoose.connect(DB_CONNECTION)
+    .then(() => {
+        console.log(`Conectado ao MongoDB: http://localhost:${PORT}`)
+        app.listen(PORT)
+    })
+    .catch((err) => console.log(err))
+
+----------
+
+Exemplo de form de login no front-end com ReactJS:
+
+import React, { useState, useEffect, useCallback } from 'react';
+
+const AuthSystem = () => {
+  const [currentView, setCurrentView] = useState('login');
+  const [accessToken, setAccessToken] = useState(null);
+  const [refreshToken, setRefreshToken] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState({});
+  const [alerts, setAlerts] = useState({});
+  const [tokenStatus, setTokenStatus] = useState('Token válido');
+
+  const baseURL = 'http://localhost:3000';
+
+  // Estados dos formulários
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [registerForm, setRegisterForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmpassword: ''
+  });
+
+  // Carregar tokens do localStorage
+  useEffect(() => {
+    const savedAccessToken = localStorage.getItem('accessToken');
+    const savedRefreshToken = localStorage.getItem('refreshToken');
+    const savedUser = localStorage.getItem('user');
+
+    if (savedAccessToken && savedRefreshToken) {
+      setAccessToken(savedAccessToken);
+      setRefreshToken(savedRefreshToken);
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+      setCurrentView('userArea');
+    }
+  }, []);
+
+  // Salvar tokens no localStorage
+  const saveTokensToStorage = useCallback((access, refresh, userData) => {
+    if (access) localStorage.setItem('accessToken', access);
+    if (refresh) localStorage.setItem('refreshToken', refresh);
+    if (userData) localStorage.setItem('user', JSON.stringify(userData));
+  }, []);
+
+  // Limpar tokens do localStorage
+  const clearTokensFromStorage = useCallback(() => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+  }, []);
+
+  // Mostrar alerta
+  const showAlert = useCallback((type, message, alertType) => {
+    setAlerts(prev => ({ ...prev, [type]: { message, type: alertType } }));
+    setTimeout(() => {
+      setAlerts(prev => ({ ...prev, [type]: null }));
+    }, 5000);
+  }, []);
+
+  // Definir loading
+  const setLoadingState = useCallback((key, isLoading) => {
+    setLoading(prev => ({ ...prev, [key]: isLoading }));
+  }, []);
+
+  // Renovar access token
+  const refreshAccessToken = useCallback(async () => {
+    try {
+      const response = await fetch(`${baseURL}/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setAccessToken(data.accessToken);
+        setUser(data.user);
+        saveTokensToStorage(data.accessToken, refreshToken, data.user);
+        setTokenStatus('Token renovado automaticamente');
+        return data.accessToken;
+      } else {
+        setTokenStatus('Erro ao renovar token');
+        handleLogout();
+        return null;
+      }
+    } catch (error) {
+      console.error('Erro ao renovar token:', error);
+      setTokenStatus('Erro de conexão');
+      return null;
+    }
+  }, [refreshToken, saveTokensToStorage]);
+
+  // Fazer requisição autenticada
+  const makeAuthenticatedRequest = useCallback(async (url, options = {}) => {
+    let currentAccessToken = accessToken;
+
+    const requestOptions = {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentAccessToken}`,
+        ...options.headers
+      }
+    };
+
+    let response = await fetch(url, requestOptions);
+
+    if (response.status === 401) {
+      const newToken = await refreshAccessToken();
+      if (newToken) {
+        currentAccessToken = newToken;
+        requestOptions.headers['Authorization'] = `Bearer ${currentAccessToken}`;
+        response = await fetch(url, requestOptions);
+      }
+    }
+
+    return response;
+  }, [accessToken, refreshAccessToken]);
+
+  // Auto refresh do token
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      const interval = setInterval(() => {
+        refreshAccessToken();
+      }, 10 * 60 * 1000); // 10 minutos
+
+      return () => clearInterval(interval);
+    }
+  }, [accessToken, refreshToken, refreshAccessToken]);
+
+  // Handler do login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoadingState('login', true);
+
+    try {
+      const response = await fetch(`${baseURL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginForm)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setAccessToken(data.accessToken);
+        setRefreshToken(data.refreshToken);
+        setUser(data.user);
+        saveTokensToStorage(data.accessToken, data.refreshToken, data.user);
+        showAlert('login', 'Login realizado com sucesso!', 'success');
+        
+        setTimeout(() => {
+          setCurrentView('userArea');
+        }, 1000);
+      } else {
+        showAlert('login', data.msg, 'danger');
+      }
+    } catch (error) {
+      showAlert('login', 'Erro de conexão com o servidor', 'danger');
+    } finally {
+      setLoadingState('login', false);
+    }
+  };
+
+  // Handler do registro
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoadingState('register', true);
+
+    try {
+      const response = await fetch(`${baseURL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registerForm)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showAlert('register', 'Cadastro realizado com sucesso! Faça login.', 'success');
+        setTimeout(() => {
+          setCurrentView('login');
+        }, 2000);
+      } else {
+        showAlert('register', data.msg, 'danger');
+      }
+    } catch (error) {
+      showAlert('register', 'Erro de conexão com o servidor', 'danger');
+    } finally {
+      setLoadingState('register', false);
+    }
+  };
+
+  // Handler do logout
+  const handleLogout = async () => {
+    try {
+      await fetch(`${baseURL}/auth/logout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken })
+      });
+    } catch (error) {
+      console.error('Erro no logout:', error);
+    }
+
+    setAccessToken(null);
+    setRefreshToken(null);
+    setUser(null);
+    clearTokensFromStorage();
+    setCurrentView('login');
+  };
+
+  // Carregar dados do usuário
+  const loadUserData = async () => {
+    if (!user || !user.id) {
+      showAlert('user', 'ID do usuário não encontrado', 'danger');
+      return;
+    }
+
+    setLoadingState('loadUser', true);
+
+    try {
+      const response = await makeAuthenticatedRequest(`${baseURL}/user/${user.id}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        showAlert('user', 'Dados carregados com sucesso!', 'success');
+        console.log('Dados do usuário:', data.user);
+      } else {
+        showAlert('user', data.msg, 'danger');
+      }
+    } catch (error) {
+      showAlert('user', 'Erro de conexão com o servidor', 'danger');
+    } finally {
+      setLoadingState('loadUser', false);
+    }
+  };
+
+  // Listar todos os usuários
+  const listAllUsers = async () => {
+    setLoadingState('listUsers', true);
+
+    try {
+      const response = await makeAuthenticatedRequest(`${baseURL}/user`);
+      const data = await response.json();
+
+      if (response.ok) {
+        showAlert('user', `${data.msg.length} usuários encontrados!`, 'success');
+        console.log('Lista de usuários:', data.msg);
+      } else {
+        showAlert('user', data.msg, 'danger');
+      }
+    } catch (error) {
+      showAlert('user', 'Erro de conexão com o servidor', 'danger');
+    } finally {
+      setLoadingState('listUsers', false);
+    }
+  };
+
+  // Componente de alerta
+  const Alert = ({ alert }) => {
+    if (!alert) return null;
+    
+    return (
+      <div style={{ 
+        padding: '10px', 
+        margin: '10px 0', 
+        border: '1px solid',
+        borderRadius: '4px',
+        backgroundColor: alert.type === 'success' ? '#d4edda' : '#f8d7da',
+        color: alert.type === 'success' ? '#155724' : '#721c24',
+        borderColor: alert.type === 'success' ? '#c3e6cb' : '#f5c6cb'
+      }}>
+        {alert.message}
+      </div>
+    );
+  };
+
+  // Tela de Login
+  const LoginForm = () => (
+    <div>
+      <h1>Fazer Login</h1>
+      <p>Entre com suas credenciais</p>
+      
+      <Alert alert={alerts.login} />
+      
+      <div>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={loginForm.email}
+            onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+            required
+          />
+        </div>
+        
+        <div>
+          <label>Senha:</label>
+          <input
+            type="password"
+            value={loginForm.password}
+            onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+            required
+          />
+        </div>
+        
+        <button onClick={handleLogin} disabled={loading.login}>
+          {loading.login ? 'Carregando...' : 'Entrar'}
+        </button>
+      </div>
+      
+      <p>
+        Não tem conta?{' '}
+        <button type="button" onClick={() => setCurrentView('register')}>
+          Cadastre-se
+        </button>
+      </p>
+    </div>
+  );
+
+  // Tela de Registro
+  const RegisterForm = () => (
+    <div>
+      <h1>Criar Conta</h1>
+      <p>Preencha os dados para se cadastrar</p>
+      
+      <Alert alert={alerts.register} />
+      
+      <div>
+        <div>
+          <label>Nome:</label>
+          <input
+            type="text"
+            value={registerForm.name}
+            onChange={(e) => setRegisterForm(prev => ({ ...prev, name: e.target.value }))}
+            required
+          />
+        </div>
+        
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={registerForm.email}
+            onChange={(e) => setRegisterForm(prev => ({ ...prev, email: e.target.value }))}
+            required
+          />
+        </div>
+        
+        <div>
+          <label>Senha:</label>
+          <input
+            type="password"
+            value={registerForm.password}
+            onChange={(e) => setRegisterForm(prev => ({ ...prev, password: e.target.value }))}
+            required
+          />
+        </div>
+        
+        <div>
+          <label>Confirmar Senha:</label>
+          <input
+            type="password"
+            value={registerForm.confirmpassword}
+            onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmpassword: e.target.value }))}
+            required
+          />
+        </div>
+        
+        <button onClick={handleRegister} disabled={loading.register}>
+          {loading.register ? 'Carregando...' : 'Cadastrar'}
+        </button>
+      </div>
+      
+      <p>
+        Já tem conta?{' '}
+        <button type="button" onClick={() => setCurrentView('login')}>
+          Fazer login
+        </button>
+      </p>
+    </div>
+  );
+
+  // Área do Usuário
+  const UserArea = () => (
+    <div>
+      <h1>Área do Usuário</h1>
+      <p>Bem-vindo ao sistema!</p>
+      
+      {user && (
+        <div style={{ padding: '10px', margin: '10px 0', backgroundColor: '#f8f9fa', border: '1px solid #dee2e6' }}>
+          <h3>Informações do Usuário</h3>
+          <p><strong>ID:</strong> {user.id}</p>
+          <p><strong>Nome:</strong> {user.name}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+        </div>
+      )}
+      
+      <Alert alert={alerts.user} />
+      
+      <div>
+        <button onClick={loadUserData} disabled={loading.loadUser}>
+          {loading.loadUser ? 'Carregando...' : 'Carregar Dados do Usuário'}
+        </button>
+        
+        <button onClick={listAllUsers} disabled={loading.listUsers}>
+          {loading.listUsers ? 'Carregando...' : 'Listar Todos os Usuários'}
+        </button>
+        
+        <button onClick={handleLogout}>
+          Sair
+        </button>
+      </div>
+      
+      <p style={{ fontSize: '0.9em', color: '#666', marginTop: '10px' }}>
+        {tokenStatus}
+      </p>
+    </div>
+  );
+
+  // Renderizar a view atual
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'login':
+        return <LoginForm />;
+      case 'register':
+        return <RegisterForm />;
+      case 'userArea':
+        return <UserArea />;
+      default:
+        return <LoginForm />;
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: '500px', margin: '0 auto', padding: '20px' }}>
+      {renderCurrentView()}
+    </div>
+  );
+};
+
+export default AuthSystem;
+
+----------
+
+Exemplo de form de login no front-end com HTML puro:
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Autenticação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .form-switch {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-switch a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .user-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .user-info p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .token-status {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela de Login -->
+        <div id="loginForm">
+            <div class="header">
+                <h1>Fazer Login</h1>
+                <p>Entre com suas credenciais</p>
+            </div>
+            
+            <div id="loginAlert"></div>
+            
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Senha:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    Entrar
+                </button>
+            </form>
+            
+            <div class="form-switch">
+                <p>Não tem conta? <a href="#" id="showRegister">Cadastre-se</a></p>
+            </div>
+        </div>
+
+        <!-- Tela de Registro -->
+        <div id="registerForm" class="hidden">
+            <div class="header">
+                <h1>Criar Conta</h1>
+                <p>Preencha os dados para se cadastrar</p>
+            </div>
+            
+            <div id="registerAlert"></div>
+            
+            <form id="registerFormElement">
+                <div class="form-group">
+                    <label for="registerName">Nome:</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Senha:</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Senha:</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    Cadastrar
+                </button>
+            </form>
+            
+            <div class="form-switch">
+                <p>Já tem conta? <a href="#" id="showLogin">Fazer login</a></p>
+            </div>
+        </div>
+
+        <!-- Área do Usuário Logado -->
+        <div id="userArea" class="hidden">
+            <div class="header">
+                <h1>Área do Usuário</h1>
+                <p>Bem-vindo ao sistema!</p>
+            </div>
+            
+            <div id="userInfo" class="user-info"></div>
+            
+            <div id="userAlert"></div>
+            
+            <button class="btn btn-secondary" id="loadUserBtn">
+                Carregar Dados do Usuário
+            </button>
+            
+            <button class="btn btn-secondary" id="listUsersBtn">
+                Listar Todos os Usuários
+            </button>
+            
+            <button class="btn btn-danger" id="logoutBtn">
+                Sair
+            </button>
+            
+            <div class="token-status" id="tokenStatus">
+                Token válido
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AuthSystem {
+            constructor() {
+                this.baseURL = 'http://localhost:3000'; // Ajuste para sua URL
+                this.accessToken = null;
+                this.refreshToken = null;
+                this.user = null;
+                this.tokenRefreshInterval = null;
+                
+                this.init();
+            }
+
+            init() {
+                // Carregar tokens do localStorage se existirem
+                this.loadTokensFromStorage();
+                
+                // Verificar se já está logado
+                if (this.accessToken && this.refreshToken) {
+                    this.showUserArea();
+                    this.startTokenRefresh();
+                } else {
+                    this.showLoginForm();
+                }
+                
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                // Alternância entre formulários
+                document.getElementById('showRegister').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showRegisterForm();
+                });
+
+                document.getElementById('showLogin').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showLoginForm();
+                });
+
+                // Formulários
+                document.getElementById('loginFormElement').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                document.getElementById('registerFormElement').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegister();
+                });
+
+                // Botões da área do usuário
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    this.handleLogout();
+                });
+
+                document.getElementById('loadUserBtn').addEventListener('click', () => {
+                    this.loadUserData();
+                });
+
+                document.getElementById('listUsersBtn').addEventListener('click', () => {
+                    this.listAllUsers();
+                });
+            }
+
+            // Gerenciamento de tokens
+            saveTokensToStorage() {
+                if (this.accessToken) {
+                    localStorage.setItem('accessToken', this.accessToken);
+                }
+                if (this.refreshToken) {
+                    localStorage.setItem('refreshToken', this.refreshToken);
+                }
+                if (this.user) {
+                    localStorage.setItem('user', JSON.stringify(this.user));
+                }
+            }
+
+            loadTokensFromStorage() {
+                this.accessToken = localStorage.getItem('accessToken');
+                this.refreshToken = localStorage.getItem('refreshToken');
+                const userData = localStorage.getItem('user');
+                if (userData) {
+                    this.user = JSON.parse(userData);
+                }
+            }
+
+            clearTokensFromStorage() {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('user');
+            }
+
+            // Refresh automático do token
+            startTokenRefresh() {
+                // Tentar renovar o token a cada 10 minutos
+                this.tokenRefreshInterval = setInterval(() => {
+                    this.refreshAccessToken();
+                }, 10 * 60 * 1000);
+            }
+
+            stopTokenRefresh() {
+                if (this.tokenRefreshInterval) {
+                    clearInterval(this.tokenRefreshInterval);
+                    this.tokenRefreshInterval = null;
+                }
+            }
+
+            async refreshAccessToken() {
+                try {
+                    const response = await fetch(`${this.baseURL}/auth/refresh`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            refreshToken: this.refreshToken
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.accessToken = data.accessToken;
+                        this.user = data.user;
+                        this.saveTokensToStorage();
+                        this.updateTokenStatus('Token renovado automaticamente');
+                    } else {
+                        this.updateTokenStatus('Erro ao renovar token');
+                        this.handleLogout();
+                    }
+                } catch (error) {
+                    console.error('Erro ao renovar token:', error);
+                    this.updateTokenStatus('Erro de conexão');
+                }
+            }
+
+            // Requisições com interceptação automática
+            async makeAuthenticatedRequest(url, options = {}) {
+                const requestOptions = {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.accessToken}`,
+                        ...options.headers
+                    }
+                };
+
+                let response = await fetch(url, requestOptions);
+
+                // Se o token expirou, tentar renovar
+                if (response.status === 401) {
+                    await this.refreshAccessToken();
+                    
+                    // Repetir a requisição com o novo token
+                    requestOptions.headers['Authorization'] = `Bearer ${this.accessToken}`;
+                    response = await fetch(url, requestOptions);
+                }
+
+                return response;
+            }
+
+            // Interface
+            showLoginForm() {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('userArea').classList.add('hidden');
+            }
+
+            showRegisterForm() {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('userArea').classList.add('hidden');
+            }
+
+            showUserArea() {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('userArea').classList.remove('hidden');
+                
+                if (this.user) {
+                    this.displayUserInfo();
+                }
+            }
+
+            displayUserInfo() {
+                const userInfoDiv = document.getElementById('userInfo');
+                userInfoDiv.innerHTML = `
+                    <h3>Informações do Usuário</h3>
+                    <p><strong>ID:</strong> ${this.user.id}</p>
+                    <p><strong>Nome:</strong> ${this.user.name}</p>
+                    <p><strong>Email:</strong> ${this.user.email}</p>
+                `;
+            }
+
+            showAlert(elementId, message, type) {
+                const alertDiv = document.getElementById(elementId);
+                alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+                
+                setTimeout(() => {
+                    alertDiv.innerHTML = '';
+                }, 5000);
+            }
+
+            updateTokenStatus(message) {
+                const statusDiv = document.getElementById('tokenStatus');
+                statusDiv.textContent = message;
+            }
+
+            setLoading(buttonId, isLoading) {
+                const button = document.getElementById(buttonId);
+                if (isLoading) {
+                    button.innerHTML = '<span class="loading"></span>Carregando...';
+                    button.disabled = true;
+                } else {
+                    button.disabled = false;
+                    // Restaurar texto original baseado no ID
+                    const originalTexts = {
+                        'loginBtn': 'Entrar',
+                        'registerBtn': 'Cadastrar',
+                        'loadUserBtn': 'Carregar Dados do Usuário',
+                        'listUsersBtn': 'Listar Todos os Usuários'
+                    };
+                    button.innerHTML = originalTexts[buttonId] || 'Botão';
+                }
+            }
+
+            // Handlers dos formulários
+            async handleLogin() {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                this.setLoading('loginBtn', true);
+
+                try {
+                    const response = await fetch(`${this.baseURL}/auth/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.accessToken = data.accessToken;
+                        this.refreshToken = data.refreshToken;
+                        this.user = data.user;
+                        
+                        this.saveTokensToStorage();
+                        this.showAlert('loginAlert', 'Login realizado com sucesso!', 'success');
+                        
+                        setTimeout(() => {
+                            this.showUserArea();
+                            this.startTokenRefresh();
+                        }, 1000);
+                    } else {
+                        this.showAlert('loginAlert', data.msg, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('loginAlert', 'Erro de conexão com o servidor', 'danger');
+                } finally {
+                    this.setLoading('loginBtn', false);
+                }
+            }
+
+            async handleRegister() {
+                const name = document.getElementById('registerName').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirmpassword = document.getElementById('confirmPassword').value;
+
+                this.setLoading('registerBtn', true);
+
+                try {
+                    const response = await fetch(`${this.baseURL}/auth/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name, email, password, confirmpassword })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.showAlert('registerAlert', 'Cadastro realizado com sucesso! Faça login.', 'success');
+                        
+                        setTimeout(() => {
+                            this.showLoginForm();
+                        }, 2000);
+                    } else {
+                        this.showAlert('registerAlert', data.msg, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('registerAlert', 'Erro de conexão com o servidor', 'danger');
+                } finally {
+                    this.setLoading('registerBtn', false);
+                }
+            }
+
+            async handleLogout() {
+                try {
+                    await fetch(`${this.baseURL}/auth/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            refreshToken: this.refreshToken
+                        })
+                    });
+                } catch (error) {
+                    console.error('Erro no logout:', error);
+                }
+
+                this.accessToken = null;
+                this.refreshToken = null;
+                this.user = null;
+                this.clearTokensFromStorage();
+                this.stopTokenRefresh();
+                this.showLoginForm();
+            }
+
+            async loadUserData() {
+                if (!this.user || !this.user.id) {
+                    this.showAlert('userAlert', 'ID do usuário não encontrado', 'danger');
+                    return;
+                }
+
+                this.setLoading('loadUserBtn', true);
+
+                try {
+                    const response = await this.makeAuthenticatedRequest(
+                        `${this.baseURL}/user/${this.user.id}`
+                    );
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.showAlert('userAlert', 'Dados carregados com sucesso!', 'success');
+                        console.log('Dados do usuário:', data.user);
+                    } else {
+                        this.showAlert('userAlert', data.msg, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('userAlert', 'Erro de conexão com o servidor', 'danger');
+                } finally {
+                    this.setLoading('loadUserBtn', false);
+                }
+            }
+
+            async listAllUsers() {
+                this.setLoading('listUsersBtn', true);
+
+                try {
+                    const response = await this.makeAuthenticatedRequest(`${this.baseURL}/user`);
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        this.showAlert('userAlert', `${data.msg.length} usuários encontrados!`, 'success');
+                        console.log('Lista de usuários:', data.msg);
+                    } else {
+                        this.showAlert('userAlert', data.msg, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('userAlert', 'Erro de conexão com o servidor', 'danger');
+                } finally {
+                    this.setLoading('listUsersBtn', false);
+                }
+            }
+        }
+
+        // Inicializar o sistema quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            new AuthSystem();
+        });
+    </script>
+</body>
+</html>
+
+-------------------------
+
+Adicionando refresh token v2: (ClaudeAI) MAIS COMPLETO???
+
+const express = require('express')
+const app = express()
+app.use(express.json())
+const mongoose = require('mongoose')
+require("dotenv").config()
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const DB_CONNECTION = process.env.DB_TABELA
+const PORT = process.env.DB_PORT
+
+const User = mongoose.model('User', {
+  name: String,
+  email: String,
+  password: String
+})
+
+// Modelo para armazenar refresh tokens
+const RefreshToken = mongoose.model('RefreshToken', {
+  token: String,
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  expiresAt: Date,
+  createdAt: { type: Date, default: Date.now }
+})
+
+// Função para gerar tokens
+function generateTokens(userId) {
+  const jwt_secret = process.env.JWT_SECRET
+  const refresh_secret = process.env.JWT_REFRESH_SECRET
+
+  const accessToken = jwt.sign(
+    { id: userId },
+    jwt_secret,
+    { expiresIn: '15m' } // Access token expira em 15 minutos
+  )
+
+  const refreshToken = jwt.sign(
+    { id: userId },
+    refresh_secret,
+    { expiresIn: '7d' } // Refresh token expira em 7 dias
+  )
+
+  return { accessToken, refreshToken }
+}
+
+// Função para salvar refresh token no banco
+async function saveRefreshToken(token, userId) {
+  const expiresAt = new Date()
+  expiresAt.setDate(expiresAt.getDate() + 7) // 7 dias
+
+  const refreshTokenDoc = new RefreshToken({
+    token,
+    userId,
+    expiresAt
+  })
+
+  await refreshTokenDoc.save()
+}
+
+// Middleware para verificar access token
+function checkToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (!token) {
+    return res.status(401).json({ msg: "Access token requerido!" })
+  }
+
+  try {
+    const jwt_secret = process.env.JWT_SECRET
+    const decoded = jwt.verify(token, jwt_secret)
+    req.userId = decoded.id
+    next()
+  } catch(err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ msg: "Access token expirado!", expired: true })
+    }
+    res.status(401).json({ msg: "Access token inválido!" })
+  }
+}
+
+//Private Route
+app.get('/user/:id', checkToken, async (req, res) => {
+  const id = req.params.id
+
+  //Check if user exists
+  const user = await User.findById(id, '-password')
+  if(!user){
+    return res.status(404).json({msg: "Usuário não encontrado!"})
+  }
+
+  res.status(200).json({user})
+})
+
+app.post('/auth/register', async (req, res) => {
+  const {name, email, password, confirmpassword} = req.body;
+
+  if(!name) {
+    return res.status(422).json({msg: "O nome é obrigatório!"})
+  }
+
+  if(!email) {
+    return res.status(422).json({msg: "O email é obrigatório!"})
+  }
+
+  if(!password) {
+    return res.status(422).json({msg: "A senha é obrigatória!"})
+  }
+
+  if(password !== confirmpassword) {
+    return res.status(422).json({msg: "As senhas não conferem!"})
+  }
+
+  //Check if user exists
+  const userExists = await User.findOne({ email: email})
+
+  if(userExists){
+    return res.status(422).json({msg: "Usuário já cadastrado com este email!"})
+  }
+
+  //create password
+  const salt = await bcrypt.genSalt(12)
+  const passwordHash = await bcrypt.hash(password, salt)
+
+  //create user
+  const user = new User({
+    name,
+    email,
+    password: passwordHash,
+  })
+
+  try {
+    const newUser = await user.save();
+    res.status(201).json({
+      message: "Usuário criado com sucesso!",
+      data: newUser
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({msg: "Aconteceu um erro no servidor. Tente mais tarde!"})
+  }
+})
+
+app.post('/auth/login', async (req, res) => {   
+  const {email, password} = req.body;
+
+  if(!email) {
+    return res.status(422).json({msg: "O email é obrigatório!"})
+  }
+
+  if(!password) {
+    return res.status(422).json({msg: "A senha é obrigatória!"})
+  }
+
+  //Check if user exists
+  const user = await User.findOne({ email: email})
+  if(!user){
+    return res.status(404).json({msg: "Usuário não encontrado!"})
+  }
+
+  //Check if password match
+  const checkPassword = await bcrypt.compare(password, user.password)
+  if(!checkPassword) {
+    return res.status(422).json({msg: "Senha inválida!"})
+  }
+
+  //Authentication
+  try{
+    const { accessToken, refreshToken } = generateTokens(user._id)
+    
+    // Salvar refresh token no banco
+    await saveRefreshToken(refreshToken, user._id)
+
+    res.status(200).json({
+      msg: "Autenticação realizada com sucesso!",
+      accessToken,
+      refreshToken,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    })
+  } catch (err){
+    console.log(err)
+    res.status(500).json({msg: "Aconteceu um erro no servidor. Tente mais tarde!"})
+  }
+})
+
+// Rota para renovar access token usando refresh token
+app.post('/auth/refresh', async (req, res) => {
+  const { refreshToken } = req.body
+
+  if (!refreshToken) {
+    return res.status(401).json({ msg: "Refresh token requerido!" })
+  }
+
+  try {
+    // Verificar se o refresh token existe no banco
+    const tokenDoc = await RefreshToken.findOne({ token: refreshToken })
+    
+    if (!tokenDoc) {
+      return res.status(401).json({ msg: "Refresh token inválido!" })
+    }
+
+    // Verificar se o refresh token não expirou
+    if (tokenDoc.expiresAt < new Date()) {
+      await RefreshToken.deleteOne({ token: refreshToken })
+      return res.status(401).json({ msg: "Refresh token expirado!" })
+    }
+
+    // Verificar a assinatura do refresh token
+    const refresh_secret = process.env.JWT_REFRESH_SECRET
+    const decoded = jwt.verify(refreshToken, refresh_secret)
+
+    // Gerar novos tokens
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(decoded.id)
+
+    // Remover o refresh token antigo e salvar o novo
+    await RefreshToken.deleteOne({ token: refreshToken })
+    await saveRefreshToken(newRefreshToken, decoded.id)
+
+    res.status(200).json({
+      msg: "Tokens renovados com sucesso!",
+      accessToken,
+      refreshToken: newRefreshToken
+    })
+
+  } catch (err) {
+    console.log(err)
+    return res.status(401).json({ msg: "Refresh token inválido!" })
+  }
+})
+
+// Rota para logout (invalidar refresh token)
+app.post('/auth/logout', async (req, res) => {
+  const { refreshToken } = req.body
+
+  if (!refreshToken) {
+    return res.status(400).json({ msg: "Refresh token requerido!" })
+  }
+
+  try {
+    // Remover refresh token do banco
+    await RefreshToken.deleteOne({ token: refreshToken })
+    res.status(200).json({ msg: "Logout realizado com sucesso!" })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: "Erro no servidor!" })
+  }
+})
+
+// Rota para logout de todos os dispositivos
+app.post('/auth/logout-all', checkToken, async (req, res) => {
+  try {
+    // Remover todos os refresh tokens do usuário
+    await RefreshToken.deleteMany({ userId: req.userId })
+    res.status(200).json({ msg: "Logout de todos os dispositivos realizado com sucesso!" })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ msg: "Erro no servidor!" })
+  }
+})
+
+app.get('/user', async (req, res) => {
+  try {
+    const findUser = await User.find()
+    res.status(200).json({msg: findUser})
+  } catch (err) {
+    res.status(500).json({msg: "Usuário não encontrado"})
+  }
+})
+
+// Limpeza automática de refresh tokens expirados (executar periodicamente)
+setInterval(async () => {
+  try {
+    await RefreshToken.deleteMany({ expiresAt: { $lt: new Date() } })
+    console.log('Refresh tokens expirados removidos')
+  } catch (err) {
+    console.log('Erro ao limpar refresh tokens:', err)
+  }
+}, 24 * 60 * 60 * 1000) // Executa a cada 24 horas
+
+mongoose.connect(DB_CONNECTION)
+  .then(() => {
+    console.log(`Conectado ao MongoDB: http://localhost:${PORT}`)
+    app.listen(PORT)
+  })
+  .catch((err) => console.log(err))
+
+---------
+
+Implementação no front-end do refresh token:
+
+// Interceptor para requisições (exemplo com axios)
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401 && error.response?.data?.expired) {
+      const refreshToken = localStorage.getItem('refreshToken')
+      
+      try {
+        const response = await axios.post('/auth/refresh', { refreshToken })
+        const { accessToken, refreshToken: newRefreshToken } = response.data
+        
+        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('refreshToken', newRefreshToken)
+        
+        // Repetir a requisição original
+        return axios(error.config)
+      } catch (refreshError) {
+        // Redirect para login
+        window.location.href = '/login'
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
+///////////////////////////////////////////////////////////////////// &&&
+
+AUTENTICAÇÃO COM MONGOOSE, JWT, BCRYPT e REFRESH TOKEN (MUITO COMPLICADO!!!!!)
+LINK: https://www.corbado.com/blog/nodejs-express-mongodb-jwt-authentication-roles
+
+Instalação:
+npm install express cors bcryptjs jsonwebtoken mongoose
+
+ESTRUTURA:
+
+root/
+├── app/
+│   ├── config/
+│   │   ├── auth.config.js
+│   │   └── db.config.js
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   └── user.controller.js
+│   ├── middlewares/
+│   │   ├── authJwt.js
+│   │   └── verifySignUp.js
+│   ├── models/
+│   │   ├── index.js
+│   │   ├── role.model.js
+│   │   └── user.model.js
+│   └── routes/
+│       ├── auth.routes.js
+│       └── user.routes.js
+├── package.json
+└── server.js
+
+--------------
+
+-Arquivo server.js:
+
+// server.js
+import express from "express";
+import cors from "cors";
+import db from "./app/models/index.js";
+import authRoutes from "./app/routes/auth.routes.js";
+import userRoutes from "./app/routes/user.routes.js";
+ 
+const app = express();
+ 
+// Middleware configuration
+const corsOptions = {
+    origin: "http://localhost:3000",           //Dominio e porta onde está o front-end
+};
+ 
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+ 
+// Simple route for testing
+app.get("/", (req, res) => {
+    res.json({ message: "Welcome to the Node.js JWT Authentication application." });
+});
+ 
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/test", userRoutes);
+ 
+// Set port and start server
+const PORT = process.env.PORT || 3001;                 //Porta onde está o back-end
+ 
+// Connect to MongoDB and start the server
+db.mongoose
+    .connect(`mongodb://${db.config.HOST}:${db.config.PORT}/${db.config.DB}`)
+    .then(() => {
+        console.log("Successfully connected to MongoDB.");
+        // Initialize roles in the database
+        initial();
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}.`);
+        });
+    })
+    .catch((err) => {
+        console.error("Connection error:", err);
+        process.exit();
+    });
+ 
+// Initial function to populate roles
+function initial() {
+    db.Role.estimatedDocumentCount()
+        .then((count) => {
+            if (count === 0) {
+                return Promise.all([
+                    new db.Role({ name: "user" }).save(),
+                    new db.Role({ name: "admin" }).save(),
+                    new db.Role({ name: "moderator" }).save(),
+                ]);
+            }
+        })
+        .then((roles) => {
+            if (roles) {
+                console.log(
+                    "Added 'user', 'admin', and 'moderator' to roles collection.",
+                );
+            }
+        })
+        .catch((err) => {
+            console.error("Error initializing roles:", err);
+        });
+}
+
+-------------------
+
+Configure MongoDB Database:
+
+// app/config/db.config.js
+
+export default {
+    HOST: "localhost",
+    PORT: 27017,
+    DB: "node_js_jwt_auth_db",
+};
+
+-------------------
+
+Define Mongoose Models:
+
+// app/models/user.model.js
 
 
+import mongoose from "mongoose";
+ 
+const userSchema = new mongoose.Schema(
+    {
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+            lowercase: true,
+        },
+        password: {
+            type: String,
+            required: true,
+            minlength: 6,
+        },
+        roles: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Role",
+            },
+        ],
+    },
+    { timestamps: true },
+);
+ 
+const User = mongoose.model("User", userSchema);
+export default User;
+
+-------------------
+
+Role Model:
+
+// app/models/role.model.js
 
 
+import mongoose from "mongoose";
+ 
+const roleSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+});
+ 
+const Role = mongoose.model("Role", roleSchema);
+export default Role;
 
+--------------------
+
+Index Model:
+
+// app/models/index.js
+
+
+import mongoose from "mongoose";
+import dbConfig from "../config/db.config.js";
+ 
+import User from "./user.model.js";
+import Role from "./role.model.js";
+ 
+const db = {};
+ 
+db.mongoose = mongoose;
+db.User = User;
+db.Role = Role;
+ 
+db.ROLES = ["user", "admin", "moderator"];
+db.config = dbConfig;
+ 
+export default db;
+
+
+----------------
+
+Configure Authentication Keys:
+
+// app/config/auth.config.js
+
+export default {
+    secret: "your-secret-key", 
+};
+
+----------------
+
+Create Middleware Functions:
+Verify Sign-Up Middleware
+
+// app/middlewares/verifySignUp.js
+
+
+import db from "../models/index.js";
+ 
+const ROLES = db.ROLES;
+const User = db.User;
+ 
+const checkDuplicateUsernameOrEmail = async (req, res, next) => {
+    try {
+        // Check if username exists
+        const userByUsername = await User.findOne({ username: req.body.username });
+        if (userByUsername) {
+            return res
+                .status(400)
+                .json({ message: "Failed! Username is already in use!" });
+        }
+ 
+        // Check if email exists
+        const userByEmail = await User.findOne({ email: req.body.email });
+        if (userByEmail) {
+            return res.status(400).json({ message: "Failed! Email is already in use!" });
+        }
+ 
+        next();
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+ 
+const checkRolesExisted = (req, res, next) => {
+    if (req.body.roles) {
+        const invalidRoles = req.body.roles.filter((role) => !ROLES.includes(role));
+        if (invalidRoles.length > 0) {
+            return res.status(400).json({
+                message: `Failed! Roles [${invalidRoles.join(", ")}] do not exist!`,
+            });
+        }
+    }
+    next();
+};
+ 
+const verifySignUp = {
+    checkDuplicateUsernameOrEmail,
+    checkRolesExisted,
+};
+ 
+export default verifySignUp;
+
+----------------
+
+Create Middleware Functions:
+JWT Authentication Middleware
+
+// app/middlewares/authJwt.js
+import jwt from "jsonwebtoken";
+import config from "../config/auth.config.js";
+import db from "../models/index.js";
+ 
+const User = db.User;
+const Role = db.Role;
+ 
+const verifyToken = async (req, res, next) => {
+    let token = req.headers["x-access-token"] || req.headers["authorization"];
+ 
+    if (!token) {
+        return res.status(403).json({ message: "No token provided!" });
+    }
+ 
+    // Remove 'Bearer ' prefix if present
+    if (token.startsWith("Bearer ")) {
+        token = token.slice(7, token.length);
+    }
+ 
+    try {
+        const decoded = jwt.verify(token, config.secret);
+        req.userId = decoded.id;
+ 
+        // Fetch user details
+        const user = await User.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found!" });
+        }
+ 
+        req.user = user;
+        next();
+    } catch (err) {
+        return res.status(401).json({ message: "Unauthorized!" });
+    }
+};
+ 
+const isAdmin = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const roles = await Role.find({ _id: { $in: user.roles } });
+ 
+        const hasAdminRole = roles.some((role) => role.name === "admin");
+ 
+        if (!hasAdminRole) {
+            return res.status(403).json({ message: "Require Admin Role!" });
+        }
+ 
+        next();
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+ 
+const isModerator = async (req, res, next) => {
+    try {
+        const user = req.user;
+        const roles = await Role.find({ _id: { $in: user.roles } });
+ 
+        const hasModeratorRole = roles.some((role) => role.name === "moderator");
+ 
+        if (!hasModeratorRole) {
+            return res.status(403).json({ message: "Require Moderator Role!" });
+        }
+ 
+        next();
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+ 
+const authJwt = {
+    verifyToken,
+    isAdmin,
+    isModerator,
+};
+ 
+export default authJwt;
+
+------------------
+
+Index Middleware
+
+// app/middlewares/index.js
+
+import authJwt from "./authJwt.js";
+import verifySignUp from "./verifySignUp.js";
+ 
+export { authJwt, verifySignUp };
+
+-----------------
+
+Create Controllers:
+Authentication Controller
+
+// app/controllers/auth.controller.js
+
+import config from "../config/auth.config.js";
+import db from "../models/index.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+ 
+const User = db.User;
+const Role = db.Role;
+ 
+export const signup = async (req, res) => {
+    try {
+        // Create a new user
+        const user = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 8),
+        });
+ 
+        const role = await Role.findOne({ name: "user" });
+        user.roles = [role._id];
+ 
+        // Save user to the database
+        await user.save();
+        res.status(201).json({ message: "User was registered successfully!" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+ 
+export const signin = async (req, res) => {
+    try {
+        // Find user by username
+        const user = await User.findOne({ username: req.body.username }).populate(
+            "roles",
+            "-__v",
+        );
+ 
+        if (!user) {
+            return res.status(404).json({ message: "User Not found." });
+        }
+ 
+        // Validate password
+        const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+        if (!passwordIsValid) {
+            return res.status(401).json({
+                accessToken: null,
+                message: "Invalid Password!",
+            });
+        }
+ 
+        // Generate JWT
+        const token = jwt.sign({ id: user.id }, config.secret, {
+            algorithm: "HS256",
+            expiresIn: 86400, // 24 hours
+        });
+ 
+        // Extract user roles
+        const authorities = user.roles.map((role) => `ROLE_${role.name.toUpperCase()}`);
+ 
+        res.status(200).json({
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            roles: authorities,
+            accessToken: token,
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+----------------
+
+User Controller:
+
+// app/controllers/user.controller.js
+
+export const allAccess = (req, res) => {
+    res.status(200).send("Public Content.");
+};
+ 
+export const userBoard = (req, res) => {
+    res.status(200).send("User Content.");
+};
+ 
+export const moderatorBoard = (req, res) => {
+    res.status(200).send("Moderator Content.");
+};
+ 
+export const adminBoard = (req, res) => {
+    res.status(200).send("Admin Content.");
+};
+
+-----------------
+
+Authentication Routes:
+
+// app/routes/auth.routes.js
+
+import express from "express";
+import { signup, signin } from "../controllers/auth.controller.js";
+import { verifySignUp } from "../middlewares/index.js";
+ 
+const router = express.Router();
+ 
+// Signup route
+router.post(
+    "/signup",
+    [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
+    signup,
+);
+ 
+// Signin route
+router.post("/signin", signin);
+ 
+export default router;
+
+----------------------
+
+User Routes:
+
+// app/routes/user.routes.js
+import express from "express";
+import {
+    adminBoard,
+    allAccess,
+    moderatorBoard,
+    userBoard,
+} from "../controllers/user.controller.js";
+import { authJwt } from "../middlewares/index.js";
+ 
+const router = express.Router();
+ 
+// Public route
+router.get("/all", allAccess);
+ 
+// User route (any authenticated user)
+router.get("/user", [authJwt.verifyToken], userBoard);
+ 
+// Moderator route
+router.get("/mod", [authJwt.verifyToken, authJwt.isModerator], moderatorBoard);
+ 
+// Admin route
+router.get("/admin", [authJwt.verifyToken, authJwt.isAdmin], adminBoard);
+ 
+export default router;
+
+///////////////////////////////////////////////////////////////////// &&&
 
 
 

@@ -1,0 +1,1344 @@
+
+////////////////////////////////////////////////////////// &&& ###
+
+instalação do Typescript
+npm install -g typescript
+
+Na pasta do projeto, digite:
+tsc --init
+
+Será gerado o arquivo tsconfig.json
+
+////////////////////////////////////////////////////////// &&& ###
+CRIANDO VARIAVEIS
+
+Modo javascript:
+let id = 5;
+
+Modo typescript:
+let id: number = 5;
+
+É preciso especificar o tipo de variavel.
+
+let name: string = "Carlos";
+let isPublished: boolean = true;
+
+Para aceitar qualquer tipo de variavel: (Use apenas se não souber o tipo da variavel!)
+let x: any = "pedro";
+let x: any = 40;
+let x: any = true;
+let x: any = [];
+
+//////////////////////////////////////////////// &&& ###
+Rodando o arquivo:
+
+Na pasta do arquivo, digite no terminal:
+tsc
+
+Será gerado o arquivo teste.js que compilará o arquivo typescript em javascript
+
+-------
+
+-Arquivo teste.ts:
+
+let name: string = "Carlos";
+
+console.log(name);
+
+Para rodar o codigo javascript compilado:
+-No terminal, dentro da pasta do arquivo, digite:
+node teste.js
+
+-------------------
+
+Então, sempre antes de rodar o arquivo, digite tsc para atualizar o arquivo .js 
+Depois rode o arquivo com: node nome_do_arquivo.js
+
+//////////////////////////////////////////////// &&& ###
+ARRAYS
+
+Criando variaveis:
+
+let ids: number[] = [1, 2, 3, 4, 5];
+let names: string[] = ["Ana", "Bruno", "Carlos"];
+let ArrayVariado: any[] = ["pedro", 0, true];
+
+------------
+
+Recebendo um array como parametro de uma função:
+
+const printID = (id: number[]) => {      
+  console.log("IDs: " + id);
+};
+
+printID([1, 2, 3]); 
+>>> IDs: 1,2,3
+
+//////////////////////////////////////////////// &&& ###
+Tipos de variaveis em funções:
+
+Strings:
+
+const juntarValores = (a, b) => {
+  return a + b;
+}
+
+console.log(juntarValores("Ana ", "Maria"))
+>>> Ana Maria
+
+---------
+Forma correta:
+
+const juntarValores = (a: string, b: string) => {
+  return a + b;
+}
+
+console.log(juntarValores("Ana ", "Maria"))
+>>> Ana Maria
+
+------------------ ###
+Números:
+
+const juntarValores = (a: string , b: string) => {
+  return a + b;
+}
+
+console.log(juntarValores("10", "5"))
+>>> 105
+
+-------
+
+const juntarValores = (a: number, b: number) => {
+  return a + b;
+}
+
+console.log(juntarValores(10, 5))
+>>> 15
+
+------------------- ###
+
+Definindo o valor de saída:
+
+const juntarValores = (a: number, b: number):number => {
+  return a + b;
+}
+
+console.log(juntarValores(10, 5))
+>>> 15
+
+---------
+
+const juntarValores = (a: string, b: string):string  => {
+  return a + b;
+}
+
+console.log(juntarValores("10", "5"))
+>>> 105
+
+---------
+
+const juntarValores = (a: number, b: number, c: string):string  => {
+  return a + b + c;
+}
+
+console.log(juntarValores(10, 5, " anos"))
+>>> 15 anos
+
+/////////////////////////////////////////////////////// &&&
+INTERFACE
+
+Modo javascript:
+
+const User = {
+  id: 2,
+  name: "Pedro",
+  age: 22,
+}
+
+User.age = 40                 //tipo number
+
+console.log(User.age)
+>>> 40
+
+Se aplicasse esse código no typescript, ele até funcionaria, mas não é o ideal.
+Teríamos problemas com o código abaixo, por exemplo:
+
+const User = {
+  id: 2,
+  name: "Pedro",
+  age: 22,
+}
+
+User.age = "40"                //tipo string
+
+console.log(User.age)
+>>> ERRO!!!
+
+--------- ###
+
+Modo typescript usando interface:
+
+interface UserInterface {
+  id: number;
+  name: string;
+  age: number;
+}
+
+const User: UserInterface = {
+  id: 2,
+  name: "Pedro",
+  age: 22,
+}
+
+User.age = 40           //tipo number
+
+console.log(User.age)
+>>> 40
+
+------------------------- ###
+Interface com campos faltando:
+
+interface UserInterface {
+  id: number;
+  name: string;
+  age?: number;       //adicione uma ? para o campo ser opcional
+}
+
+const User: UserInterface = {
+  id: 2,
+  name: "Pedro",
+}
+
+console.log(User.age)
+>>> undefined
+
+------
+Adicionando uma condicional:
+
+interface UserInterface {
+  id: number;
+  name: string;
+  age?: number;       
+}
+
+const User: UserInterface = {
+  id: 2,
+  name: "Pedro",
+}
+
+if (!User.age){
+  console.log("Idade não foi informada")
+} else {
+  console.log(User.age)
+}
+
+>>> Idade não foi informada
+
+--------------------------- ###
+
+Interface com funções:
+
+Modo javascript:
+
+const User = {
+    funcao(mensagem) {
+        console.log(mensagem);
+    }
+};
+User.funcao("Texto da mensagem");
+>>> Texto da mensagem
+
+----
+
+Modo typescript:
+
+interface UserInterface {
+  funcao(mensagem: string): void;     
+}
+
+const User: UserInterface = {
+  funcao(mensagem) {
+    console.log(mensagem);
+  }
+}
+
+User.funcao("Texto da mensagem")
+>>> Texto da mensagem
+
+----
+
+Os nomes dos parametros na interface não precisam ser exatamente os mesmos:
+
+interface UserInterface {
+  funcao(mensagem: string): void;  
+}
+
+const User: UserInterface = {
+  funcao(msg) {
+    console.log(msg);
+  }
+}
+
+User.funcao("Texto da mensagem")
+
+------
+
+interface SomaInterface {
+  Somar(a: number, b: number): void;     
+}
+
+const Adicao: SomaInterface = {
+  Somar(a, b) {
+    console.log(a + b);
+  }
+}
+
+Adicao.Somar(2, 5)
+>>> 7
+
+----------
+
+É possível colocar os tipos dentro da função também:
+
+interface UserInterface {
+  funcao(mensagem: string): void;  
+}
+
+const User: UserInterface = {
+  funcao(mensagem: string): void {
+    console.log(mensagem);
+  }
+}
+
+User.funcao("Texto da mensagem")
+>>> Texto da mensagem
+
+////////////////////////////////////////// &&& ###
+LIDANDO COM TIPOS DE VARIAVEIS INCERTAS
+
+Modo javascript:
+
+const printID = (id) => {
+  console.log("ID: " + id);
+};
+
+printID("123");        //OU printID(123);   
+>>> ID: 123
+
+-----
+
+Modo typescript:
+
+const printID = (id: number) => {      
+  console.log("ID: " + id);
+};
+
+printID(123);   
+>>> ID: 123
+
+OU
+
+const printID = (id: string) => {      
+  console.log("ID: " + id);
+};
+
+printID("123");   
+>>> ID: 123
+
+-------- ###
+UNION
+
+Porém, e se não souber qual tipo de dados virá para id?
+É possível usar o | (significa ou) para resolver o problema:
+
+const printID = (id: string | number) => {      
+  console.log("ID: " + id);
+};
+
+printID(123);       //OU printID("123");       
+>>> ID: 123
+
+------
+Colocando as opções de tipos em uma variavel:
+
+type TiposDeID = string | number;
+
+const printID = (id: TiposDeID) => {      
+  console.log("ID: " + id);
+};
+
+printID(123);       //OU printID("123");
+>>> ID: 123
+
+///////////////////////////////////////////////// &&&
+INTERSECTIONS 
+Juntar os campos de mais de uma interface
+
+interface Dados1 {
+  nome: string;
+}
+
+interface Dados2 {
+  idade: number;
+}
+
+type TodosDados = Dados1 & Dados2;
+
+const InfoPessoa = (pessoa: TodosDados):void => {
+  console.log(`${pessoa.nome} tem ${pessoa.idade} anos`)
+}
+
+InfoPessoa({
+  nome: "Carlos", 
+  idade: 32
+})
+
+///////////////////////////////////////////////&&&
+ENUMS
+
+enum MENSAGENS {
+  msg1 = "TextoMsg1",
+  msg2 = "TextoMsg2",
+  msg3 = "TextoMsg3",
+}
+
+const showMsg = (mensagem: MENSAGENS) => {
+  if (mensagem == MENSAGENS.msg1) {
+    console.log("TEXTO 1")
+  } else if (mensagem == MENSAGENS.msg2) {
+    console.log("TEXTO 2")
+  } else {
+    console.log("TEXTO 3")
+  }
+}
+
+showMsg(MENSAGENS.msg2)
+
+>>> TEXTO 2
+
+-----------
+
+enum LoginError {
+  Unauthorized = "unauthorized",
+  NoUser = "nouser",
+  WrongCredentials = "wrongcredentials",
+  Internal = "internal",
+}
+
+const printErrorMsg = (error: LoginError) => {
+  if (error == LoginError.Unauthorized) {
+    console.log("User not authorized")
+  } else if (error == LoginError.NoUser) {
+    console.log("No user was found with that username")
+  } else if (error == LoginError.WrongCredentials) {
+    console.log("Wrong username/password")
+  } else {
+    console.log("Internal Error.")
+  }
+}
+
+printErrorMsg(LoginError.NoUser)
+
+>>> No user was found with that username
+
+///////////////////////////////////////////// &&&
+INTERFACE GENÉRICA (CONTAINER)
+
+Uma interface pode ser passada para uma classe:
+
+interface UserInterface {
+  ...
+}
+
+class Pessoa <UserInterface> {
+  ...
+} 
+
+-------- ###
+
+Criando uma interface genérica que aceite vários tipos de dados:
+
+class Container <T> {
+  private contents: T[]
+
+  constructor() {
+    this.contents = []
+  }
+
+  addItem(item: T):void {
+    this.contents.push(item)
+  }
+
+  getItem(indice: number):T | undefined {
+    return this.contents[indice]
+  }
+}
+
+const pessoas = new Container <string> () 
+pessoas.addItem("Maria")
+const p1 = pessoas.getItem(0)
+console.log(p1)                    // >>> Maria
+
+const numeros = new Container <number> ()
+numeros.addItem(1)
+const num1 = numeros.getItem(0)
+console.log(num1)                  // >>> 1
+
+/////////////////////////////////////////////// &&&
+CAMPOS IMUTÁVEIS EM UMA INTERFACE
+
+Para proibir que valores de certos campos de uma interface possam ser alterados:
+
+interface PessoaInterface {
+  readonly id: number;            //Não pode ser alterado
+  readonly nome: string;          //Não pode ser alterado
+  readonly dataInicio: Date;       //Não pode ser alterado
+  idade: number;                    //Pode ser alterado
+}
+
+const funcionario: PessoaInterface = {
+  id: 12345,
+  nome: "Maria",
+  dataInicio: new Date(),
+  idade: 20,
+}
+
+funcionario.idade = 33
+
+console.log(funcionario)
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+Iniciando
+
+Instalação do react na pasta do projeto:
+npm create vite@latest     //Te pedirá o nome do projeto e pacote
+ou
+npm create vite@latest .   //Não te pedirá o nome do projeto e pacote
+
+Selecione React
+Selecione Typescript
+
+Serão criados os arquivos do projeto react:
+pasta public
+pasta src
+.gitignore
+eslint.config.js
+index.html
+package.json
+README.md
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+
+Para instalar as dependencias (node_modules), digite no terminal:
+npm install    
+
+------------------ ###
+Excluindo coisas desnecessárias:
+
+-Arquivo App.tsx dentro da pasta src:
+
+import './App.css'
+
+function App() {
+
+  return (
+    <>
+    
+    </>
+  )
+}
+
+export default App
+
+¨¨¨
+-Arquivo App.css:
+
+#root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+---------------- ###
+
+Extensões de arquivos:
+
+arquivo_com_componente.tsx
+ou
+arquivo_sem_componente.ts
+
+------------------- ###
+
+Rodando o arquivo:
+
+Digite no terminal:
+npm run dev
+
+///////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+Imprimindo resultados
+
+export default function App() {
+
+  const pessoa: string = "Carlos";
+
+  return (
+    <>
+      <h1>{pessoa}</h1>
+    </>
+  )
+}
+
+-------------- ###
+
+export default function App() {
+
+  function Pessoa(nome: string) {
+    return nome;
+  }
+
+  return (
+    <>
+      <h1>{Pessoa("Maria")}</h1>
+    </>
+  )
+}
+
+---------------- ###
+
+export default function App() {
+
+  const Pessoa = (dados: string | number) => {
+    return dados;
+  }
+
+  return (
+    <>
+      <h1>{Pessoa("Ana")} tem {Pessoa(33)} anos</h1>
+    </>
+  )
+}
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+Criando componente
+
+Exportando um componente sem default:
+
+-Arquivo Teste.tsx:
+
+export const Teste = () => {
+  return (
+    <div>
+      <h1>TEXTO DE EXEMPLO</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import {Teste} from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste />
+    </>
+  )
+}
+
+---------
+
+-Exportando um componente com default:
+
+-Arquivo Teste.tsx:
+
+export default function Teste() {
+  return (
+    <div>
+      <h1>TEXTO DE EXEMPLO</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste />
+    </>
+  )
+}
+
+
+///////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+PROPS E INTERFACES
+
+-Arquivo Teste.tsx:
+
+export default function Teste(props) {
+  return (
+    <div>
+      <h1>{props.texto}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import "./App.css"
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste texto={"TEXTO DE EXEMPLO"}/>
+      <Teste texto={23}/>
+    </>
+  )
+}
+
+OBS: O props aceitará qualquer tipo de variavel e mostrará o resultado na tela. 
+Porém, podem ocorrer problemas em alguns casos, caso o tipo da variável não seja definido. 
+Para isso é usada uma interface para definir os tipos.
+
+---------- ###
+PROPS COM INTERFACES
+
+-Arquivo Teste.tsx:
+
+interface TxtInterface {
+  texto: string;
+}
+
+export default function Teste(props: TxtInterface) {
+  return (
+    <div>
+      <h1>{props.texto}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste texto={"TEXTO DE EXEMPLO"} />{" "}
+    </>
+  )
+}
+
+------------ ###
+
+-Arquivo Teste.tsx:
+
+interface PessoaInterface {
+  nome: string;
+  idade: number;
+  estado: boolean;
+}
+
+export default function Teste(props: PessoaInterface) {
+  return (
+    <div>
+      <h1>{props.nome}</h1>
+      <h1>{props.idade}</h1>
+      <h1>{props.estado ? "Casada" : "Solteira"}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Maria"} idade={23} estado={true}/>{" "}
+    </>
+  )
+}
+
+------------ ###
+
+Desconstrução de props:
+
+-Arquivo Teste.tsx:
+
+interface NomeInterface {
+  nome: string;
+}
+
+export default function Teste({nome}: NomeInterface) {
+  return (
+    <div>
+      <h1>{nome}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Maria"} />{" "}
+    </>
+  )
+}
+
+-------------------- ### ***
+Aceitando mais de um tipo de variavel:
+
+-Arquivo teste.tsx:
+
+interface PessoaInterface {
+  nome: string;
+  idade: number | null;
+}
+
+export default function Teste({nome, idade}: PessoaInterface) {
+
+  return (
+    <div>
+      <h1>{nome}</h1>  
+      <h1>{idade}</h1>                
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Maria"} idade={null}/> 
+    </>
+  )
+}
+
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+USESTATE
+
+Modo implícito: (pode dar problema)
+
+import {useState} from 'react'
+
+export default function App() {
+  const [pessoa, setPessoa] = useState("Maria")     //Typescript vai assumir que o tipo é string
+
+  return (
+    <>
+      <h1>{pessoa}</h1>
+    </>
+  )
+}
+
+---------
+
+Modo explícito: (Mais correto)
+
+import {useState} from 'react'
+
+export default function App() {
+  const [pessoa, setPessoa] = useState<string>("Maria")
+
+  return (
+    <>
+      <h1>{pessoa}</h1>
+    </>
+  )
+}
+
+--------------- ###
+
+Usando interfaces com useState:
+
+interface NomeInterface {
+  nome: string;
+}
+
+import {useState} from 'react'
+
+export default function App() {
+  const [pessoa, setPessoa] = useState<NomeInterface>({nome: "Maria"})
+
+  return (
+    <>
+      <h1>{pessoa.nome}</h1>
+    </>
+  )
+}
+
+
+-------------- ###
+UseState com Props: (exemplo 1)
+
+-Arquivo teste.tsx:
+
+interface NomeInterface {
+  nome: string;
+}
+
+export default function Teste({nome}:NomeInterface) {
+
+  return (
+    <div>
+      <h1>{nome}</h1>                      
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import {useState} from 'react'
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  const [pessoa, setPessoa] = useState("Ana")
+
+  return (
+    <>
+      <Teste nome={pessoa} />
+      <button onClick={() => setPessoa("Maria")}>Mudar</button>
+    </>
+  )
+}
+
+------------ ###
+UseState com Props: (exemplo 2)
+
+-Arquivo teste.tsx:
+
+import {useState} from 'react'
+
+interface NomeInterface {
+  nome: string;
+}
+
+export default function Teste({nome}: NomeInterface) {
+  const [show, setShow] = useState<boolean>(true)
+
+  return (
+    <div>
+      {show && <h1>{nome}</h1>}                      //OU   <h1>{show ? {nome} : "Sem nome"}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Maria"}/>
+    </>
+  )
+}
+
+------------------------ ###
+UseState com Props: (exemplo 3)
+
+-Arquivo teste.tsx:
+
+import {useState} from 'react'
+
+interface PessoaInterface {
+  nome: string;
+  estado: boolean;
+}
+
+export default function Teste(props: PessoaInterface) {
+  const [show, setShow] = useState<boolean>(props.estado)
+
+  return (
+    <div>
+      <h1>{props.nome}</h1>
+      <h1>{show ? "É casado" : "Não é casado"}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Carlos"} estado={false}/>
+    </>
+  )
+}
+
+¨¨¨¨
+Usando destruction no arquivo teste.tsx:
+
+import {useState} from 'react'
+
+interface PessoaInterface {
+  nome: string;
+  estado: boolean;
+}
+
+export default function Teste({nome, estado}: PessoaInterface) {
+  const [show, setShow] = useState<boolean>(estado)
+
+  return (
+    <div>
+      <h1>{nome}</h1>
+      <h1>{show ? "É casado" : "Não é casado"}</h1>
+    </div>
+  )
+}
+
+------------------------- ###
+UseState com props: (exemplo 4)
+
+-Arquivo teste.tsx:
+
+import {useState} from 'react'
+
+interface PessoaInterface {
+  nome: string;
+  idade: number;
+}
+
+export default function Teste({nome, idade}: PessoaInterface) {
+  const [show, setShow] = useState<boolean | null>(true)
+
+  return (
+    <>
+      {show && <h1>{nome} tem {idade} anos</h1>}
+    </>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Ana"} idade={22} />
+    </>
+  )
+}
+
+----------------------- ###
+
+UseState com props: (exemplo 5)
+
+-Arquivo teste.tsx:
+
+import {useState} from 'react'
+
+interface PessoaInterface {
+  nome: string;
+}
+
+export default function Teste({nome}: PessoaInterface) {
+  const [info, setInfo] = useState<string | null>(null)
+
+  return (
+    <>
+      <h1>{nome}</h1>
+      <h1>{info === null ? "Sem info" : info}</h1>        //É o mesmo que {!info ? "Verdade" : "Falso"}      
+    </>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Carlos"} />
+    </>
+  )
+}
+
+///////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+TOGGLE
+
+-Arquivo teste.tsx:
+
+import {useState} from 'react'
+
+interface PessoaInterface {
+  nome: string;
+}
+
+export default function Teste({nome}: PessoaInterface) {
+  const [show, setShow] = useState<boolean>(true)
+
+  return (
+    <>
+      <button onClick={() => setShow(!show)}>Clique</button>
+
+      {show && <h1>{nome}</h1>}
+    </>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Ana"} />
+    </>
+  )
+}
+
+--------------- ###
+
+-Arquivo teste.tsx:
+
+import {useState} from 'react'
+
+interface PessoaInterface {
+  nome: string;
+}
+
+export default function Teste({nome}: PessoaInterface) {
+  const [show, setShow] = useState<boolean>(true)
+
+  const toggle = () => {
+    setShow((prev) => !prev)
+  }
+
+  return (
+    <>
+      <button onClick={toggle}>Clique</button>
+
+      {show && <h1>{nome}</h1>}
+    </>
+  )
+}
+
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Carlos"} />
+    </>
+  )
+}
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+ONCHANGE COM INPUT
+
+import {useState} from 'react'
+
+export default function App() {
+
+  const [texto, setTexto] = useState<string | null>(null)
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTexto(event.target.value)
+  }
+
+  return (
+    <>
+      <h1>{texto ? texto : "Sem texto"}</h1>
+      <input onChange={handleChange} />
+    </>
+  )
+}
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+ONCHANGE COM SUBMIT
+
+import {useState} from 'react'
+
+interface FormInterface {
+  email: string;
+}
+
+export default function App() {
+
+  const [dados, setDados] = useState<FormInterface>({email: ""})
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDados((prevData) => ({
+      ...prevData,
+      [event.target.name]: event.target.value
+    }))
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    alert(dados.email)
+  }
+
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <input name="email" value={dados.email} onChange={handleChange} />
+        <button type="submit">ENVIAR</button>
+      </form>
+    </>
+  )
+}
+
+--------- ###
+
+Outra forma de lidar com o handleChange:
+
+export default function App() {
+
+  const [dados, setDados] = useState<FormInterface>({email: ""})
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDados({
+      ...dados,
+      [event.target.name]: event.target.value
+    })
+  }
+...
+}
+
+------------------- ###
+
+import {useState} from 'react'
+
+interface FormInterface {
+  username: string;
+  email: string;
+}
+
+export default function App() {
+
+  const [dados, setDados] = useState<FormInterface>({email: "", username: ""})
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDados((prevData) => ({
+      ...prevData,
+      [event.target.name]: event.target.value
+    }))
+  }
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    alert(dados.email)
+    console.log(dados.username)
+  }
+
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <input name="username" value={dados.username} onChange={handleChange} />
+        <input name="email" value={dados.email} onChange={handleChange} />
+        <button type="submit">ENVIAR</button>
+      </form>
+    </>
+  )
+}
+
+-------------------- ###
+
+import React, { useState } from 'react';
+
+interface FormData {
+  username: string;
+  email: string;
+}
+
+export default function App() {
+
+  const [formData, setFormData] = useState<FormData>({
+    username: '',
+    email: '',
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();                                       
+    alert(`
+      ${formData.username} - ${formData.email}
+    `);
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="username" value={formData.username} onChange={handleChange} />
+        <input type="email" name="email" value={formData.email} onChange={handleChange} />
+        <button type="submit">ENVIAR</button>
+      </form>
+    </>
+  )
+}
+
+----------------------- ###
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+
+
+
+
+

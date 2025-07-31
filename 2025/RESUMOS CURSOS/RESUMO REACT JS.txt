@@ -18,7 +18,12 @@ npx create-react-app nomedapasta -y    (MODO ANTIGO E DESATUALIZADO)
 Usando o Vite:  
 VIDEO: https://www.youtube.com/embed/3OqiKTyH4r0?autoplay=1
 
-npx create-vite 
+npx create-vite            
+ou
+npm create vite@latest     //Te pedirá o nome do projeto e pacote
+ou
+npm create vite@latest .   //Não te pedirá o nome do projeto e pacote   
+
 Escolha o nome do projeto
 Escolha o framework React
 Escolha Javascript
@@ -6678,7 +6683,18 @@ Copie a chave secreta do cliente
 Vá em Publico alvo
 Adicione um Usuários de teste colocando um email google
 
+//////////////////////////////////////////////////////////////// &&&
+DEPLOY
+VIDEO: https://www.youtube.com/embed/dCLhUialKPQ?autoplay=1
 
+Na pasta do projeto, digite no terminal:
+npm run build
+
+Será gerada a pasta dist
+
+O conteúdo dentro da pasta dist é o que será colocado na pasta public de um site de hospedagem
+
+//////////////////////////////////////////////////////////////// &&&
 
 
 
