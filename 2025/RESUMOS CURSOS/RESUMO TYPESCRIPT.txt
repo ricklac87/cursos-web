@@ -144,6 +144,20 @@ const juntarValores = (a: number, b: number, c: string):string  => {
 console.log(juntarValores(10, 5, " anos"))
 >>> 15 anos
 
+----------------------- ###
+
+function funcao(mensagem: string) {
+  return mensagem
+}
+
+export default function App() {
+  return (
+    <>
+      <h1>{funcao("Texto da mensagem")}</h1>
+    </>
+  )
+}
+
 /////////////////////////////////////////////////////// &&&
 INTERFACE
 
@@ -394,7 +408,7 @@ InfoPessoa({
 })
 
 ///////////////////////////////////////////////&&&
-ENUMS
+ENUM
 
 enum MENSAGENS {
   msg1 = "TextoMsg1",
@@ -804,6 +818,42 @@ export default function App() {
   return (
     <>
       <Teste nome={"Maria"} />{" "}
+    </>
+  )
+}
+
+-------------------
+
+-Arquivo teste.tsx:
+
+interface PessoaInterface {
+  nome: string;
+  idade: number;
+  funcao: () => void;
+}
+
+export const Teste = ({ nome, idade, funcao } : PessoaInterface) => {
+  return (
+    <div>
+      <h1>{nome}</h1>
+      <p>{idade}</p>
+      <button onClick={funcao}>Clique</button>
+    </div>
+  );
+};
+
+-Arquivo App.tsx:
+
+import {Teste} from './components/Teste'
+
+function show() {
+  alert("Clicou!")
+}
+
+export default function App() {
+  return (
+    <>
+      <Teste nome={"Ana"} idade={24} funcao={show}/>
     </>
   )
 }
@@ -1325,7 +1375,335 @@ export default function App() {
   )
 }
 
------------------------ ###
+-------------------- ###
+VIDEO: https://www.youtube.com/embed/665UnOGx3Pg?autoplay=1
+
+import React, {useState} from 'react'
+
+interface UserInterface {
+  email: string;
+}
+
+interface Props {
+  user: UserInterface;
+  onUpdate: (user: UserInterface) => void 
+}
+
+function userUpdate({user, onUpdate}: Props) {
+  const [name, setName] = useState<string>(user.name)
+  const [email, setEmail] = useState<string>(user.email)
+
+  const handleSubmit = (event: ReactFormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    onUpdate({
+      ...user,
+      name: name,
+      email: email,
+    })
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>Nome:</label>
+        <input  
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Email:</label>
+        <input  
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+      <button type="submit">Update</button>
+    </form>
+  )
+}
+
+export default userUpdate;
+
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+USECONTEXT
+
+Exemplo simples:
+
+
+
+
+
+
+--------------------- ###
+VIDEO: https://www.youtube.com/embed/665UnOGx3Pg?autoplay=1
+
+Exemplo complicado:
+
+-Arquivo UserContextProvider.tsx:
+
+import {createContext, useState, useEffect} from 'react'
+
+export interface User {
+  nome: string;
+  estado: boolean;
+}
+
+interface UserContextType {
+  getUsers: User[] | null;
+  addUser: {user: User} => void;
+  updateUser: {id: string} => void;
+  deleteUser: {id: string} => void;
+}
+
+const contextInitialValues = {
+  getUsers: null,
+  addUser: () => null,
+  updateUser: () => null,
+  deleteUser: () => null,
+}
+
+export const UserContext = createContext<UserContextType>(contextInitialValues);
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const UserProvider = (props: Props) => {
+  const [users, setUsers] = useState<User[] | null>(null)
+
+  useEffect(() => {
+    setUsers([{nome: "Maria", estado: "Casada"}])    //aqui teria um fetch
+  }, [])
+
+  const addUser = (user: User) => null
+  const updateUser = (id: string) => null
+  const deleteUser = (id: string) => null
+
+  return (
+    <UserContext.Provider value={{getUsers, addUser, updateUser, deleteUser}}>
+      {props.children}
+    </UserContext.Provider>
+  )
+}
+
+-Arquivo User.tsx:
+
+import {useContext} from 'react'
+import {UserContext} from './UserContextProvider'
+
+
+interface Props {
+  nome: string;
+  estado: boolean;
+}
+
+export default function User ({nome}: Props) {
+
+  const {getUsers, addUser, updateUser, deleteUser} = useContext(UserContext)
+
+  return (
+    <div>
+      <h1>{nome}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import User from "./User"
+import {UserProvider} from "./UserContextProvider"
+
+export default function App() {
+  return (
+    <UserProvider>
+      <User nome={"Bruno"} estado={true} />
+    </UserProvider>
+  )
+}
+
+//////////////////////////////////////////////////////////////// &&& ***
+TYPESCRIPT COM REACT
+ENUM
+
+enum MENSAGENS {
+  msg1 = "Texto da Mensagem1",
+  msg2 = "Texto da Mensagem2",
+  msg3 = "Texto da Mensagem3",
+}
+export default function App() {
+  return (
+    <>
+      <h1>{MENSAGENS.msg1}</h1>
+    </>
+  );
+}
+
+------
+
+Usando React.FC para tipar explicitamente o componente funcional:
+
+
+import React from 'react';
+
+enum MENSAGENS {
+  msg1 = "Texto da Mensagem1",
+  msg2 = "Texto da Mensagem2",
+  msg3 = "Texto da Mensagem3",
+}
+
+const App: React.FC = () => {
+  return (
+    <>
+      <h1>{MENSAGENS.msg1}</h1>
+    </>
+  );
+};
+
+export default App;
+
+------------------ ###
+Usando props:
+
+-Arquivo Teste.tsx:
+
+interface EstadoInterface {
+  estado: Estados;
+}
+
+export enum Estados {
+  RJ = "Rio de Janeiro",
+  SP = "São Paulo",
+  MG = "Minas Gerais",
+}
+
+export const Teste = ({estado}: EstadoInterface) => {
+  return (
+    <div>
+      <h1>{estado}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import React from 'react';
+import {Teste, Estados} from './components/Teste'
+
+const App: React.FC<Estados> = () => {
+  return (
+    <>
+      <Teste estado={Estados.SP}/>
+    </>
+  );
+};
+
+export default App;
+
+OU
+
+import {Teste, Estados} from './components/Teste'
+
+export default function App() {
+  return (
+    <>
+      <Teste estado={Estados.MG}/>
+    </>
+  );
+};
+
+//////////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
+REACT.FC COM PROPS E INTERFACES
+
+React.FC is a type that stands for "Function Component" in React. 
+It is a generic type that allows you to specify the props that a function component will accept.
+
+Using React.FC can be helpful for a number of reasons:
+
+It provides type safety for the props that a component expects to receive. 
+This can help catch bugs early on and make your code easier to understand.
+
+It makes it easier to refactor your component's props. 
+For example, if you want to rename a prop, the TypeScript compiler will catch any places where that prop is used and help you update them.
+
+It makes it easier to see the expected shape of a component's props just by looking at its type definition.
+
+------------ ###
+
+import React from 'react';
+
+const App: React.FC = () => {
+  return (
+    <>
+      ...
+    </>
+  );
+};
+
+export default App;
+
+------------ ###
+
+-Arquivo App.tsx:
+
+import {Teste} from './components/Teste'
+
+export default function App() {
+  return (
+    <>
+      <Teste nome={"Maria"} />
+    </>
+  )
+}
+
+-Arquivo Teste.tsx:  (SEM REACT.FC)
+
+interface Props {
+  nome: string;
+}
+
+export const Teste = ({nome}: Props) => {
+  return (
+    <div>
+      <h1>{nome}</h1>
+    </div>
+  );
+};
+
+-Arquivo Teste.tsx:  (COM REACT.FC)
+
+import React from 'react';
+
+interface Props {
+  nome: string;
+}
+
+export const Teste: React.FC<Props> = ({nome}) => {
+  return (
+    <div>
+      <h1>{nome}</h1>
+    </div>
+  );
+};
+
+OBS: Não é possível usar desta forma como função:
+
+export function Teste({nome}: React.FC<Props>) {
+  ...
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -1337,8 +1715,5 @@ export default function App() {
 
 //////////////////////////////////////////////////////////////// &&&
 TYPESCRIPT COM REACT
-
-
-
 
 

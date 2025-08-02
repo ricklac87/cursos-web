@@ -3567,13 +3567,14 @@ export default function App() {
 }
 
 ////////////////////////////////////////////////////////////////&&&
-NAVEGANDO ENTRE TELAS COM REACT ROUTER E LINK
+NAVEGANDO ENTRE TELAS COM REACT ROUTER E LINK 
 VIDEO: https://www.youtube.com/embed/WATv_Md3y_o?autoplay=1
 
 Primeiro instale a extensão com:
 npm install react-router-dom
 
------
+----------------------------- ### &&&
+BROWSER ROUTER, ROUTE E ROUTES (Forma antiga)
 
 -Dentro de um arquivo chamado Pagina1.js:
 
@@ -3585,6 +3586,7 @@ export default function Pagina1() {
   )
 }
 
+¨¨¨¨
 -Dentro de um arquivo chamado Erro404.js:
 
 export default function Erro404() {                        
@@ -3595,6 +3597,7 @@ export default function Erro404() {
   )
 }
 
+¨¨¨¨
 -Dentro de um arquivo chamado Home.js:
 
 import React from 'react'
@@ -3609,7 +3612,7 @@ export default function Home() {
   )
 }
 
-
+¨¨¨¨
 -Dentro de um arquivo chamado App.js:    (ou Index.js)
 
 import React from 'react'
@@ -3635,8 +3638,7 @@ export default function App() {
   )
 }
 
------------------
-
+----------------- ###
 Usando o useNavigate ao invés de Link:
 VIDEO: https://www.youtube.com/embed/X3It9vgZqcU?autoplay=1
 
@@ -3670,7 +3672,7 @@ export default function Home() {
   )
 }
 
-
+¨¨¨¨
 -Dentro de um arquivo chamado App.js:    (ou Index.js)
 
 import React from 'react'
@@ -3694,8 +3696,7 @@ export default function App() {
   )
 }
 
-------------------
-
+------------------ ###
 Dynamic Route:
 https://www.youtube.com/embed/c02YoWR9gSY?autoplay=1
 
@@ -3724,7 +3725,7 @@ const Produtos = () => {                      //Ou export defaul function Produt
 
 }
 
-
+¨¨¨¨
 -Dentro do arquivo App.js:
 
 ....
@@ -3739,8 +3740,7 @@ const Produtos = () => {                      //Ou export defaul function Produt
 ....
 
 
------------
-
+----------- ###
 Dynamic Route usando useParams() no react-router:
 LINK: https://reactrouter.com/api/hooks/useParams#examples
 
@@ -3765,6 +3765,95 @@ function SomeComponent() {
 }
 
 <Route path="/posts/:postId" element={<Post />} />;
+
+////////////////////////////////////////////////////// &&&
+USANDO O REACT-ROUTER   ***
+PROVIDER, LINK, OUTLET E BROWSER ROUTER (Forma atual)
+
+-Arquivo Contato.jsx:
+
+export default function Contato() {                        
+  return (
+    <div className="contato">  
+      <p>Conteúdo da página Contato</p>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Home.jsx:
+
+export default function Home() {
+  
+  return (
+    <div className="home">  
+      <p>Conteúdo da página Home</p>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Navbar.jsx:
+
+export default function Navbar() {
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/contato">Contato</Link>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+
+
+¨¨¨¨
+-Arquivo main.jsx:
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import Home from './routes/Home.jsx'
+import Contato from './routes/Contato.jsx'
+
+const router = createBrowserRouter(
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {path: "/", element: <Home />},
+      {path: "/contato", element: <Contato />},
+    ]
+  }
+)
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
+)
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import './App.css'
+import {Outlet} from 'react-router-dom'
+import Navbar from "./components/Navbar"
+
+export default function App(){
+  return(
+    <div className="App">
+      <Navbar />
+      <Outlet />
+    </>
+  )
+}
 
 ////////////////////////////////////////////////////////////////&&&
 EXERCICIO 1 com BARRA DE PESQUISA
@@ -4673,7 +4762,7 @@ export default class ListaNomes extends React.Component{
   }
 }
 
-////////////////////////////////////////////////////////////////&&& ***
+////////////////////////////////////////////////////////////////&&&
 BOTÕES / INTERATIVIDADE
 
 -Para mudar de cor sem usar useState:
@@ -5441,6 +5530,1128 @@ export default App;
 
 ////////////////////////////////////////////////////////////////&&&
 HOOK: useContext
+
+Usado para passar valores entre diferentes nivés de componentes sem usar props.
+
+Usando 3 componentes para passar o valor do componente pai para o componente neto:
+VIDEO: https://www.youtube.com/embed/FpNfvbNYPsg?autoplay=1
+
+----------------- ###
+FORMA ERRADA SEM USAR O USECONTEXT
+
+Usando Prop drilling (passando valores até o componente no centro)
+<ComponentePai>        //Cria o valor da variavel
+  <ComponenteFilho>    //Recebe o valor do componente Pai
+    <ComponenteNeto>   //Está no centro/dentro e recebe o valor do componente Filho
+
+¨¨¨¨
+-Arquivo ComponenteNeto.jsx:  (é quem usa o valor da variável)
+
+export default function ComponenteNeto(props) {
+  return (
+    <div>
+      <h1>{props.user}</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import ComponenteNeto from './ComponenteNeto'
+
+export default function ComponenteFilho(props) {
+  return (
+    <div>
+      <ComponenteNeto user={props.user} />
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponentePai.jsx:   (cria a variavel com o valor)
+
+import {useState} from 'react'
+import ComponenteFilho from './ComponenteFilho'
+
+export default function ComponentePai() {
+
+  const [user, setUser] = useState("Jorge")
+
+  return (
+    <div>
+      <ComponenteFilho user={user}/>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponentePai from './components/ComponentePai'
+
+export default function App() {
+  return (
+    <>
+      <ComponentePai />
+    </>
+  )
+}
+
+----------------- ###
+FORMA CORRETA USANDO O USECONTEXT
+
+-Arquivo ComponenteNeto.jsx:   (é quem usa o valor do contexto)
+
+import {useContext} from 'react'
+import {UserContext} from './ComponentePai'
+
+export default function ComponenteNeto() {
+
+  const user = useContext(UserContext)
+
+  return (
+    <div>
+      <h1>{user}</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:  (não é mais necessário para passar o valor através de props)
+
+import ComponenteNeto from './ComponenteNeto'
+
+export default function ComponenteFilho() {
+  return (
+    <div>
+      <ComponenteNeto />
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponentePai.jsx:  (Cria o contexto e a variavel com o valor)
+
+import {useState, createContext} from 'react'
+import ComponenteFilho from './ComponenteFilho'
+
+export const UserContext = createContext()
+
+export default function ComponentePai() {
+
+  const [user, setUser] = useState("Jorge")
+
+  return (
+    <div>
+      <UserContext.Provider value={user}>               //OU <UserContext.Provider value="Jorge">
+        <ComponenteFilho user={user}/>                  //OU <ComponenteNeto /> 
+      </UserContext.Provider>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponentePai from './components/ComponentePai'
+
+export default function App() {
+  return (
+    <>
+      <ComponentePai />
+    </>
+  )
+}
+
+---------------- ###
+
+-Arquivo ComponentePai.jsx:
+
+import {useState, createContext} from 'react'
+import ComponenteFilho from './ComponenteFilho'
+
+export const Contexto = createContext(null)
+
+export default function ComponentePai() {
+
+  const [estado, setEstado] = useState(true)
+
+  return (
+    <div>
+      <Contexto.Provider value={estado}>
+        <ComponenteFilho />
+      </Contexto.Provider>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import {useContext} from 'react'
+import {Contexto} from './ComponentePai'
+
+export default function ComponenteFilho() {
+  const estado = useContext(Contexto)
+  return (
+    <div>
+      <h1>{estado ? "ESTADO VERDADEIRO" : "ESTADO FALSO"}</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponentePai from './components/ComponentePai'
+
+export default function App() {
+  return (
+    <>
+      <ComponentePai />
+    </>
+  )
+}
+
+---------------- ###
+
+-Arquivo ComponentePai.jsx:
+
+import {createContext} from 'react'
+import ComponenteFilho from './ComponenteFilho'
+
+export const Contexto = createContext(null)
+
+export default function ComponentePai() {
+
+  return (
+    <div>
+      <Contexto.Provider value={true}>
+        <ComponenteFilho />
+      </Contexto.Provider>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import {useState, useContext} from 'react'
+import {Contexto} from './ComponentePai'
+
+export default function ComponenteFilho() {
+  const [estado, setEstado] = useState(useContext(Contexto))
+  
+  return (
+    <div>
+      <h1>{estado ? "ESTADO VERDADEIRO" : "ESTADO FALSO"}</h1>
+      <button onClick={() => setEstado(!estado)}>ALTERAR ESTADO</button>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponentePai from './components/ComponentePai'
+
+export default function App() {
+  return (
+    <>
+      <ComponentePai />
+    </>
+  )
+}
+
+--------------- ###
+Passando apenas o valor através do contexto:
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext } from 'react';
+
+export const Contexto = createContext("Texto de exemplo");
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import { useContext } from 'react';
+
+import {Contexto} from './components/ComponentePai'
+
+export default function App(){
+  const txt = useContext(Contexto);
+  return (
+    <>
+      <h1>{txt}</h1>
+    </>
+  )
+};
+
+------------------ ###
+VALOR INICIAL E NOVO
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext } from 'react';
+
+export const Contexto = createContext("Valor inicial");
+
+export default function ComponenteA({children}){
+  return (
+    <Contexto.Provider value={"Novo valor"}>
+      {children}
+    </Contexto.Provider>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import { useContext } from 'react';
+import {Contexto} from './ComponentePai'
+
+export default function ComponenteFilho(){
+  const txt = useContext(Contexto)
+  return (
+    <h1>{txt}</h1>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponenteFilho from './components/ComponenteFilho'
+
+export default function App(){
+  return (
+    <>
+      <ComponenteFilho />
+    </>
+  )
+};
+
+>>> Valor inicial
+
+--------------
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext } from 'react';
+
+export const Contexto = createContext("Valor inicial");
+
+export default function ComponenteA({children}){
+  return (
+    <Contexto.Provider value={"Novo valor"}>
+      {children}
+    </Contexto.Provider>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import { useContext } from 'react';
+import {Contexto} from './ComponentePai'
+
+export default function ComponenteFilho(){
+  const txt = useContext(Contexto)
+  return (
+    <h1>{txt}</h1>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponenteFilho from './components/ComponenteFilho'
+import ComponentePai from './components/ComponentePai'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+>>> Novo valor
+
+-------------------
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext, useContext, useState } from 'react';
+
+export const Contexto = createContext("Valor inicial");
+
+export default function ComponenteA({children}){
+  const [txt, setTxt] = useState(useContext(Contexto))
+  return (
+    <>
+      <input type="text"onChange={(e) => setTxt(e.target.value)} />
+      <Contexto.Provider value={txt}>
+        {children}
+      </Contexto.Provider>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import { useContext } from 'react';
+import {Contexto} from './ComponentePai'
+
+export default function ComponenteFilho(){
+  const txt = useContext(Contexto)
+  return (
+    <h1>{txt}</h1>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponenteFilho from './components/ComponenteFilho'
+import ComponentePai from './components/ComponentePai'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+>>> Iniciará com "Valor Inicial" e será alterado ao digitar algo no input
+
+----------------- ###
+CRIANDO UM VALOR GLOBAL COM USECONTEXT
+VIDEO: https://www.youtube.com/embed/FzBGqvxdxv0?autoplay=1
+
+-Arquivo ComponenteA.jsx:
+
+import {useContext} from 'react'
+import {Contexto} from '../App'
+
+export default function ComponenteA() {
+  const txt = useContext(Contexto)
+  return (
+    <div>
+      <h1>{txt}: Conteúdo do Componente A</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteB.jsx:
+
+import {useContext} from 'react'
+import {Contexto} from '../App'
+
+export default function ComponenteB() {
+  const txt = useContext(Contexto)
+  return (
+    <div>
+      <h1>{txt}: Conteúdo do Componente B</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import {createContext} from 'react'
+import ComponenteA from './components/ComponenteA'
+import ComponenteB from './components/ComponenteB'
+
+export const Contexto = createContext()
+
+export default function App(){
+  return (
+    <>
+      <Contexto.Provider value={"Titulo"}>
+        <ComponenteA />
+        <ComponenteB />
+      </Contexto.Provider>
+    </>
+  )
+}
+
+----------------- ###
+
+-Arquivo App.jsx:
+
+import {createContext} from 'react'
+import ComponenteA from './components/ComponenteA'
+import ComponenteB from './components/ComponenteB'
+
+export const Contexto = createContext(null)
+
+export default function App(){
+  return (
+    <>
+      <Contexto.Provider value={{titulo: 'Titulo', txt: 'Texto'}}>
+        <ComponenteA />
+        <ComponenteB />
+      </Contexto.Provider>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA:
+
+import {useContext} from 'react'
+import {Contexto} from '../App'
+
+export default function ComponenteA() {
+
+  const {titulo, txt} = useContext(Contexto)
+
+  return (
+    <div>
+      <h1>{titulo}: {txt} A</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteB:
+
+import {useContext} from 'react'
+import {Contexto} from '../App'
+
+export default function ComponenteB() {
+
+  const {titulo, txt} = useContext(Contexto)
+
+  return (
+    <div>
+      <h1>{titulo}: {txt} B</h1>
+    </div>
+  )
+}
+
+
+----------------- ###
+Usando apenas dois componentes para simplificar:
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext } from 'react';
+
+export const Contexto = createContext({txt: "Texto de exemplo"});
+
+export const ComponentePai = ({children}) => {
+  return (
+    <div>
+      <Contexto.Provider>
+        {children}
+      </Contexto.Provider>
+    </div>
+  );
+};
+
+-Arquivo App.jsx:
+
+import { useContext } from 'react';
+
+import {Contexto} from './components/ComponentePai'
+
+export default function App(){
+  const {txt} = useContext(Contexto);
+  return (
+    <>
+      <h1>{txt}</h1>
+    </>
+  )
+};
+
+>>> Texto de exemplo
+
+------------------- ###
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext } from 'react';
+
+export const Contexto = createContext();
+
+export default function ComponentePai({children}){
+  
+  return (
+    <div>
+      <Contexto.Provider value={"Texto de exemplo"}>
+        {children}
+      </Contexto.Provider>
+    </div>
+  )
+};
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import {useContext} from 'react'
+
+import {Contexto} from './ComponentePai'
+
+export default function ComponenteFilho() {
+  const txt = useContext(Contexto)
+  return (
+    <div>
+      <h1>{txt}</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import ComponentePai from './components/ComponentePai'
+import ComponenteFilho from './components/ComponenteFilho'
+
+export default function App(){
+
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+------------------ ###
+
+-Arquivo Tema.jsx:
+
+import React, { createContext } from 'react';
+
+export const CorContext = createContext({cor: "red"});
+
+export const Tema = ({children}) => {
+  return (
+    <div>
+      <CorContext.Provider>
+        {children}
+      </CorContext.Provider>
+    </div>
+  );
+};
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import React, { useContext } from 'react';
+
+import {CorContext} from './components/Tema'
+
+export default function App(){
+  const {cor} = useContext(CorContext);
+  return (
+    <>
+      <h1 style={{color: cor}} >Texto na cor vermelha</h1>
+    </>
+  )
+};
+
+-------------------- ###
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext, useState } from 'react';
+
+export const Contexto = createContext({
+  cor: "red",
+  txt: "Texto",
+});
+
+export const ComponentePai = ({children}) => {
+  const [cor, setCor] = useState("red");
+  const [txt, setTxt] = useState("Texto");
+  
+  return (
+    <Contexto.Provider value={{ cor, txt }}>
+      {children}
+    </Contexto.Provider>
+  );
+};
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import {useContext} from "react";
+import {Contexto} from "./ComponentePai";
+
+export const ComponenteFilho = () => {
+  const {cor, txt} = useContext(Contexto);
+
+  return (
+    <>
+      <div style={{color: cor}}>
+        <h2>{txt}</h2>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import {ComponentePai} from './components/ComponentePai'
+import {ComponenteFilho} from './components/ComponenteFilho'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+---------------------- ### ***
+USANDO O REACT-ROUTER PROVIDER COM USECONTEXT
+
+-Arquivo Contato.jsx:
+
+export default function Contato() {                        
+  return (
+    <div className="contato">  
+      <p>Conteúdo da página Contato</p>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Home.jsx:
+
+export default function Home() {
+  
+  return (
+    <div className="home">  
+      <p>Conteúdo da página Home</p>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Navbar.jsx:
+
+export default function Navbar() {
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/contato">Contato</Link>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+
+
+¨¨¨¨
+-Arquivo main.jsx:
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import Home from './routes/Home.jsx'
+import Contato from './routes/Contato.jsx'
+
+const router = createBrowserRouter(
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {path: "/", element: <Home />},
+      {path: "/contato", element: <Contato />},
+    ]
+  }
+)
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
+)
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import './App.css'
+import {Outlet} from 'react-router-dom'
+import Navbar from "./components/Navbar"
+
+export default function App(){
+  return(
+    <div className="App">
+      <Navbar />
+      <Outlet />
+    </>
+  )
+}
+
+-------------------------------------
+Adicionando o useContext:
+
+-Arquivo ThemeContext.jsx:    (Componente Pai)
+
+import { createContext, useState } from 'react'
+
+export const ThemeContext = createContext()
+
+export const ThemeProvider = ({children}) => {
+
+  const [theme, setTheme] = useState("light") 
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light")                  
+  }
+
+  return (
+    <ThemeContext.Provider value={{theme, toggleTheme}}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+¨¨¨¨
+-Adicionando o contexto criado ao arquivo main.jsx:
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import Home from './routes/Home.jsx'
+import Contato from './routes/Contato.jsx'
+import {ThemeProvider} from './context/ThemeContext.jsx'
+
+const router = createBrowserRouter(
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {path: "/", element: <Home />},
+      {path: "/contato", element: <Contato />},
+    ]
+  }
+)
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  </StrictMode>,
+)
+
+¨¨¨¨
+Criando um tema escuro no CSS:
+
+-Arquivo App.css:
+
+.dark-theme, .dark-theme a {
+  background-color: #333;
+  color: #fff;
+}
+
+
+¨¨¨¨
+Adicionando o contexto ao App:
+
+-Arquivo App.jsx:
+
+import './App.css'
+import {Outlet} from 'react-router-dom'
+import Navbar from "./components/Navbar"
+import {useContext} from "react"
+import {ThemeContext} from "./context/ThemeContext"
+
+export default function App(){
+  const {theme} = useContext(ThemeContext)
+  return(
+    <div className={`App ${theme === "dark" ? "dark-theme" : ""}`}>
+      <Navbar />
+      <Outlet />
+    </>
+  )
+}
+
+¨¨¨¨
+-Adicionando o contexto na página Home e Contato:
+
+-Arquivo Contato.jsx:
+
+import {useContext} from 'react'
+import {ThemeContext} from '../context/ThemeContext'
+
+export default function Contato() {             
+  const {theme, toggleTheme} = useContext(ThemeContext)
+
+  return (
+    <div className="contato">  
+      <p>Conteúdo da página Contato. Tema atual: {theme}</p>
+      <button onClick={toggleTheme}>Mudar tema<button>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Home.jsx:
+
+import {useContext} from 'react'
+import {ThemeContext} from '../context/ThemeContext'
+
+export default function Home() {
+  const {theme, toggleTheme} = useContext(ThemeContext)
+
+  return (
+    <div className="home">  
+      <p>Conteúdo da página Home. Tema atual: {theme}</p>
+      <button onClick={toggleTheme}>Mudar tema<button>
+    </div>
+  )
+}
+
+OBS: Ao atualizar a página, o contexto voltará a ser o inicial. Para evitar que isso aconteça, seria necessário armazenar a mudança no local storage (ou cookies).
+
+--------------------- ###
+useContext com Funções vs Classes
+
+VIDEO: https://www.youtube.com/embed/5LrDIWkK_Bc?autoplay=1
+
+-Arquivo App.jsx:
+
+import {useState} from 'react'
+import FunctionContext from './FunctionContext'
+import ClassContext from './ClassContext'
+
+export const ThemeContext = createContext()
+
+export default function App() {
+  const [darkTheme, setDarkTheme] = useState(true)
+
+  function toggleTheme() {
+    setDarkTheme(prevTheme => !prevTheme)
+  }
+
+  return (
+    <>
+      <ThemeContext.Provider value={darkTheme}>
+        <button onClick={toggleTheme}>Toogle</button>
+        <FunctionContext />
+        <ClassContext />
+      </ThemeContext.Provider>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo FunctionContext.jsx:
+
+import {useContext} from 'react'
+import {ThemeContext} from './App'
+
+export default function FunctionComponent() {
+
+  const darkTheme = useContext(ThemeContext)
+
+  const themeStyles = {
+    backgroundColor: darkTheme ? '#333' : '#CCC',
+    color: darkTheme ? '#CCC' : '#333',    
+  }
+
+  return (
+    <div style={themeStyles}>Function Theme</div>
+  )
+}
+
+
+¨¨¨¨
+-Arquivo ClassContext.jsx:
+
+import {Component} from 'react'
+import {ThemeContext} from './App'
+
+export default class ClassContext extends Component {
+
+  themestyles(dark) {
+    return {
+      backgroundColor: dark ? '#333' : '#CCC',
+      color: dark ? '#CCC' : '#333',
+    }
+  }
+
+  render() {
+    return (
+      <ThemeContext>
+        {darkTheme => {
+          return (
+            <div style={this.themeStyles(darkTheme)}>
+              Class Theme
+            </div>
+          )
+        }}
+      </ThemeContext>
+    )
+  }
+}
+
+------------------------ 
+Separando o contexto em um arquivo próprio
+(Forma desnecessariamente complicada)
+
+-Arquivo ThemeContext.jsx:
+
+import {createContext, useState} from 'react'
+
+const ThemeContext = createContext()
+const ThemeUpdateContext = createContext()
+
+export function useTheme() {
+  return useContext(ThemeContext)
+}
+
+export function useUpdateTheme() {
+  return useContext(ThemeUpdateContext)
+}
+
+export function ThemeProvider({children}){
+  const [darkTheme, setDarkTheme] = useState(true)
+
+  function toggleTheme() {
+    setDarkTheme(prevTheme => !prevTheme)
+  }
+
+  return (
+    <ThemeContext.Provider value={darkTheme}>
+      <ThemeUpdateContext.Provider value={toggleTheme}>
+        {children}
+      </ThemeUpdateContext>
+    </ThemeContext.Provider>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import FunctionContext from './FunctionContext'
+import ClassContext from './ClassContext'
+import {ThemeProvider} from './ThemeContext'
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <FunctionContext />
+    </ThemeProvider>
+  )
+}
+
+¨¨¨¨
+-Arquivo FunctionContext.jsx:
+
+import {useTheme, useThemeUpdate} from './ThemeContext'
+
+export default function FunctionComponent() {
+
+  const darkTheme = useTheme()
+  const toggleTheme = useThemeUpdate()
+
+  const themeStyles = {
+    backgroundColor: darkTheme ? '#333' : '#CCC',
+    color: darkTheme ? '#CCC' : '#333',    
+  }
+
+  return (
+    <>
+      <button onClick={toggleTheme}>Toogle</button>
+      <div style={themeStyles}>Function Theme</div>
+    </>
+  )
+}
+
+-------------------------- ***
+Forma mais fácil:
+
+-Arquivo ComponentePai.jsx:   (ThemeContext.jsx)
+
+import { createContext, useState } from 'react';
+
+export const Contexto = createContext();
+
+export const ComponentePai = ({children}) => {
+  const [theme, setTheme] = useState(true);
+
+  const toggleTheme = () => {
+    setTheme(!theme);
+  }
+
+  return (
+    <Contexto.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </Contexto.Provider>
+  );
+};
+
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:      (FunctionContext.jsx)
+
+import {useContext} from "react";
+import {Contexto} from "./ComponentePai";
+
+export const ComponenteFilho = () => {
+  const {theme, toggleTheme} = useContext(Contexto)
+
+  const themeStyles = {
+    backgroundColor: theme ? 'white' : 'black',
+    color: theme ? 'black' : 'white',    
+  }
+
+  return (
+    <>
+      <button onClick={toggleTheme}>Toogle</button>
+      <div style={themeStyles}>
+        <h1>Texto de exemplo</h1>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+
+-Arquivo App.jsx:
+
+import {ComponentePai} from './components/ComponentePai'
+import {ComponenteFilho} from './components/ComponenteFilho'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+----------------------- ###
 VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
 
 -No arquivo theme-context.js:
