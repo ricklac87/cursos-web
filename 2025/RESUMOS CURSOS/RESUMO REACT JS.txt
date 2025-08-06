@@ -140,7 +140,14 @@ export default function App() {
   );
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////// &&&
+REACT SNIPPETS
+
+Instale a extensão Reactjs code snippets no VSCode
+
+Para criar um componente, digite rsc + ENTER 
+
+///////////////////////////////////////////////////////////////////////////////////////&&&
 CORES, TAMANHOS E TEMAS PERSONALIZADOS
 
 -No arquivo Theme.css:          (ou globals.css)
@@ -3855,6 +3862,106 @@ export default function App(){
   )
 }
 
+------------------ ###
+
+-Arquivo router.jsx dentro da pasta router:
+
+import {createBrowserRouter} from 'react-router';
+import MainLayout from '../layout/MainLayout';
+import Home from '../components/Home';
+import Contatos from '../components/Contatos';
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: MainLayout,
+    children: [
+      {
+        path: "/",
+        Component: Home,
+      },{
+        path: "/contatos",
+        Component: Contatos,
+      }
+    ],
+  },
+]);
+
+¨¨¨¨
+-Arquivo main.jsx:
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
+)
+
+¨¨¨¨
+-Arquivo Navbar.jsx dentro da pasta components:
+
+export default const Navbar = () => {
+  return (
+    <div>
+      <h1>NAVBAR</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Footer.jsx dentro da pasta components:
+
+export default const Footer = () => {
+  return (
+    <div>
+      <h1>Footer</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Home.jsx dentro da pasta components:
+
+export default const Home = () => {
+  return (
+    <div>
+      <h1>Conteúdo da Home</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo Contatos.jsx dentro da pasta components:
+
+export default const Contatos = () => {
+  return (
+    <div>
+      <h1>Conteúdo de Contatos</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo MainLayout.jsx dentro da pasta layout:
+
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import {Outlet} from 'react-router';
+
+export default const MainLayout = () => {
+  return (
+    <>
+      <Nav />
+      <Outlet />
+      <Footer />
+    </>
+  )
+}
+
+
 ////////////////////////////////////////////////////////////////&&&
 EXERCICIO 1 com BARRA DE PESQUISA
 VIDEO: https://www.youtube.com/embed/whBg2A-ls2I?autoplay=1
@@ -5174,6 +5281,251 @@ export default function App() {
 
 ////////////////////////////////////////////////////////////////&&&
 HOOK: Use Effect FORMA CORRETA
+VIDEO: https://www.youtube.com/embed/L-1sP3Ljhsg
+
+O useEffect é usado de 3 formas diferentes:
+
+Forma 1: Executa sempre após uma re-renderização   (Atualiza instantaneamente)
+useEffect(() => {})
+
+Forma 2: Executa somente ao montar (mount) (É criado um um componente no DOM)     (Só renderiza 1 vez no início ao montar)
+useEffect(() => {}, [])
+
+Forma 3: Executa somente ao montar e se houver uma alteração no valor
+useEffect(() => {}, [valor])
+
+Normalmente usado em:
+-Event-Listeners
+-Manipulação do DOM
+-Subscriptions/Inscrições (atualizações em tempo real)
+-Pegar (Fetch) dados de uma API
+-Limpar quando um componente desmonta (desmount)
+
+OBS: É possível usar mais de 1 useEffect em um componente
+
+------------
+Forma 1:
+
+import { useState, useEffect } from "react";
+
+export default function App() {
+
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    document.title = `Contagem: ${count}`;
+  })
+
+  function addCount() {
+    setCount(prev => prev + 1)
+  }
+
+  return (
+    <div>
+      <p>Contagem: {count}</p>
+      <button onClick={addCount}>Aumentar</button>
+    </div>
+  )
+}
+
+-Atualizará o título da página instantaneamente.
+
+-------------
+Forma 2:
+
+import { useState, useEffect } from "react";
+
+export default function App() {
+
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    document.title = `Contagem: ${count}`;
+  }, [])
+
+  function addCount() {
+    setCount(prev => prev + 1)
+  }
+
+  return (
+    <div>
+      <p>Contagem: {count}</p>
+      <button onClick={addCount}>Aumentar</button>
+    </div>
+  )
+}
+
+-O valor do titulo da página não será atualizado toda vez que clica no botão, evitando que o componente seja re-renderizado desnecessariamente. Um bom exemplo seria se o titulo fosse:
+document.title = `Título da página`;
+
+Nesse caso acima, o título só precisa ser renderizado 1 vez no início, pois não será alterado no futuro. Então é melhor usar:
+useEffect(() => {...}, [])
+
+---------------
+Forma 3:
+
+import { useState, useEffect } from "react";
+
+export default function App() {
+
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    document.title = `Contagem: ${count}`;
+  }, [count])
+
+  function addCount() {
+    setCount(prev => prev + 1)
+  }
+
+  return (
+    <div>
+      <p>Contagem: {count}</p>
+      <button onClick={addCount}>Aumentar</button>
+    </div>
+  )
+}
+
+-O titulo da página será atualizado instantaneamente toda vez que o valor de count for alterado.
+
+-----------
+
+import { useState, useEffect } from "react";
+
+export default function App() {
+
+  const [count, setCount] = useState(0)
+  const [color, setColor] = useState("green")
+
+  useEffect(() => {
+    document.title = `Contagem: ${count} - Cor: ${color}`;
+  }, [count])
+
+  function addCount() {
+    setCount(prev => prev + 1)
+  }
+
+  function changeColor() {
+    setColor(prev => prev === "green" ? "blue" : "green")
+  }
+
+  return (
+    <div>
+      <p>Contagem: {count}</p>
+      <p>Cor: {color}</p>
+      <button onClick={addCount}>Aumentar</button>
+      <button onClick={changeColor}>Mudar Cor</button>
+    </div>
+  )
+}
+
+-Apenas a variavel count no titulo será alterada no titulo ao clicar nos botões. Para alterar ambos, o codigo ficaria:
+
+  useEffect(() => {
+    document.title = `Contagem: ${count} - Cor: ${color}`;
+  }, [count, color])
+
+----------------
+PARA QUE USAR useEFFECT?
+
+Os códigos acima também funcionariam se removesse o useEffect:
+
+document.title = `Contagem: ${count}`;
+
+ao invés de:
+
+useEffect(() => {
+  document.title = `Contagem: ${count} - Cor: ${color}`;
+})
+
+
+Então, para que usar o useEffect? 
+Para deixar o código mais limpo e deixar mais claro em que momento ou circunstância a instrução será executada (uma das 3 formas de uso do useEffect)
+
+Outro motivo é para poder usar clean-up codes ao usar Event-Listeners:
+
+  useEffect(() => {
+    document.title = `Contagem: ${count}`;
+    return() => {
+      //some clean-up code
+    }
+  })
+
+Exemplo alterando o tamanho da janela:
+
+import { useState } from "react";
+
+export default function App() {
+
+  const [width, setWidth] = useState(window.innerWidth)
+  const [height, setHeight] = useState(window.innerHeight)
+
+  window.addEventListener("resize", handleResize)
+  console.log("EVENT LISTERNER ADICIONADO")
+
+  function handleResize(){
+    setWidth(window.innerWidth)
+    setHeight(window.innerHeight)
+  }
+
+  return (
+    <>
+      <p>Window width: {width}px</p>
+      <p>Window height: {height}px</p>
+    </>
+  )
+}
+
+-Com o código acima, toda vez que a janela fosse redimensionada, o event listener seria ativado, juntamente com a mensagem do console.log
+Para resolver isso, é necessário usar um useEffect:
+
+import { useState, useEffect } from "react";
+
+export default function App() {
+
+  const [width, setWidth] = useState(window.innerWidth)
+  const [height, setHeight] = useState(window.innerHeight)
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize)
+    console.log("EVENT LISTERNER ADICIONADO")
+  }, [])
+
+  function handleResize(){
+    setWidth(window.innerWidth)
+    setHeight(window.innerHeight)
+  }
+
+  return (
+    <>
+      <p>Window width: {width}px</p>
+      <p>Window height: {height}px</p>
+    </>
+  )
+}
+
+-Desta forma, o event listener e a mensagem do console.log só serão invocados no início e ao montar o componente.
+Então aparecerão 2 mensagens no log do console.
+Para resolver isso é necessário adicionar um clean-up code:
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize)
+    console.log("EVENT LISTERNER ADICIONADO")
+
+    return () => {
+      window.removeEventListener("resize", handleResize)
+      console.log("EVENT LISTERNER REMOVIDO")
+    }
+  }, [])
+
+Então o log ficaria:
+>>> EVENT LISTERNER ADICIONADO
+>>> EVENT LISTERNER REMOVIDO
+>>> EVENT LISTERNER ADICIONADO
+
+A razão para aparecer 2 vezes a mensagem é que o modo Strict está ativado. Caso seja desativado, não aparecerá duplicado.
+
+---------------------- ###
 VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
 
 import { useState, useEffect } from "react"; 
@@ -5293,9 +5645,105 @@ O useLayoutEffect é melhor usado quando se quer fazer uma alteração no DOM ba
 
 ////////////////////////////////////////////////////////////////&&&
 HOOK: useRef
-VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
 
 O useRef guarda um valor, assim como o useState, mas quando é atualizado, o componente não é renderizado novamente.
+
+useState() = Renderiza novamente o componente quando o state é alterado
+
+useRef() = Não renderiza novamente o componente quando o state é alterado. Usado para quando quisermos que um componente memorize uma informação, mas que queira que cause uma re-renderização.
+
+Mais usado quando:
+-Acessar/Interagir com elementos do DOM
+-Manuseando Focus, Animations e Transitions
+-Gerenciando Timers e Intervals
+
+---------------- ###
+VIDEO: https://www.youtube.com/embed/AltU-XcGvuo
+
+Exemplo sem useRef:
+
+import { useState, useEffect } from "react";
+
+export default function App() {
+
+  const [number, setNumber] = useState(0)
+
+  useEffect(() => {
+    console.log("Componente renderizado")
+  })
+
+  function handleClick(){
+    setNumber(prev => prev + 1)
+  }
+
+
+  return (
+    <div>
+      <p>{number}</p>
+      <button onClick={handleClick}>Clique</button>
+    </div>
+  )
+}
+
+-No exemplo acima, toda vez que o botão é clicado, o valor de number é alterado e o componente é renderizado novamente.
+
+Para evitar a re-renderização, pode-se usar o useRef ao invés do useState:
+
+import { useRef, useEffect } from "react";
+
+export default function App() {
+
+  const number = useRef(0)
+
+  useEffect(() => {
+    console.log("Componente renderizado")
+  })
+
+  function handleClick(){
+    number.current = number.current + 1
+    console.log(number.current)
+  }
+
+  return (
+    <div>
+      <p>{number.current}</p>
+      <button onClick={handleClick}>Clique</button>
+    </div>
+  )
+}
+
+-Com isso, ao clicar no botão e alterar o valor de number, o componente não é renderizado novamente.
+
+OBS: useRef retorna um objeto com a propriedade current.
+
+-----------------------
+
+import { useRef, useEffect } from "react";
+
+export default function App() {
+
+  const inputRef = useRef(null)
+
+  useEffect(() => {                 //opcional
+    console.log("Componente renderizado")
+  })
+
+  function handleClick(){
+    inputRef.current.focus()
+    inputRef.current.style.backgroundColor = "yellow"
+  }
+
+  return (
+    <div>
+      <input ref={inputRef} />
+      <button onClick={handleClick}>MUDAR</button>
+    </div>
+  )
+}
+
+--------------------------- ###
+
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
 
 -Para referenciar algum elemento HTML:
 
@@ -5385,11 +5833,82 @@ const App = () => {
 
 export default App;
 
+--------------------------------- ###
+VIDEO: https://www.youtube.com/embed/jPo0mIcNZfM?autoplay=1
+
+Criando um cronometro usando useRef:
+
+import React, {useState, useEffect, useRef} from 'react';
+
+export default function App(){
+
+    const [isRunning, setIsRunning] = useState(false);
+    const [elapsedTime, setElapsedTime] = useState(0);
+    const intervalIdRef = useRef(null);
+    const startTimeRef = useRef(0);
+
+    useEffect(() => {
+
+        if(isRunning){
+            intervalIdRef.current = setInterval(() => {
+                setElapsedTime(Date.now() - startTimeRef.current);
+            }, 10);
+        }
+
+        return () => {
+            clearInterval(intervalIdRef.current);
+        }
+    }, [isRunning]);
+
+    function start(){
+        setIsRunning(true);
+        startTimeRef.current = Date.now() - elapsedTime;
+    }
+
+    function stop(){
+        setIsRunning(false);
+    }
+
+    function reset(){
+        setElapsedTime(0);
+        setIsRunning(false);
+    }
+
+    function formatTime(){
+
+        let hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+        let minutes = Math.floor(elapsedTime / (1000 * 60) % 60);
+        let seconds = Math.floor(elapsedTime / (1000) % 60);
+        let milliseconds = Math.floor((elapsedTime % 1000) / 10);
+
+        hours = String(hours).padStart(2, "0");
+        minutes = String(minutes).padStart(2, "0");
+        seconds = String(seconds).padStart(2, "0");
+        milliseconds = String(milliseconds).padStart(2, "0");
+
+        return `${minutes}:${seconds}:${milliseconds}`;
+    }
+
+    return(
+        <div>
+            <div>{formatTime()}</div>
+            <div>
+                <button onClick={start}>Start</button>
+                <button onClick={stop}>Stop</button>
+                <button onClick={reset}>Reset</button>
+            </div>
+        </div>
+    );
+}
+
+
 ////////////////////////////////////////////////////////////////&&&
 HOOK: useReducer
 VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
 
 O useReducer deve ser usado (ao invés do useState) quando o state for muito complexo/grande 
+
+----------
 
 import {useReducer} from 'react'
 
@@ -5422,7 +5941,74 @@ const App = () => {
 
 export default App
 
--------------
+--------------
+
+import {useReducer} from 'react'
+
+export default function App(){
+
+  const initialState = {count: 0}
+
+  const reducer = (state, action) => {
+    switch(action.type) {
+      case "Increase": {
+        return {count: state.count + 1}
+      }
+      case "Decrease": {
+        return {count: state.count - 1}
+      }
+      default: {
+        return state;
+      }
+    }
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  const Increase = () => {
+    dispatch({type: "Increase"})
+  }
+
+  const Decrease = () => {
+    dispatch(type: "Decrease")
+  }
+
+  return (
+    <div>
+      <h1>Contagem: {state.count}</h1>
+      <button onClick={Increase}>Aumentar</button>
+      <button onClick={Decrease}>Diminuir</button>
+    </div>
+  )
+}
+
+-Este código é o equivalente a:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [count, setCount] = useState(0)
+
+  const Increase = () => {
+    setCount(prev => prev + 1)
+  }
+
+  const Decrease = () => {
+    setCount(prev => prev - 1)
+  }
+
+  return (
+    <div>
+      <h1>Contagem: {count}</h1>
+      <button onClick={Increase}>Aumentar</button>
+      <button onClick={Decrease}>Diminuir</button>
+    </div>
+  )
+}
+
+
+---------------------------------
 
 import {useReducer, useState} from 'react'
 
@@ -5527,6 +6113,97 @@ const App = () => {
 };
 
 export default App;
+
+------------------------------- ###
+VIDEO: https://www.youtube.com/embed/MWSjt4ib9b8?autoplay=1
+
+-Arquivo actions.js:
+
+export const UPDATE_USERNAME_TYPE = 'UPDATE_USERNAME_TYPE'
+export const UPDATE_PASSWORD_TYPE = 'UPDATE_PASSWORD_TYPE'
+export const UPDATE_EMAIL_TYPE = 'UPDATE_EMAIL_TYPE'
+
+¨¨¨¨
+-Arquivo reducers.js:
+
+import {UPDATE_USERNAME_TYPE, UPDATE_PASSWORD_TYPE, UPDATE_EMAIL_TYPE} from './actions'
+
+export const initialUserState = {
+  username: '',
+  password: '',
+  email: '',
+}
+
+function userReducer(state, action) {
+  console.log(state);
+  console.log(action);
+  switch (action.type) {
+    case UPDATE_USERNAME_TYPE: {
+      //console.log("Updating username")
+      const newState = { ...state };
+      newState.username = action.value;
+      return newState;
+    }
+    case UPDATE_PASSWORD_TYPE: {
+      //console.log("Updating password")
+      const newState = { ...state };
+      newState.password = action.value;
+      return newState;
+    }
+    case UPDATE_EMAIL_TYPE: {
+      //console.log("Updating email")
+      const newState = { ...state };
+      newState.email = action.value;
+      return newState;
+    }
+    default:
+      return state;
+  }
+}
+
+export default userReducer
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import { useReducer } from 'react'
+import userReducer from './reducers'
+
+export default function App() {
+  const [state, dispatch] = useReducer(userReducer, initialUserState)
+
+  return(
+    <>
+      <p>Username: {state.username}</p>
+      <p>Password: {state.password}</p>
+      <p>Email: {state.email}</p>
+
+      <input 
+        placeholder="Digite o username"
+        onChange={(e) => {
+          dispatch({type: UPDATE_USERNAME_TYPE, value: e.target.value})
+        }}
+      />
+      <input 
+        placeholder="Digite a password"
+        onChange={(e) => {
+          dispatch({type: UPDATE_PASSWORD_TYPE, value: e.target.value})
+        }}
+      />
+      <input 
+        placeholder="Digite o email"
+        onChange={(e) => {
+          dispatch({type: UPDATE_EMAIL_TYPE, value: e.target.value})
+        }}
+      />
+    </>
+  )
+}
+
+----------------------- ###
+VIDEO: 
+
+
 
 ////////////////////////////////////////////////////////////////&&&
 HOOK: useContext
@@ -5798,7 +6475,7 @@ import { createContext } from 'react';
 
 export const Contexto = createContext("Valor inicial");
 
-export default function ComponenteA({children}){
+export default function ComponentePai({children}){
   return (
     <Contexto.Provider value={"Novo valor"}>
       {children}
@@ -5842,7 +6519,7 @@ import { createContext } from 'react';
 
 export const Contexto = createContext("Valor inicial");
 
-export default function ComponenteA({children}){
+export default function ComponentePai({children}){
   return (
     <Contexto.Provider value={"Novo valor"}>
       {children}
@@ -5889,7 +6566,7 @@ import { createContext, useContext, useState } from 'react';
 
 export const Contexto = createContext("Valor inicial");
 
-export default function ComponenteA({children}){
+export default function ComponentePai({children}){
   const [txt, setTxt] = useState(useContext(Contexto))
   return (
     <>
@@ -6219,7 +6896,7 @@ export default function App(){
   )
 };
 
----------------------- ### ***
+---------------------- ### 
 USANDO O REACT-ROUTER PROVIDER COM USECONTEXT
 
 -Arquivo Contato.jsx:
@@ -6587,7 +7264,7 @@ export default function FunctionComponent() {
   )
 }
 
--------------------------- ***
+-------------------------- 
 Forma mais fácil:
 
 -Arquivo ComponentePai.jsx:   (ThemeContext.jsx)
@@ -7906,10 +8583,586 @@ Será gerada a pasta dist
 O conteúdo dentro da pasta dist é o que será colocado na pasta public de um site de hospedagem
 
 //////////////////////////////////////////////////////////////// &&&
+TODO LIST / TO-DO LIST
 
+Adicionando um botão de adicionar:
 
+import { useState } from 'react'
 
+export default function App(){
 
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  function handleChange(event){
+    setNewTask(event.target.value)
+  }
+
+  function addTask(){
+    if(newTask.trim() !== ""){                           //Para evitar que algo seja adicionado se o input estiver vazio
+      setTasks(prev => [...prev, newTask])
+      setNewTask("")
+    }
+  }
+
+  return (
+    <>
+      <div>
+        <input type="text" value={newTask} onChange={handleChange}/>
+        <button onClick={addTask}>ADICIONAR</button>
+      </div>
+      {tasks.map((task, index) => (
+        <div key={index}>
+          <p>{task}</p>
+        </div>
+      ))}
+    </>
+  )
+}
+
+--------------
+
+Adicionando um botão de remover:
+
+import { useState } from 'react'
+
+export default function App(){
+
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  function handleChange(event){
+    setNewTask(event.target.value)
+  }
+
+  function addTask(){
+    if(newTask.trim() !== ""){                           
+      setTasks(prev => [...prev, newTask])
+      setNewTask("")
+    }
+  }
+
+  function removeTask(index){
+    setTasks(prev => prev.filter((_, i) => i !== index))
+    setNewTask("")
+  }
+
+  return (
+    <>
+      <div>
+        <input type="text" value={newTask} onChange={handleChange}/>
+        <button onClick={addTask}>ADICIONAR</button>
+      </div>
+      {tasks.map((task, index) => (
+        <div key={index}>
+          <p>{task}</p>
+          <button onClick={() => removeTask(index)}>Remover</button>
+        </div>
+      ))}
+    </>
+  )
+}
+
+-------------------- ###
+Todo List com botões para mover as tarefas para cima ou para baixo:
+VIDEO: https://www.youtube.com/embed/9wiWzu_tRB0?autoplay=1
+
+import { useState } from 'react'
+
+export default function App(){
+
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  function handleInputChange(event){
+      setNewTask(event.target.value);
+  }
+
+  function addTask(){
+      if(newTask.trim() !== ""){
+          setTasks(prev => [...prev, newTask]);
+          setNewTask("");
+      }
+  }
+
+  function deleteTask(index){
+      const updatedTasks = tasks.filter((_, i) => i !== index);
+      setTasks(updatedTasks);
+  }
+
+  function moveTaskUp(index){
+
+      if(index > 0){
+          const updatedTasks = [...tasks];
+          [updatedTasks[index], updatedTasks[index - 1]] = 
+          [updatedTasks[index - 1], updatedTasks[index]];
+          setTasks(updatedTasks);
+      }
+  }
+
+  function moveTaskDown(index){
+
+      if(index < tasks.length - 1){
+          const updatedTasks = [...tasks];
+          [updatedTasks[index], updatedTasks[index + 1]] = 
+          [updatedTasks[index + 1], updatedTasks[index]];
+          setTasks(updatedTasks);
+      }
+  }
+
+  return (
+
+    <div className="to-do-list">
+
+      <h1>To-Do-List</h1>
+
+      <div>
+        <input
+          type="text"
+          placeholder="Enter a task..."
+          value={newTask}
+          onChange={handleInputChange}/>
+        <button
+          className="add-button"
+          onClick={addTask}>
+          Add
+        </button>
+      </div>
+      <ol>
+        {tasks.map((task, index) => 
+          <li key={index}>
+            <span className="text">{task}</span>
+            <button
+              className="delete-button"
+              onClick={() => deleteTask(index)}>
+              Delete
+            </button>
+            <button
+              className="move-button"
+              onClick={() => moveTaskUp(index)}>
+              ☝
+            </button>
+            <button
+              className="move-button"
+              onClick={() => moveTaskDown(index)}>
+              👇
+            </button>
+          </li>
+        )}
+      </ol>
+    </div>
+  );
+}
+
+---------------------------- ###
+Salvando as tarefas no local storage:
+
+import { useState, useEffect } from 'react'
+
+export default function App(){
+
+  const [tasks, setTasks] = useState(() => {
+    const storedTasks = localStorage.getItem('tasks');
+    return storedTasks ? JSON.parse(storedTasks) : [];
+  });
+  const [newTask, setNewTask] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
+  function handleChange(event){
+    setNewTask(event.target.value)
+  }
+
+  function addTask(){
+    if(newTask.trim() !== ""){                           
+      setTasks(prev => [...prev, newTask])
+      setNewTask("")
+    }
+  }
+
+  function removeTask(index){
+    setTasks(prev => prev.filter((_, i) => i !== index))
+    setNewTask("")
+  }
+
+  return (
+    <>
+      <div>
+        <input type="text" value={newTask} onChange={handleChange}/>
+        <button onClick={addTask}>ADICIONAR</button>
+      </div>
+      {tasks.map((task, index) => (
+        <div key={index}>
+          <p>{task}</p>
+          <button onClick={() => removeTask(index)}>Remover</button>
+        </div>
+      ))}
+    </>
+  )
+}
+
+---------------------------------------------------------------------------- ###
+TODO LIST COM MAIS DE 1 CAMPO:
+
+import { useState } from 'react'
+
+export default function App(){
+
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  function handleChange(event){
+    setNewTask(event.target.value)
+  }
+
+  function addTask(){
+    if(newTask.trim() !== ""){                           
+      setTasks(prev => [...prev, { id: Date.now(), txt: newTask.trim() }])   
+      //OU  setTasks([...tasks, { id: Date.now(), txt: newTask.trim() }])
+      setNewTask("")
+    }
+  }
+
+  function removeTask(id){
+    setTasks(prev => prev.filter((task) => task.id !== id))      
+    //OU  setTasks(tasks.filter((task) => task.id !== id))
+  }
+
+  return (
+    <>
+      <div>
+        <input type="text" value={newTask} onChange={handleChange}/>
+        <button onClick={addTask}>ADICIONAR</button>
+      </div>
+      {tasks.map((task) => (
+        <div key={task.id}>
+          <p>{task.txt}</p>
+          <button onClick={() => removeTask(task.id)}>Remover</button>
+        </div>
+      ))}
+    </>
+  )
+}
+
+--------------
+
+import { useState } from 'react'
+
+export default function App(){
+
+  const [tarefas, setTarefas] = useState([]);
+  const [novaTarefa, setNovaTarefa] = useState("");
+
+  function handleChange(event){
+    setNovaTarefa(event.target.value)
+  }
+
+  function addTarefa(){
+    if(novaTarefa.trim() !== ""){                           
+      setTarefas(prev => [...prev, { id: Date.now(), txt: novaTarefa.trim(), completa: false }])   
+      setNovaTarefa("")
+    }
+  }
+
+  function removeTarefa(id){
+    setTarefas(prev => prev.filter((tarefa) => tarefa.id !== id))      
+  }
+
+  function completaTarefa(id) {
+    setTarefas(
+      tarefas.map((tarefa) =>
+        tarefa.id === id ? { ...tarefa, completa: !tarefa.completa } : tarefa
+      )
+    );
+  };
+
+  return (
+    <>
+      <div>
+        <input type="text" value={novaTarefa} onChange={handleChange}/>
+        <button onClick={addTarefa}>ADICIONAR</button>
+      </div>
+      {tarefas.map((tarefa) => (
+        <div key={tarefa.id}>
+          <p style={{color: tarefa.completa ? "green" : "red" }}>{tarefa.txt}</p>
+          <button onClick={() => removeTarefa(tarefa.id)}>Remover</button>
+          <button onClick={() => completaTarefa(tarefa.id)}>{!tarefa.completa ? "Completa" : "Falta fazer"}</button>
+        </div>
+      ))}
+    </>
+  )
+}
+
+----------------------------- ###
+
+import { useState } from 'react';
+
+export default function App() {
+
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState('');
+
+  const handleInputChange = (event) => {
+    setNewTodo(event.target.value);
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();                               //necessário somente se estiver em um form submit
+    if (newTodo.trim() !== '') {
+      setTodos([...todos, { id: Date.now(), text: newTodo.trim(), completed: false }]);
+      setNewTodo('');
+    }
+  };
+
+  const handleTodoComplete = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const handleTodoDelete = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  return (
+    <div className="App">
+      <h1>Todo List</h1>
+      <form onSubmit={handleFormSubmit}>
+        <input
+          type="text"
+          value={newTodo}
+          onChange={handleInputChange}
+          placeholder="Add new todo"
+        />
+        <button type="submit">Add</button>
+      </form>
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            <span style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+              {todo.text}
+            </span>
+            <button onClick={() => handleTodoComplete(todo.id)}>
+              {todo.completed ? 'Undo' : 'Complete'}
+            </button>
+            <button onClick={() => handleTodoDelete(todo.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+------------------------------------------------ ###
+TODO LIST COM CHECKBOX
+
+import { useState } from 'react'
+
+export default function App(){
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  const tasksChecked = tasks.filter(task => task.checked).length;
+
+  function handleChange(event){
+    setNewTask(event.target.value)
+  }
+
+  function addTask(){
+    if(newTask.trim() !== ""){                           
+      setTasks(prev => [...prev, { id: Date.now(), txt: newTask.trim(), checked: false }])   
+      setNewTask("")
+    }
+  }
+
+  function toggleTask(id) {
+    setTasks(prev => prev.map(task =>
+      task.id === id ? { ...task, checked: !task.checked } : task
+    ));
+  }
+
+  function removeCheckedTasks() {
+    setTasks(prev => prev.filter(task => !task.checked));
+  }
+
+  return (
+    <>
+      <div>
+        <input type="text" value={newTask} onChange={handleChange}/>
+        <button onClick={addTask}>ADICIONAR</button>
+      </div>
+
+      {tasks.map((task) => (
+        <div key={task.id}>
+          <input
+            type="checkbox"
+            checked={task.checked}
+            onChange={() => toggleTask(task.id)}
+          />
+          {task.txt}
+        </div>
+      ))}
+
+      <div>
+        <button onClick={removeCheckedTasks} disabled={tasksChecked === 0}>
+          {tasksChecked !== 0 ? "Remover selecionados" : "Nada selecionado"}
+        </button>  
+      </div>      
+
+    </>
+  )
+}
+
+----------------------------------------------- ###
+TODO LIST PERMITINDO TECLADO E MOUSE
+VIDEO: https://www.youtube.com/embed/tbot1XH2k5c?autoplay=1
+
+import { useState } from 'react'
+
+export default function App(){
+
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  function handleChange(event){
+    setNewTask(event.target.value)
+  }
+
+  function handleKeyDown(event) {
+    const isEnter = event.keyCode === 13;
+    const newText = newTask.trim();
+    const isTextPresent = newText.length > 0;
+    if (isEnter && isTextPresent) {
+      addTask(newTask)
+    }
+  }
+
+  function addTask(){
+    if(newTask.trim() !== ""){                           
+      setTasks(prev => [...prev, newTask])
+      setNewTask("")
+    }
+  }
+
+  function removeTask(index){
+    setTasks(prev => prev.filter((_, i) => i !== index))
+    setNewTask("")
+  }
+
+  return (
+    <>
+      <div>
+        <input 
+          type="text" 
+          placeholder="Digite a nova tarefa"
+          value={newTask} 
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}               
+        />
+        <button onClick={addTask} aria-pressed="true">ADICIONAR</button>
+      </div>
+      {tasks.map((task, index) => (
+        <ul key={index}>
+          <li style={{listStyle: 'none'}}>{task}</li>
+          <button onClick={() => removeTask(index)}>Remover</button>
+        </ul>
+      ))}
+    </>
+  )
+}
+
+OBS: É mais recomendado armazenar os keycodes em um arquivo separado.
+
+-Arquivo keycodes.js dentro da pasta helpers:
+
+export const enterCode = 13;
+
+E então importaria essa variavel no arquivo principal:
+
+...
+  function handleKeyDown(event) {
+    if (event.keyCode === enterCode) {
+      console.log("handleKeyDown", event)
+    }
+  }
+...
+
+////////////////////////////////////////////////////////////////&&&
+REMOVENDO RELATIVE PATHS NO REACT
+
+É possível utilizar absolute paths ao invés de relative paths.
+
+-------------
+Modo create-react-app (sem vite)
+
+No arquivo jsconfig.json (ou tsconfig.json no typescript) adicione o bloco de código:
+    {
+      "compilerOptions": {
+        "baseUrl": "src",
+        "paths": {
+          "@components/*" : ["components/*"],
+          "@routes/*" : ["routes/*"],
+          "@contexts/*" : ["contexts/*"],
+          "@services/*" : ["services/*"],
+        }
+      },
+      "include": ["src"]
+    }
+
+Desta forma, toda vez que for importar algum componente, não é necessário começar com ./ ou ../
+Por exemplo:
+
+import ComponenteA from '@components/ComponenteA'
+
+---------------
+Modo create react-vite:
+LINK: https://dev.to/mizanrifat/streamlining-absolute-imports-in-react-with-typescript-and-vite-2bpp
+
+Adicione o codigo abaixo no arquivo vite.config.js:
+
+ import path from 'path';
+
+ export default {
+   // ...other config options
+   resolve: {
+     alias: {
+       '@assets': path.resolve(__dirname, 'src/assets'),
+       '@components': path.resolve(__dirname, 'src/components'),
+       '@services': path.resolve(__dirname, 'src/services'),
+       '@routes': path.resolve(__dirname, 'src/routes'),
+       // ...other aliases
+     },
+   },
+ };
+
+Para importar o componente:
+
+import ComponenteA from '@components/ComponenteA'
+
+------
+
+No typescript teria que adicionar o codigo abaixo:
+
+No arquivo tsconfig.json:
+
+ {
+   "compilerOptions": {
+     "baseUrl": ".",
+     "paths": {
+       "@/assets": ["./src/assets/*"],
+       "@/components": ["./src/components/*"],
+       // ...other paths
+     }
+   }
+ }
+
+OBS: Não consegui fazer funcionar no typescript!!!
+
+/////////////////////////////////////////////////////////////// &&&
 
 
 

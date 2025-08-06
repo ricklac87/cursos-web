@@ -753,7 +753,7 @@ export default function App() {
 
   return (
     <>
-      <Teste texto={"TEXTO DE EXEMPLO"} />{" "}
+      <Teste texto={"TEXTO DE EXEMPLO"} />
     </>
   )
 }
@@ -786,7 +786,7 @@ export default function App() {
 
   return (
     <>
-      <Teste nome={"Maria"} idade={23} estado={true}/>{" "}
+      <Teste nome={"Maria"} idade={23} estado={true}/>
     </>
   )
 }
@@ -817,7 +817,7 @@ export default function App() {
 
   return (
     <>
-      <Teste nome={"Maria"} />{" "}
+      <Teste nome={"Maria"} />
     </>
   )
 }
@@ -858,7 +858,20 @@ export default function App() {
   )
 }
 
--------------------- ### ***
+--------------------- ### ***
+Props sem campos:
+
+interface ComponenteProps {}
+
+export default function Componente({}: ComponenteProps){
+	return (
+		<>
+      ...
+    </>
+	)
+}
+
+-------------------- ### 
 Aceitando mais de um tipo de variavel:
 
 -Arquivo teste.tsx:
@@ -1432,17 +1445,612 @@ export default userUpdate;
 TYPESCRIPT COM REACT
 USECONTEXT
 
-Exemplo simples:
+Passando apenas o valor através do contexto:
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext } from 'react';
+
+export interface IContexto {
+  txt: string;
+}
+
+export const Contexto = createContext<IContexto>({txt: "Texto de exemplo"});
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import { useContext } from 'react';
+import {Contexto} from './components/ComponentePai'
+
+export default function App(){
+
+  const dados = useContext(Contexto);
+
+  return (
+    <>
+      <h1>{dados.txt}</h1>
+    </>
+  )
+};
+
+-----------
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext } from 'react';
+
+interface IContexto {
+  nome: string;
+  idade: string;
+}
+
+export const Contexto = createContext<IContexto>({
+  nome: "Maria",
+  idade: "22 anos",
+});
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import { useContext } from 'react';
+import { Contexto } from './components/ComponentePai';
+
+export default function App() {
+  const dados = useContext(Contexto);
+
+  return (
+    <>
+      <h1>{dados.nome}</h1>
+      <h2>{dados.idade}</h2>
+    </>
+  );
+}
+
+-----------------
 
 
 
+---------------------------- ###
+
+import { createContext } from 'react';
+
+interface IContexto {
+  nome: string;
+  idade: string;
+}
+
+export const Contexto = createContext<IContexto>({
+  nome: "Sem nome",
+  idade: "Sem idade",
+});
+
+interface ComponentePaiProps {
+  children: React.ReactNode;
+}
+
+export default function ComponentePai({ children }: ComponentePaiProps) {
+  return (
+    <Contexto.Provider value={{nome: "Carlos", idade:"35 anos"}}>
+      {children}
+    </Contexto.Provider>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.tsx:
+
+import { useContext } from 'react';
+import { Contexto } from './ComponentePai';
+
+interface IDados {
+  nome: string;
+  idade: string;
+}
+
+export default function ComponenteFilho() {
+  const dados: IDados = useContext(Contexto);
+  
+  return (
+    <>
+      <h1>{dados.nome}</h1>
+      <h2>{dados.idade}</h2>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import ComponenteFilho from './components/ComponenteFilho';
+import ComponentePai from './components/ComponentePai';
+
+export default function App() {
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  );
+}
+
+------------------ ###
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext } from 'react';
+
+interface IContexto {
+  nome: string | undefined;
+  idade: string | undefined;
+}
+
+export const Contexto = createContext<IContexto>({
+  nome: undefined,
+  idade: undefined,
+});
+
+interface ComponentePaiProps {
+  children: React.ReactNode;
+}
+
+export default function ComponentePai({ children }: ComponentePaiProps) {
+  return (
+    <Contexto.Provider value={{nome: "Sem nome", idade:"Sem idade"}}>
+      {children}
+    </Contexto.Provider>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteFilho.tsx:
+
+import { useContext } from 'react';
+import { Contexto } from './ComponentePai';
+
+interface IDados {
+  nome: string | undefined;
+  idade: string | undefined;
+}
+
+export default function ComponenteFilho() {
+  const dados: IDados = useContext(Contexto);
+  
+  return (
+    <>
+      <h1>{dados.nome = "Maria"}</h1>
+      <h2>{dados.idade = "44 anos"}</h2>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import ComponenteFilho from './components/ComponenteFilho';
+import ComponentePai from './components/ComponentePai';
+
+export default function App() {
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  );
+}
+
+------------------- ###
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext } from 'react';
+
+interface IContexto {
+  txt: string;
+}
+
+export const Contexto = createContext<IContexto>({txt: "Texto inicial"});
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const ComponentePai = ({children}: Props) => {
+  return (
+    <div>
+      <Contexto.Provider>
+        {children}
+      </Contexto.Provider>
+    </div>
+  );
+};
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import { useContext } from 'react';
+
+import {Contexto} from './components/ComponentePai'
+
+export default function App(){
+  const {txt} = useContext(Contexto);
+  return (
+    <>
+      <h1>{txt}</h1>
+    </>
+  )
+};
+
+>>> Texto inicial
+
+-------------------- ### ***
+
+-Arquivo ComponentePai.jsx:
+
+import { createContext, useState } from 'react';
+
+interface IContexto {
+  txt: string | undefined;
+  setTxt: (value: string) => void;
+}
+
+export const Contexto = createContext<IContexto>({
+  txt: undefined,
+  setTxt: () => {},
+});
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const ComponentePai = ({ children }: Props) => {
+  const [txt, setTxt] = useState<string>('Texto de exemplo');
+
+  return (
+    <>
+      <Contexto.Provider value={{txt, setTxt}}>
+        {children}
+      </Contexto.Provider>
+    </>
+  );
+}
 
 
+¨¨¨¨
+-Arquivo ComponenteFilho.jsx:
+
+import { useContext } from 'react';
+import {Contexto} from './ComponentePai'
+
+export const ComponenteFilho = () => {
+  const {txt} = useContext(Contexto)
+  return (
+    <>
+    <h1>{txt}</h1>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import {ComponenteFilho} from './components/ComponenteFilho';
+import {ComponentePai} from './components/ComponentePai';
+
+export default function App() {
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  );
+}
+
+-------------- ###
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext, useState } from 'react';
+
+interface IContexto {
+  cor: string | undefined;
+  txt: string | undefined;
+}
+
+export const Contexto = createContext<IContexto>({
+  cor: undefined,
+  txt: undefined,
+});
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const ComponentePai = ({children}: Props) => {
+  const [cor, setCor] = useState<string | undefined>("blue");
+  const [txt, setTxt] = useState<string | undefined>("Texto azul");
+  
+  return (
+    <Contexto.Provider value={{ cor, txt }}>
+      {children}
+    </Contexto.Provider>
+  );
+};
+
+¨¨¨¨
+-Arquivo ComponenteFilho.tsx:
+
+import {useContext} from "react";
+import {Contexto} from "./ComponentePai";
+
+export const ComponenteFilho = () => {
+  const {cor, txt} = useContext(Contexto);
+
+  return (
+    <>
+      <div style={{color: cor}}>
+        <h2>{txt}</h2>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import {ComponentePai} from './components/ComponentePai'
+import {ComponenteFilho} from './components/ComponenteFilho'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+---------------- ###
+Toggle com useContext e booleans:
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext, useState } from 'react';
+
+interface IContexto {
+  theme: boolean;
+  setTheme: (value: boolean) => void;
+}
+
+export const Contexto = createContext<IContexto>({
+  theme: true,
+  setTheme: (prevTheme) => !prevTheme,                //Ou setTheme: () => {},
+});
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const ComponentePai = ({children}: Props) => {
+  const [theme, setTheme] = useState<boolean>(true);
+
+  return (
+    <Contexto.Provider value={{ theme, setTheme }}>
+      {children}
+    </Contexto.Provider>
+  );
+};
+
+¨¨¨¨
+-Arquivo ComponenteFilho.tsx:
+
+import {useContext} from "react";
+import {Contexto} from "./ComponentePai";
+
+export const ComponenteFilho = () => {
+  const {theme, setTheme} = useContext(Contexto)
+
+  const themeStyles = {
+    backgroundColor: theme ? 'white' : 'black',
+    color: theme ? 'black' : 'white',    
+  }
+  
+  const toggleTheme = () => {
+    setTheme(!theme);
+  }
+
+  return (
+    <>
+      <button onClick={toggleTheme}>Toogle</button>
+      <div style={themeStyles}>
+        <h1>Texto de exemplo</h1>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import {ComponentePai} from './components/ComponentePai'
+import {ComponenteFilho} from './components/ComponenteFilho'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+----------------
+
+Outra forma:
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext, useState } from 'react';
+
+interface IContexto {
+  theme: boolean;
+  setTheme: (value: boolean) => void;
+  toggleTheme: () => void;
+}
+
+export const Contexto = createContext<IContexto>({
+  theme: true,
+  setTheme: () => {},
+  toggleTheme: () => {},
+});
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const ComponentePai = ({children}: Props) => {
+  const [theme, setTheme] = useState<boolean>(true);
+
+  const toggleTheme = () => {
+    setTheme(!theme);
+  }
+
+  return (
+    <Contexto.Provider value={{ theme , setTheme, toggleTheme }}>
+      {children}
+    </Contexto.Provider>
+  );
+};
+
+¨¨¨¨
+-Arquivo ComponenteFilho.tsx:
+
+import {useContext} from "react";
+import {Contexto} from "./ComponentePai";
+
+export const ComponenteFilho = () => {
+  const {theme, toggleTheme} = useContext(Contexto)
+
+  const themeStyles = {
+    backgroundColor: theme ? 'white' : 'black',
+    color: theme ? 'black' : 'white',    
+  }
+
+  return (
+    <>
+      <button onClick={toggleTheme}>Toogle</button>
+      <div style={themeStyles}>
+        <h1>Texto de exemplo</h1>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import {ComponentePai} from './components/ComponentePai'
+import {ComponenteFilho} from './components/ComponenteFilho'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
+
+--------------------- ###
+Toggle com useContext e strings:
+
+-Arquivo ComponentePai.tsx:
+
+import { createContext, useState } from 'react';
+
+interface IContexto {
+  theme: string | null;
+  setTheme: (value: string) => void;
+  toggleTheme: () => void;
+}
+
+export const Contexto = createContext<IContexto>({
+  theme: "light",
+  setTheme: () => {},
+  toggleTheme: () => {},
+});
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const ComponentePai = ({children}: Props) => {
+  const [theme, setTheme] = useState<string | null>("light");
+
+  const toggleTheme = () => {
+    if (theme === "light") {
+      return setTheme("dark");
+    }
+    return setTheme("light");
+  };
+
+  return (
+    <Contexto.Provider value={{ theme, setTheme, toggleTheme }}>
+      {children}
+    </Contexto.Provider>
+  );
+};
+
+¨¨¨¨
+-Arquivo ComponenteFilho.tsx:
+
+import {useContext} from "react";
+import {Contexto} from "../components/ComponentePai";
+
+export const ComponenteFilho = () => {
+  const {theme, toggleTheme} = useContext(Contexto);
+
+  return (
+    <>
+      <div
+        style={{
+          backgroundColor: theme === "light" ? "#eee" : "#333",
+          color: theme === "dark" ? "#eee" : "#333",
+        }}
+      >
+        <h1>Tema atual: {theme}</h1>
+        <button onClick={toggleTheme}>Toggle Theme</button>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import {ComponentePai} from './components/ComponentePai'
+import {ComponenteFilho} from './components/ComponenteFilho'
+
+export default function App(){
+  return (
+    <>
+      <ComponentePai>
+        <ComponenteFilho />
+      </ComponentePai>
+    </>
+  )
+};
 
 --------------------- ###
 VIDEO: https://www.youtube.com/embed/665UnOGx3Pg?autoplay=1
 
-Exemplo complicado:
+CRUD com useContext:
 
 -Arquivo UserContextProvider.tsx:
 
@@ -1715,5 +2323,31 @@ export function Teste({nome}: React.FC<Props>) {
 
 //////////////////////////////////////////////////////////////// &&&
 TYPESCRIPT COM REACT
+TAILWIND
 
+Instalação:
+npm install tailwindcss @tailwindcss/vite
+
+¨¨¨¨
+No arquivo vite.config.ts adicione o tailwind:
+
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
+export default defineConfig({
+  plugins: [
+    react(),                //opcional
+    tailwindcss(),
+  ],
+})
+
+¨¨¨¨
+
+Importação:
+@import "tailwindcss";
+
+¨¨¨¨
+Remova o css de App.css e index.css se necessário.
+
+//////////////////////////////////////////////////////////// &&&
+TYPESCRIPT COM REACT
 
