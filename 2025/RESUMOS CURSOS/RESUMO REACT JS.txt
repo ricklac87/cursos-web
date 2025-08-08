@@ -3774,7 +3774,7 @@ function SomeComponent() {
 <Route path="/posts/:postId" element={<Post />} />;
 
 ////////////////////////////////////////////////////// &&&
-USANDO O REACT-ROUTER   ***
+USANDO O REACT-ROUTER  
 PROVIDER, LINK, OUTLET E BROWSER ROUTER (Forma atual)
 
 -Arquivo Contato.jsx:
@@ -8755,7 +8755,7 @@ export default function App(){
 }
 
 ---------------------------- ###
-Salvando as tarefas no local storage:
+Salvando as tarefas no local storage: 
 
 import { useState, useEffect } from 'react'
 
@@ -8895,7 +8895,8 @@ export default function App(){
   )
 }
 
------------------------------ ###
+
+------------------------------ ###
 
 import { useState } from 'react';
 
@@ -9016,6 +9017,1469 @@ export default function App(){
     </>
   )
 }
+
+----------------------------- ###
+TODO LIST COM CHECKBOX, EDIÇÃO, LOCALSTORAGE
+VIDEO: https://www.youtube.com/embed/EbnmosN64JQ?autoplay=1
+
+Inserindo adicionar e remover:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [todo, setTodo] = useState("")
+
+  function addTodo(e){                             
+    e.preventDefault()                                     //Caso não use Formik ou react-hook-form
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          //OU id: Date.now()
+        txt: todo,
+        completed: false,
+      }
+      
+      setTodos(prev => [...prev].concat(newTodo))        
+      //OU setTodos([...todos].concat(newTodo)) 
+      //OU setTodos(prev => [...prev, newTodo]) 
+      //OU setTodos(prev => [...prev, { id: new Date().getTime(), txt: todo, completed: false }])
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo(id) {
+    const updatedTodos = (prev) => [...prev].filter((task) => task.id !== id)
+    //OU const updatedTodos = [...todos].filter((task) => task.id !== id)
+    //OU setTodos(todos.filter((task) => task.id !== id))
+      
+    setTodos(updatedTodos)
+  } 
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.map((task) => 
+        <div key={task.id}>
+          <h2>{task.txt}</h2>
+
+          <button onClick={() => deleteTodo(task.id)}>Remover</button>
+
+        </div>)
+      }
+    </div>
+  )
+} 
+
+--------- %%%
+Adicionando checkbox:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [todo, setTodo] = useState("")
+
+  function addTodo(e){                             
+    e.preventDefault()                                     
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          
+        txt: todo,
+        completed: false,
+      }
+      
+      setTodos(prev => [...prev].concat(newTodo))              
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo(id) {
+    const updatedTodos = (prev) => [...prev].filter((task) => task.id !== id)
+      
+    setTodos(updatedTodos)
+  } 
+
+  function toggleComplete(id){
+    const updatedTodos = [...todos].map((task) => {       
+      if (task.id === id) {
+        task.completed = !task.completed
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.map((task) => 
+        <div key={task.id}>
+
+          <h2 
+            style={{ 
+              textDecoration: task.completed ? "line-through" : "", 
+              color: task.completed ? "green" : "red", 
+            }}>
+              {task.txt}
+          </h2>
+          
+          <button onClick={() => deleteTodo(task.id)}>Remover</button>
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+        
+        </div>)
+      }
+    </div>
+  )
+} 
+
+---------------- %%%
+Adicionando botão para remover tarefas selecionadas:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [todo, setTodo] = useState("")
+
+  function addTodo(e){                             
+    e.preventDefault()                                     
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          
+        txt: todo,
+        completed: false,
+      }
+
+      setTodos(prev => [...prev].concat(newTodo))              
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo() {
+    const updatedTodos = todos.filter((task) => !task.completed)
+    setTodos(updatedTodos)
+  } 
+
+  function toggleComplete(id){
+    const updatedTodos = [...todos].map((task) => {       
+      if (task.id === id) {
+        task.completed = !task.completed
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.some(task => task.completed) ? <button onClick={deleteTodo}>Remover selecionados</button> : ''}
+      //OU {todos.some(task => task.completed) && <button onClick={deleteTodo}>Remover selecionados</button>}
+
+      {todos.map((task) => 
+        <div key={task.id}>
+
+          <h2 
+            style={{ 
+              textDecoration: task.completed ? "line-through" : "", 
+              color: task.completed ? "green" : "red", 
+            }}>
+              {task.txt}
+          </h2>
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+
+        </div>)
+      }
+    </div>
+  )
+}
+
+--------------------- %%%
+Adicionando uma forma de editar as tarefas: (FORMA 1 - AI)
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [todo, setTodo] = useState("")
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
+
+  function addTodo(e){                             
+    e.preventDefault()                                     
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          
+        txt: todo,
+        completed: false,
+      }
+
+      setTodos(prev => [...prev].concat(newTodo))              
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo() {
+    const updatedTodos = todos.filter((task) => !task.completed)
+    setTodos(updatedTodos)
+  } 
+
+  function toggleComplete(id){
+    const updatedTodos = [...todos].map((task) => {       
+      if (task.id === id) {
+        task.completed = !task.completed
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+  }
+
+  function editTodo(id, txt) {
+    setEditingId(id);
+    setEditText(txt);
+  }
+
+  function updateTodo(id) {
+    const updatedTodos = [...todos].map((task) => {
+      if (task.id === id) {
+        task.txt = editText;
+      }
+      return task;
+    });
+    setTodos(updatedTodos);
+    setEditingId(null);
+    setEditText("");
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.some(task => task.completed) && <button onClick={deleteTodo}>Remover selecionados</button>}
+
+      {todos.map((task) => 
+        <div key={task.id}>
+          {editingId === task.id 
+          ? 
+          (
+            <div>
+              <input
+                type="text"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+              />
+              <button onClick={() => updateTodo(task.id)}>Salvar</button>
+            </div>
+          ) 
+          : 
+          (
+            <div>
+              <h2 
+                style={{ 
+                  textDecoration: task.completed ? "line-through" : "", 
+                  color: task.completed ? "green" : "red", 
+                }}>
+                  {task.txt}
+              </h2>
+              <button onClick={() => editTodo(task.id, task.txt)}>Editar</button>
+            </div>
+          )}
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+
+        </div>)
+      }
+    </div>
+  )
+}
+
+--------------------- %%%
+Adicionando uma forma de editar as tarefas: (FORMA 2 - VIDEO)
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [todo, setTodo] = useState("")
+  const [editingTodo, setEditingTodo] = useState(null)
+  const [editText, setEditText] = useState("")
+
+  function addTodo(e){                             
+    e.preventDefault()                                     
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          
+        txt: todo,
+        completed: false,
+      }
+      
+      setTodos(prev => [...prev].concat(newTodo))              
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo(id) {
+    const updatedTodos = (prev) => [...prev].filter((task) => task.id !== id)
+      
+    setTodos(updatedTodos)
+  } 
+
+  function toggleComplete(id){
+    const updatedTodos = [...todos].map((task) => {       
+      if (task.id === id) {
+        task.completed = !task.completed
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+  }
+
+  function editTodo(id){
+    const updatedTodos = [...todos].map((task) => {
+      if (task.id === id) {
+        task.txt = editText
+      }
+      return task
+    })
+    
+    setTodos(updatedTodos)
+    setEditingTodo(null)
+    setEditText("")
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.map((task) => 
+        <div key={task.id}>
+
+          {editingTodo === task.id 
+          ? 
+            (<input type="text" onChange={(e) => setEditText(e.target.value)} value={editText} />)
+          :
+            (<h2>{task.txt}</h2>)
+          }
+          
+          <button onClick={() => deleteTodo(task.id)}>Remover</button>
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+          
+          {editingTodo === task.id 
+          ?
+            (<button onClick={() => editTodo(task.id)}>Enviar mudanças</button>)
+          :
+            (<button onClick={() => setEditingTodo(task.id)}>Editar</button>)
+          }
+
+        </div>)
+      }
+    </div>
+  )
+} 
+
+----
+Versão enxuta:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [todo, setTodo] = useState("")
+  const [editingTodo, setEditingTodo] = useState(null)
+  const [editText, setEditText] = useState("")
+
+  function addTodo(e){                             
+    e.preventDefault()                                     
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          
+        txt: todo,
+        completed: false,
+      }
+
+      setTodos(prev => [...prev, newTodo])             //OU setTodos([...todos, newTodo])           
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo(id) {
+    setTodos(todos.filter((task) => task.id !== id))
+  } 
+
+  function toggleComplete(id){
+    const updatedTodos = [...todos].map((task) => {       
+      if (task.id === id) {
+        task.completed = !task.completed
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+  }
+
+  function editTodo(id){
+    const updatedTodos = [...todos].map((task) => {
+      if (task.id === id) {
+        task.txt = editText
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+    setEditingTodo(null)
+    setEditText("")
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.map((task) => 
+        <div key={task.id}>
+
+          {editingTodo === task.id 
+          ? 
+            (<input type="text" onChange={(e) => setEditText(e.target.value)} value={editText} />)
+          :
+            (<h2>{task.txt}</h2>)
+          }
+
+          <button onClick={() => deleteTodo(task.id)}>Remover</button>
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+
+          {editingTodo === task.id 
+          ?
+            (<button onClick={() => editTodo(task.id)}>Enviar mudanças</button>)
+          :
+            (<button onClick={() => setEditingTodo(task.id)}>Editar</button>)
+          }
+
+        </div>)
+      }
+    </div>
+  )
+}
+
+--------------------- %%%
+Salvando os todos no local storage usando useEffect: (Exemplo do Video)
+
+import {useState, useEffect} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState( JSON.parse(localStorage.getItem("todos")) ?? []);
+  const [todo, setTodo] = useState("")
+  const [editingTodo, setEditingTodo] = useState(null)
+  const [editText, setEditText] = useState("")
+
+  useEffect(() => {
+    const temp = JSON.stringify(todos)
+    localStorage.setItem("todos", temp)
+  }, [todos])
+
+  function addTodo(e){                             
+    e.preventDefault()                                     
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          
+        txt: todo,
+        completed: false,
+      }
+
+      setTodos(prev => [...prev, newTodo])             //OU setTodos([...todos, newTodo])           
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo(id) {
+    setTodos(todos.filter((task) => task.id !== id))
+  } 
+
+  function toggleComplete(id){
+    const updatedTodos = [...todos].map((task) => {       
+      if (task.id === id) {
+        task.completed = !task.completed
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+  }
+
+  function editTodo(id){
+    const updatedTodos = [...todos].map((task) => {
+      if (task.id === id) {
+        task.txt = editText
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+    setEditingTodo(null)
+    setEditText("")
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.map((task) => 
+        <div key={task.id}>
+
+          {editingTodo === task.id 
+          ? 
+            (<input type="text" onChange={(e) => setEditText(e.target.value)} value={editText} />)
+          :
+            (<h2>{task.txt}</h2>)
+          }
+
+          <button onClick={() => deleteTodo(task.id)}>Remover</button>
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+
+          {editingTodo === task.id 
+          ?
+            (<button onClick={() => editTodo(task.id)}>Enviar mudanças</button>)
+          :
+            (<button onClick={() => setEditingTodo(task.id)}>Editar</button>)
+          }
+
+        </div>)
+      }
+    </div>
+  )
+}
+
+--------------- %%%
+Salvando no local Storage (exemplo da AI)
+
+import {useState, useEffect} from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState(() => {
+    const storedTasks = localStorage.getItem('todos');
+    return storedTasks ? JSON.parse(storedTasks) : [];
+  })
+  //const [todos, setTodos] = useState( JSON.parse(localStorage.getItem("todos")) ?? []);
+  const [todo, setTodo] = useState("")
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
+
+  useEffect(() => {
+    const temp = JSON.stringify(todos)
+    localStorage.setItem("todos", temp)
+  }, [todos])
+
+  function addTodo(e){                             
+    e.preventDefault()                                     
+
+    if(todo.trim() !== ""){ 
+      const newTodo = {
+        id: new Date().getTime(),                          
+        txt: todo,
+        completed: false,
+      }
+
+      setTodos(prev => [...prev].concat(newTodo))              
+
+      setTodo("")
+    }
+  }
+
+  function deleteTodo() {
+    const updatedTodos = todos.filter((task) => !task.completed)
+    setTodos(updatedTodos)
+  } 
+
+  function toggleComplete(id){
+    const updatedTodos = [...todos].map((task) => {       
+      if (task.id === id) {
+        task.completed = !task.completed
+      }
+      return task
+    })
+
+    setTodos(updatedTodos)
+  }
+
+  function editTodo(id, txt) {
+    setEditingId(id);
+    setEditText(txt);
+  }
+
+  function updateTodo(id) {
+    const updatedTodos = [...todos].map((task) => {
+      if (task.id === id) {
+        task.txt = editText;
+      }
+      return task;
+    });
+    setTodos(updatedTodos);
+    setEditingId(null);
+    setEditText("");
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTodo}>
+        <input type="text" value={todo} onChange={(e) => setTodo(e.target.value)} />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {todos.some(task => task.completed) && <button onClick={deleteTodo}>Remover selecionados</button>}
+
+      {todos.map((task) => 
+        <div key={task.id}>
+          {editingId === task.id ? (
+            <div>
+              <input
+                type="text"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+              />
+              <button onClick={() => updateTodo(task.id)}>Salvar</button>
+            </div>
+          ) : (
+            <div>
+              <h2 
+                style={{ 
+                  textDecoration: task.completed ? "line-through" : "", 
+                  color: task.completed ? "green" : "red", 
+                }}>
+                  {task.txt}
+              </h2>
+              <button onClick={() => editTodo(task.id, task.txt)}>Editar</button>
+            </div>
+          )}
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+
+        </div>)
+      }
+    </div>
+  )
+}
+
+-------------------------------------- ###
+TODO LIST COM BARRA DE PESQUISA, FILTRO, CATEGORIAS E ORDEM 
+VIDEO: https://www.youtube.com/embed/YVEVrigByKY
+
+Recebendo os dados das tarefas salvas:
+
+import { useState } from 'react'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([
+    {
+      id: 1,
+      text: "Tarefa 1",
+      category: "Trabalho",
+      isCompleted: false,
+    },
+    {
+      id: 2,
+      text: "Tarefa 2",
+      category: "Pessoal",
+      isCompleted: false,
+    },
+    {
+      id: 3,
+      text: "Tarefa 3",
+      category: "Estudos",
+      isCompleted: false,
+    },
+  ])
+
+  return(
+    <>
+      <div>
+        {todos.map((todo) => (
+            
+          <div>
+            <h2>{todo.text}</h2>
+            <p>{todo.category}</p>
+          </div>
+
+          <div>
+            <button>Completar</button>
+            <button>Remover</button>
+          </div>
+            
+          <hr />
+
+        ))}
+      </div>
+    </>
+  )
+}
+
+-------------- %%%
+Separando o todo em um componente separado
+
+-Arquivo Todo.jsx dentro da pasta components:
+
+export default function Todo({todo}){
+
+  return(
+    <div>
+      <div>
+        <h2>{todo.text}</h2>
+        <p>{todo.category}</p>
+      </div>
+
+      <div>
+        <button>Completar</button>
+        <button>Remover</button>
+      </div>
+        
+      <hr />
+    </div>
+  )
+}
+
+-----
+-Arquivo App.jsx:
+
+import { useState } from 'react'
+import Todo from './components/Todo'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([
+    {
+      id: 1,
+      text: "Tarefa 1",
+      category: "Trabalho",
+      isCompleted: false,
+    },
+    {
+      id: 2,
+      text: "Tarefa 2",
+      category: "Pessoal",
+      isCompleted: false,
+    },
+    {
+      id: 3,
+      text: "Tarefa 3",
+      category: "Estudos",
+      isCompleted: false,
+    },
+  ])
+
+  return(
+    <>
+      <div>
+        {todos.map((todo) => (           
+          <Todo todo={todo} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+--------------- %%%
+Criando um componente para adicionar tarefas:
+
+-Arquivo TodoForm.jsx dentro da pasta components:
+
+import { useState } from 'react'
+
+export default function TodoForm({addTodo}){
+
+  const [value, setValue] = useState("")
+  const [category, setCategory] = useState("")
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if(!value || !category) return;
+    addTodo(value, category);
+    setValue("");
+    setCategory("");
+  }
+
+  return(
+    <div>
+      <form onSubmit={handleSubmit}>
+
+        <input 
+          type="text" 
+          placeholder="Digite a nova tarefa"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+
+        <select 
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="">Selecione a categoria:</option>
+          <option value="Categoria1">CATEGORIA 1</option>
+          <option value="Categoria2">CATEGORIA 2</option>
+          <option value="Categoria3">CATEGORIA 3</option>
+        </select>
+
+        <button type="submit">Criar tarefa</button>
+      </form>
+    </div>
+  )
+}
+
+--------
+-Arquivo App.jsx:
+
+import { useState } from 'react'
+import Todo from './components/Todo'
+import TodoForm from './components/TodoForm'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+
+  function addTodo(text, category) {
+    const newTodos = [...todos, {
+      id: Math.floor(Math.random() * 1000),
+      text, 
+      category, 
+      isCompleted: false,
+    }]
+
+    setTodos(newTodos)
+  }
+
+  return(
+    <>
+      <TodoForm addTodo={addTodo} />
+
+      <div>
+        {todos.map((todo) => (    
+          <Todo key={todo.id} todo={todo} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+----------------- %%%
+Adicionando um botão de remover tarefas:
+
+-Arquivo App.jsx:
+
+import { useState } from 'react'
+import Todo from './components/Todo'
+import TodoForm from './components/TodoForm'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+
+  function addTodo(text, category) {
+    const newTodos = [...todos, {
+      id: Math.floor(Math.random() * 1000),
+      text, 
+      category, 
+      isCompleted: false,
+    }]
+
+    setTodos(newTodos)
+  }
+
+  function removeTodo(id) {
+    const filterTodos = [...todos].filter(todo => todo.id !== id ? todo : null)
+
+    setTodos(filterTodos)
+  }
+
+  return(
+    <>
+      <TodoForm addTodo={addTodo} />
+
+      <div>
+        {todos.map((todo) => (    
+          <Todo key={todo.id} todo={todo} removeTodo={removeTodo} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+----------
+--Arquivo Todo.jsx dentro da pasta components:
+
+export default function Todo({todo, removeTodo}){
+
+  return(
+    <div>
+      <div>
+        <h2>{todo.text}</h2>
+        <p>{todo.category}</p>
+      </div>
+
+      <div>
+        <button>Completar</button>
+        <button onClick={() => removeTodo(todo.id)}>Remover</button>
+      </div>
+        
+      <hr />
+    </div>
+  )
+}
+
+---------------- %%%
+Adicionando botão para completar tarefa: (sem checkbox)
+
+-Arquivo App.jsx:
+
+import { useState } from 'react'
+import Todo from './components/Todo'
+import TodoForm from './components/TodoForm'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+
+  function addTodo(text, category) {
+    const newTodos = [...todos, {
+      id: Math.floor(Math.random() * 1000),
+      text, 
+      category, 
+      isCompleted: false,
+    }]
+
+    setTodos(newTodos)
+  }
+
+  function removeTodo(id) {
+    const filterTodos = [...todos].filter(todo => todo.id !== id ? todo : null)
+
+    setTodos(filterTodos)
+  }
+
+  function completeTodo(id) {
+    const completedTodos = [...todos].map((todo) => 
+      todo.id === id ? {...todo, isCompleted: !todo.isCompleted} : todo
+    )
+    setTodos(completedTodos)
+  }
+
+  return(
+    <>
+      <TodoForm addTodo={addTodo} />
+
+      <div>
+        {todos.map((todo) => (    
+          <Todo key={todo.id} todo={todo} removeTodo={removeTodo} completeTodo={completeTodo} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+----------
+--Arquivo Todo.jsx dentro da pasta components:
+
+export default function Todo({todo, removeTodo, completeTodo}){
+
+  return(
+    <div>
+      <div 
+        style={{ 
+          color: todo.isCompleted ? "green" : "red", 
+          textDecoration: todo.isCompleted ? "line-through" : ""
+      }}>
+        <h2>{todo.text}</h2>
+        <p>{todo.category}</p>
+      </div>
+      
+      <div>
+        <button onClick={() => completeTodo(todo.id)}>{todo.isCompleted ? "NÃO REALIZADA" : "COMPLETAR" }</button>
+        <button onClick={() => removeTodo(todo.id)}>Remove</button>
+      </div>
+
+      <hr />
+    </div>
+  )
+}
+
+--------------------------- %%%
+Adicionando uma barra de busca:
+
+-Arquivo Search.jsx dentro da pasta components:
+
+export default function Search({search, setSearch}){
+
+  return(
+    <div>
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Digite o que você busca..."
+      />
+
+      <hr />
+    </div>
+  )
+}
+
+------------
+-Arquivo App.jsx:
+
+import { useState } from 'react'
+import Todo from './components/Todo'
+import TodoForm from './components/TodoForm'
+import Search from './components/Search'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [search, setSearch] = useState("")
+
+  function addTodo(text, category) {
+    const newTodos = [...todos, {
+      id: Math.floor(Math.random() * 1000),
+      text, 
+      category, 
+      isCompleted: false,
+    }]
+
+    setTodos(newTodos)
+  }
+
+  function removeTodo(id) {
+    const filterTodos = [...todos].filter(todo => todo.id !== id ? todo : null)
+
+    setTodos(filterTodos)
+  }
+
+  function completeTodo(id) {
+    const completedTodos = [...todos].map((todo) => 
+      todo.id === id ? {...todo, isCompleted: !todo.isCompleted} : todo
+    )
+    setTodos(completedTodos)
+  }
+
+  return(
+    <>
+      <Search search={search} setSearch={setSearch} />
+
+      <TodoForm addTodo={addTodo} />
+
+      <div>
+        {todos
+          .filter((todo) => todo.text.toLowerCase().includes(search.toLowerCase()))
+          .map((todo) => (    
+            <Todo key={todo.id} todo={todo} removeTodo={removeTodo} completeTodo={completeTodo} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+------------------------ %%%
+Adicionando filtro de ordenação:
+
+-Arquivo Filter.jsx dentro da pasta components:
+
+export default function Filter({filter, setFilter, setSort}){
+
+  return(
+    <div>
+      <h3>Filtrar:</h3>
+
+      <div>
+        <p>Status:</p>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+          <option value="All">Todas</option>
+          <option value="Completed">Completas</option>
+          <option value="Incomplete">Incompletas</option>
+        </select>
+      </div>
+
+      <hr />
+
+      <div>
+        <p>Ordem alfabética:</p>
+        <button onClick={() => setSort("Asc")}>Asc</button>
+        <button onClick={() => setSort("Desc")}>Desc</button>
+      </div>
+
+      <hr />
+    </div>
+  )
+}
+
+-------------
+-Arquivo App.jsx:
+
+import { useState } from 'react'
+import Todo from './components/Todo'
+import TodoForm from './components/TodoForm'
+import Search from './components/Search'
+import Filter from './components/Filter'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [search, setSearch] = useState("")
+  const [filter, setFilter] = useState("All")
+  const [sort, setSort] = useState("Asc")
+
+
+  function addTodo(text, category) {
+    const newTodos = [...todos, {
+      id: Math.floor(Math.random() * 1000),
+      text, 
+      category, 
+      isCompleted: false,
+    }]
+
+    setTodos(newTodos)
+  }
+
+  function removeTodo(id) {
+    const filterTodos = [...todos].filter(todo => todo.id !== id ? todo : null)
+
+    setTodos(filterTodos)
+  }
+
+  function completeTodo(id) {
+    const completedTodos = [...todos].map((todo) => 
+      todo.id === id ? {...todo, isCompleted: !todo.isCompleted} : todo
+    )
+    setTodos(completedTodos)
+  }
+
+  return(
+    <>
+      <Search search={search} setSearch={setSearch} />
+
+      <Filter filter={filter} setFilter={setFilter} setSort={setSort} />
+
+      <TodoForm addTodo={addTodo} />
+
+      <div>
+        {todos
+          .filter((todo) => filter === "All" ? true : filter === "Completed" ? todo.isCompleted : !todo.isCompleted)
+          .filter((todo) => todo.text.toLowerCase().includes(search.toLowerCase()))
+          .sort((a, b) => sort === "Asc" ? a.text.localeCompare(b.text) : b.text.localeCompare(a.text))
+          .map((todo) => (    
+            <Todo key={todo.id} todo={todo} removeTodo={removeTodo} completeTodo={completeTodo} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+----------------------
+Os outros arquivos permanecem os mesmos:
+
+-Arquivo Todo.jsx:
+
+export default function Todo({todo, removeTodo, completeTodo}){
+
+  return(
+    <div>
+      <div 
+        style={{ 
+          color: todo.isCompleted ? "green" : "red", 
+          textDecoration: todo.isCompleted ? "line-through" : ""
+      }}>
+        <h2>{todo.text}</h2>
+        <p>{todo.category}</p>
+      </div>
+      
+      <div>
+        <button onClick={() => completeTodo(todo.id)}>{todo.isCompleted ? "NÃO REALIZADA" : "COMPLETAR" }</button>
+        <button onClick={() => removeTodo(todo.id)}>Remove</button>
+      </div>
+
+      <hr />
+    </div>
+  )
+}
+
+OUTRA FORMA COM CHECKBOX:
+
+export default function Todo({todo, removeTodo, completeTodo}){
+
+  return(
+    <div>
+      <div 
+        style={{ 
+          color: todo.isCompleted ? "green" : "red", 
+          textDecoration: todo.isCompleted ? "line-through" : ""
+      }}>
+        <h2>{todo.text}</h2>
+        <p>{todo.category}</p>
+      </div>
+      
+      <div>
+        <input type="checkbox" onChange={() => completeTodo(todo.id)} checked={todo.isCompleted} />    
+        {todo.isCompleted && <button onClick={() => removeTodo(todo.id)}>Remove</button>}   
+      </div>
+
+      <hr />
+    </div>
+  )
+}
+
+-----
+-Arquivo TodoForm.jsx:
+
+import { useState } from 'react'
+
+export default function TodoForm({addTodo}){
+
+  const [value, setValue] = useState("")
+  const [category, setCategory] = useState("")
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if(!value || !category) return;
+    addTodo(value, category);
+    setValue("");
+    setCategory("");
+  }
+
+  return(
+    <div>
+      <form onSubmit={handleSubmit}>
+
+        <input 
+          type="text" 
+          placeholder="Digite a nova tarefa"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+
+        <select 
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="">Selecione a categoria:</option>
+          <option value="Categoria1">CATEGORIA 1</option>
+          <option value="Categoria2">CATEGORIA 2</option>
+          <option value="Categoria3">CATEGORIA 3</option>
+        </select>
+
+        <button type="submit">Criar tarefa</button>
+
+        <hr />
+      </form>
+    </div>
+  )
+}
+
+-----
+-Arquivo Search.jsx:
+
+export default function Search({search, setSearch}){
+
+  return(
+    <div>
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Digite o que você busca..."
+      />
+
+      <hr />
+    </div>
+  )
+}
+
+---------------- ###
+Forma alternativa com botão único para remover tarefas selecionadas:
+
+-Arquivo Todo.jsx:
+
+export default function Todo({todo, completeTodo}){
+
+  return(
+    <div>
+      <div 
+        style={{ 
+          color: todo.isCompleted ? "green" : "red", 
+          textDecoration: todo.isCompleted ? "line-through" : ""
+      }}>
+        <h2>{todo.text}</h2>
+        <p>{todo.category}</p>
+      </div>
+      
+      <div>
+        <input type="checkbox" onChange={() => completeTodo(todo.id)} checked={todo.isCompleted} />
+      </div>
+
+      <hr />
+    </div>
+  )
+}
+
+--------
+-Arquivo TodoForm.jsx:
+
+import { useState } from 'react'
+
+export default function TodoForm({addTodo, removeTodo, todos}){
+
+  const [value, setValue] = useState("")
+  const [category, setCategory] = useState("")
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if(!value || !category) return;
+    addTodo(value, category);
+    setValue("");
+    setCategory("");
+  }
+
+  return(
+    <div>
+      <form onSubmit={handleSubmit}>
+
+        <input 
+          type="text" 
+          placeholder="Digite a nova tarefa"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+
+        <select 
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="">Selecione a categoria:</option>
+          <option value="Categoria1">CATEGORIA 1</option>
+          <option value="Categoria2">CATEGORIA 2</option>
+          <option value="Categoria3">CATEGORIA 3</option>
+        </select>
+
+        <button type="submit">Criar tarefa</button>
+
+        {todos.some(todo => todo.isCompleted) && <button onClick={removeTodo}>Remover tarefas selecionadas</button>}
+
+        <hr />
+      </form>
+    </div>
+  )
+}
+
+----------
+-Arquivo App.jsx:
+
+import { useState } from 'react'
+import Todo from './components/Todo'
+import TodoForm from './components/TodoForm'
+import Search from './components/Search'
+import Filter from './components/Filter'
+
+export default function App(){
+
+  const [todos, setTodos] = useState([])
+  const [search, setSearch] = useState("")
+  const [filter, setFilter] = useState("All")
+  const [sort, setSort] = useState("Asc")
+
+
+  function addTodo(text, category) {
+    const newTodos = [...todos, {
+      id: Math.floor(Math.random() * 1000),
+      text, 
+      category, 
+      isCompleted: false,
+    }]
+
+    setTodos(newTodos)
+  }
+
+  function removeTodo() {
+    const updatedTodos = [...todos].filter((todo) => !todo.isCompleted)
+    setTodos(updatedTodos)
+  }
+
+  function completeTodo(id) {
+    const completedTodos = [...todos].map((todo) => 
+      todo.id === id ? {...todo, isCompleted: !todo.isCompleted} : todo
+    )
+    setTodos(completedTodos)
+  }
+
+  return(
+    <>
+      <Search search={search} setSearch={setSearch} />
+
+      <Filter filter={filter} setFilter={setFilter} setSort={setSort} />
+
+      <TodoForm addTodo={addTodo} removeTodo={removeTodo} todos={todos} />
+
+      <div>
+        {todos
+          .filter((todo) => filter === "All" ? true : filter === "Completed" ? todo.isCompleted : !todo.isCompleted)
+          .filter((todo) => todo.text.toLowerCase().includes(search.toLowerCase()))
+          .sort((a, b) => sort === "Asc" ? a.text.localeCompare(b.text) : b.text.localeCompare(a.text))
+          .map((todo) => (    
+            <Todo key={todo.id} todo={todo} removeTodo={removeTodo} completeTodo={completeTodo} />
+        ))}
+      </div>
+    </>
+  )
+}
+
 
 ----------------------------------------------- ###
 TODO LIST PERMITINDO TECLADO E MOUSE
@@ -9163,8 +10627,186 @@ No arquivo tsconfig.json:
 OBS: Não consegui fazer funcionar no typescript!!!
 
 /////////////////////////////////////////////////////////////// &&&
+REDUX 
+
+Serve para criar e gerenciar states. (Ex: criar global states para ser usado em vários componentes)
+
+Instalação:
+npm install @reduxjs/toolkit react-redux
+
+----
+
+Crie um arquivo chamado store.js dentro da pasta src. 
+Dentro deste arquivo, serão colocadas os states.
+
+-Arquivo store.js:
+
+import {configureStore} from "@reduxjs/toolkit"
+
+const store = configureStore({ 
+  reducer: {
+    nome_do_state : nome_do_reducer
+  } 
+})
+
+---- ***
+
+É necessário importar o Provider do Redux no arquivo main.jsx: (ou index.jsx)
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.jsx'
+import {Provider} from 'react-redux'
+import {store} from './store.js'
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </StrictMode>
+)
+
+------------- ###
 
 
+
+
+
+-------------###
+CRUD (Add e Remove) COM REDUX TOOLKIT
+VIDEO: https://www.youtube.com/embed/QgK_-G-hWeA?autoplay=1
+
+-Arquivo movieSlice.js dentro da pasta src:
+
+import {createSlice} from "@reduxjs/toolkit"
+
+const initialState = {
+  filmes: [
+    {id: 1, name: "Interstellar"},
+    {id: 2, name: "Harry Potter"},
+  ],
+}
+
+const movieSlice = createSlice({
+  name: "movies",
+  initialState,
+  reducers: {
+    addMovie: (state, action) => {
+      const newMovie = { id: Date.now(), name: action.payload };
+      state.filmes.push(newMovie);
+    },
+    removeMovie: (state, action) => {
+      state.filmes = state.filmes.filter((movie) => movie.id !== action.payload)
+    },
+  },
+})
+
+export const {addMovie, removeMovie} = movieSlice.actions
+export default movieSlice.reducer
+
+¨¨¨¨
+Forma alternativa de criar id (criará o id com o número seguinte ao último id criado):
+...
+  reducers: {
+    addMovie: (state, action) => {
+      const newId = state.filmes.length ? state.filmes[state.filmes.length - 1].id + 1 : 1;
+      const newMovie = { id: newId, name: action.payload };
+      state.filmes.push(newMovie);
+    },
+  ...
+  }
+...
+
+--------------
+-Arquivo store.js dentro da pasta src:
+
+import {configureStore} from "@reduxjs/toolkit"
+import movieReducer from "./movieSlice"
+
+const store = configureStore({ 
+  reducer: {
+    movies: movieReducer,
+  }, 
+})
+
+--------------
+-Arquivo MovieList.jsx dentro da pasta components:
+
+import {useSelector, useDispatch} from 'react-redux'
+import {removeMovie} from '../movieSlice'
+
+export const MovieList = () => {
+
+  const AllMovies = useSelector((state) => state.movies.filmes)
+
+  const dispatch = useDispatch() 
+
+  const handleRemoveMovie = (id) => {
+    dispatch(removeMovie(id))
+  }
+
+  return (
+    <div>
+      <h1>Lista de filmes</h1>
+
+      {AllMovies.map((movie) => (
+        <div key={movie.id}>
+          <h3>{movie.name}</h3>
+          <button onClick={() => handleRemoveMovie(movie.id)}>Remover</button>
+          <hr />
+        </div>
+      ))}
+
+    </div>
+  )
+}
+
+-------------
+-Arquivo MovieInput.jsx dentro da pasta components:
+
+import {useState} from 'react'
+import {addMovie} from '../movieSlice'
+import {useDispatch} from 'react-redux'
+
+export const MovieInput = () => {
+
+  const [newMovie, setNewMovie] = useState("")
+
+  const dispatch = useDispatch()
+
+  const handleAddMovie = () => {
+    if(newMovie) {
+      dispatch(addMovie(newMovie))
+      setNewMovie("")
+    }
+  }
+
+  return (
+    <>
+      <input value={newMovie} onChange={(e) => setNewMovie(e.target.value)}/>
+      <button onClick={handleAddMovie}>Adicionar filme</button>
+    </>
+  )
+}
+
+--------------
+-Arquivo App.jsx:
+
+import {MovieList} from './components/MovieList'
+import {MovieInput} from './components/MovieInput'
+
+export default function App() {
+  return (
+    <>
+      <MovieInput />
+      <MovieList />
+    </>
+  )
+}
+
+----------------------------- ###
 
 
 
