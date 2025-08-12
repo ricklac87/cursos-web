@@ -662,6 +662,157 @@ export default function App() {
 >>> Texto de Exemplo
 
 ------------------------------------------------------------&&&
+PROPTYPES (NÃO FUNCIONA MAIS!!! É MELHOR USAR TYPESCRIPT)    DEPRECATED
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+-Arquivo Pessoa.jsx:
+
+import PropTypes from 'prop-types'
+
+export default function Pessoa(props) {
+  return(
+    <div>
+      <p>Nome: {props.nome}</p>
+      <p>Idade: {props.idade} anos</p>
+      <p>Solteiro: {props.status ? "Sim" : "Não"}</p>
+    </div>
+  )
+}
+
+Pessoa.propTypes = {
+  nome: PropTypes.string,
+  idade: PropTypes.number,
+  status: PropTypes.bool,      //Não é boolean, é bool
+}
+
+¨¨¨¨
+-Dentro do arquivo App.jsx:
+
+import Pessoa from './components/Pessoa'         
+
+export default function App(){
+  return(
+    <>  
+      <Pessoa nome='Thiago' idade={20} status={true} />
+    </>
+  )
+}
+
+-Usando o PropTypes, caso seja passado um valor com um tipo diferente do especificado, aparecerá um warning no console.
+
+------------------------------------------------------------&&&
+DEFAULT PROPS (NÃO FUNCIONA MAIS!!!!)
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+-Arquivo Pessoa.jsx:
+
+import PropTypes from 'prop-types'
+
+export default function Pessoa(props) {
+  return(
+    <div>
+      <p>Nome: {props.nome}</p>
+      <p>Idade: {props.idade} anos</p>
+      <p>Solteiro: {props.status ? "Sim" : "Não"}</p>
+    </div>
+  )
+}
+
+Pessoa.defaultProps = {
+  nome: "Sem nome",
+  idade: "Sem idade",
+  status: "Status não informado",      
+}
+
+¨¨¨¨
+-Dentro do arquivo App.jsx:
+
+import Pessoa from './components/Pessoa'         
+
+export default function App(){
+  return(
+    <>  
+      <Pessoa nome='Thiago' idade={20} />
+    </>
+  )
+}
+
+>>> Thiago
+>>> 20 anos
+>>> Status não informado
+
+-Como não foi passado um valor para status, foi mostrado o valor estabelecido como default
+
+--------------------------------- &&&
+Props usando arrays com valores default: (MODO ATUALIZADO AO INVÉS DE DEFAULTPROPS)
+
+-Arquivo Pessoas.jsx:
+
+export default function Pessoas({id = 0, nome = "Sem nome", idade = "Sem idade", sexo = "Sexo não informado"}) {
+  return (
+    <>
+      <p>Nome: {nome}</p>
+      <p>Idade: {idade}</p>
+      <p>Sexo: {sexo}</p>
+    </>
+  );
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import Pessoas from './components/Pessoas'
+
+export default function App() {
+
+  const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  return (
+    <>
+      {pessoas.map(pessoa => (
+        <div key={pessoa.id}>
+          <Pessoas nome={pessoa.nome} idade={pessoa.idade} />
+          <hr />
+        </div>  
+      ))}
+    </>
+  );
+}
+
+-Como o valor de sexo não foi especificado, será exibido o valor default declarado
+
+/////////////////////////////////////////////////////////////// &&&
+DESTRUCTION / DESESTRUTURAÇÃO (ao invés de props)
+VIDEO: https://www.youtube.com/embed/playlist?list=PLyRd2qM1TnCriAHRluaT2vmPpfmC1OonK
+
+-Usando props:
+
+export default function Teste(props){
+  return (
+    <>
+      <p>{props.nome}</p>
+      <p>{props.idade}</p>
+    </>
+  )
+}
+
+¨¨¨¨¨¨¨¨
+-Usando destruction:
+
+export default function Teste({nome, idade}){
+  return (
+    <>
+      <p>{nome}</p>
+      <p>{idade}</p>
+    </>
+  )
+}
+
+------------------------------------------------------------&&&
 ENVIAR FUNÇÕES PARA COMPONENTES
 VIDEO: https://www.youtube.com/embed/6T6AM9VbLMY?autoplay=1
 
@@ -1269,7 +1420,7 @@ reportWebVitals();
 Dessa forma apenas o componente relogio será atualizado e renderizado a cada segundo
 
 ----------------------------------------------------------------------------&&&
-ALTERANDO STATE NO REACT:
+USESTATE - ALTERANDO STATE NO REACT:
 VIDEO: https://www.youtube.com/embed/ZokLiEbKiiU?autoplay=1
 
 State é o que armazena valores de propriedades que pertencem ao componente. E quando mudam o valor do estado, estes componentes são renderizados novamente.
@@ -1406,6 +1557,358 @@ export default function App() {
       <button onClick = { () => setName('Thiago') }>        *Não é preciso indicar de qual variavel estamos querendo alterar
         MUDAR NOME
       </button>
+    </>
+  )
+}
+
+------------------------------------ ###
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [nome, setNome] = useState("Bruno")
+  const [idade, setIdade] = useState(0)
+  const [status, setStatus] = useState(true)
+
+  const updateNome = () => {
+    setNome("Carlos")
+  }
+
+  const addIdade = () => {
+    setIdade(prev => prev + 1)
+  }
+
+  const toggleStatus = () => {
+    setStatus(!status)
+  }
+
+  return (
+    <>
+      <p>Nome: {nome}</p>
+      <button onClick={updateNome}>Mudar nome</button>
+
+      <p>Idade: {idade}</p>
+      <button onClick={addIdade}>Aumentar idade</button>
+
+      <p>Trabalhando: {status ? "Sim" : "Não"}</p>
+      <button onClick={toggleStatus}>Mudar status</button>     
+    </>
+  )
+}
+
+------------------------------------ ###
+HOOK: Use state (forma recomendada PREV)
+VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
+
+Forma simples:
+
+import { usestate } from "react";
+
+const App = () => {
+  const [count, setCount] = usestate(0);
+  const incrementCount = () => {
+    setCount(count + 1);                           //ERRADO
+  }
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={incrementCount}>Increment</button>
+    </div>
+  )
+}
+export default App;
+
+-------
+
+Forma CORRETA:
+
+import { usestate } from "react";
+
+const App = () => {
+
+  const [count, setCount] = usestate(0);
+
+  const incrementCount = () => {
+    setCount((prevState) = prevState + 1);            //CERTO
+  }
+
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={incrementCount}>Increment</button>
+    </div>
+  )
+}
+
+export default App;
+
+----------
+
+import { usestate } from "react";
+
+const App = () => {
+
+  const [state, setState] = usestate({count: 0, theme: "light"});
+
+  const incrementcount = () => {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        count: prevState.count + 1,
+        theme: "dark"
+      }
+    })
+  }
+
+  return (
+    <div>
+      <h1>{state.count}</h1>
+      <button onClick={incrementCount}>Increment</button>
+    </div>
+  )
+}
+
+export default App;
+
+--------------
+
+import { useState } from "react";
+
+export default function App() {
+
+  const [user, setUser] = useState({
+    nome: "Ana",
+    idade: 15,
+    hobbies: ["Leitura","Musica"],
+  })
+
+  const aumentaIdade = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      idade: prevUser.idade + 1,
+    }))
+  }
+
+  return (
+    <div>
+      <p>Nome: {user.nome}</p>
+      <p>Idade: {user.idade}</p>
+      <button onClick={aumentaIdade}>Aumentar idade</button>
+    </div>
+  )
+
+}
+
+-------------------------------------------------------------------------- &&&
+CLICK EVENTS e FUNÇÕES
+
+-Função sem parâmetro:
+
+export default function App() {
+
+  const Show = () => alert("CLICOU!")
+
+  return(
+    <>
+      <button onClick={Show}>Click</button>
+    </>
+  )
+}
+
+--------
+
+-Função com parâmetro:
+
+export default function App() {
+
+  const Show = (texto) => alert(texto)
+
+  return(
+    <>
+      <button onClick={Show("CLICOU!")}>Click</button>
+    </>
+  )
+}
+
+-No exemplo acima, a função será invocada ao iniciar sem precisar apertar no botão.
+Para resolver isso, é necessário usar arrow function:
+
+export default function App() {
+
+  const Show = (texto) => alert(texto)
+
+  return(
+    <>
+      <button onClick={() => Show("CLICOU!")}>Click</button>
+    </>
+  )
+}
+
+----------------------------- ###
+
+export default function App() {
+
+  const handleClick = (e) => console.log(e)
+
+  return(
+    <>
+      <button onClick={(e) => handleClick(e)}>Click</button>
+    </>
+  )
+}
+
+Ao clicar no botão, aparecerá no console todos os tipos de propriedades de evento.
+Ex: Onde clicou, o que foi clicado, etc...
+
+-------
+
+export default function App() {
+
+  const handleClick = (e) => console.log(e.target)
+
+  return(
+    <>
+      <button onClick={(e) => handleClick(e)}>Click</button>
+    </>
+  )
+}
+
+>>>  <button>"Click"</button>
+
+---------------- 
+
+Mudando o valor de texto de um elemento:
+
+export default function App() {
+
+  const handleClick = (e) => e.target.textContent = "Novo texto"
+
+  return(
+    <>
+      <h1 onClick={(e) => handleClick(e)}>Texto inicial</h1>
+    </>
+  )
+}
+
+Ao clicar no elemento, ele muda o seu valor.
+
+--------
+
+Mudando a cor de um elemento:
+
+export default function App() {
+
+  const handleClick = (e) => e.target.style.color = "red"
+
+  return(
+    <>
+      <h1 onClick={(e) => handleClick(e)}>Texto que ficará vermelho ao clicar</h1>
+    </>
+  )
+}
+
+--------
+
+Desaparecendo um elemento:
+
+export default function App() {
+
+  const handleClick = (e) => e.target.style.display = "none"
+
+  return(
+    <>
+      <h1 onClick={(e) => handleClick(e)}>Texto que desaparecerá</h1>
+    </>
+  )
+}
+
+--------
+Mudando a classe de um elemento:
+
+-Arquivo App.css:
+
+.vermelho {
+  color: red;
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import './App.css'
+
+export default function App() {
+
+  const handleClick = (e) => e.target.className = "vermelho"
+
+  return(
+    <>
+      <h1 onClick={(e) => handleClick(e)}>Texto</h1>
+    </>
+  )
+}
+
+-------
+
+-Arquivo App.css:
+
+.azul {
+  color: blue;
+}
+
+.vermelho {
+  color: red;
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import './App.css'
+
+export default function App() {
+
+  const handleClick = (e) => {e.target.className = e.target.className === "vermelho" ? "azul" : "vermelho";}
+
+  return(
+    <>
+      <h1 className="vermelho" onClick={handleClick}>TEXTO</h1>
+    </>
+  )
+}
+
+OBS: Normalmente com toggle é usado useState para guardar o valor de uma variavel.
+
+import './App.css'
+import {useState} from 'react'
+
+export default function App() {
+
+  const [cor, setCor] = useState("vermelho")
+
+  const handleClick = () => {setCor(cor === "vermelho" ? "azul" : "vermelho")}
+
+  return(
+    <>
+      <h1 className={cor} onClick={handleClick}>TEXTO</h1>
+    </>
+  )
+}
+
+OU
+
+import './App.css'
+import {useState} from 'react'
+
+export default function App() {
+
+  const [cor, setCor] = useState(true)
+
+  const handleClick = () => setCor(!cor)
+
+  return(
+    <>
+      <h1 className={cor ? "vermelho" : "azul"} onClick={handleClick}>TEXTO</h1>
     </>
   )
 }
@@ -1670,152 +2173,6 @@ export default function App() {
 
 Desta forma, ao clicar no link o evento não será iniciado.
 
-----------------------------------------------------------------------------&&&
-RENDERIZAÇÃO CONDICIONAL NO REACT:
-VIDEO: https://www.youtube.com/embed/lanKyPZQG_4?autoplay=1
-
-
-Exemplo 1:
-
-import React from 'react'
-
-export default function App() {
-
-	const cumprimento = () => {
-		const hora = new Date().getHours()
-		if(hora >= 0 &&hora < 13) {
-			return <p>Bom dia</p>
-		}
-		else if(hora >=13 && hora < 18){
-			return <p>Boa tarde</p>
-		}
-		else{
-			return <p>Boa noite</p>
-		}
-	}
-
-	return (
-		<>
-			{cumprimento()}
-		</>
-	);
-}
-
-Com isso, dependendo da hora do sistema ele apresentaráum texto diferente.
-
---------------
-
-Exemplo 2:
-
-import React,{useState} from 'react'
-
-export default function App() {
-
-	const [log , setLog] = useState(false)
-	
-	const msglogin = () => {
-		return 'Usuário Logado'
-	}
-
-	const msglogoff = () => {
-		return 'Faça o login'
-	}
-
-	return (
-		<>
-			<p>{log ? msglogin() : msglogoff()}</p>
-
-			<button onClick = { () => setLog(!log)}> 
-				{ log ? 'Logoff' : 'Login' } 
-			</button> 
-		</>
-	);
-}
-
-----------------
-
-Exemplo 3:
-
-import React,{useState} from 'react'
-
-export default function App() {
-
-	const [cor, setCor] = useState(1)
-	
-	const vermelho = {color: 'red'}
-	const verde = {color: 'green'}
-	const azul = {color: 'blue'}
-	
-	const voltaCor = (c) =>{
-		if(c == 1) {
-			return vermelho
-		}
-		else if (c == 2){
-			return verde
-		}
-		else{
-			return azul
-		}
-	}
-	
-	const mudaCor = () => {
-		setCor(cor+1)
-		if(cor > 2) {
-			setCor(1)
-		}
-	}
-
-	return (
-		<>
-			<h1 style = {voltaCor(cor)}>TEXTO</h1>
-			<button onClick={() => mudaCor()}>Muda Cor</button>
-		</>
-	);
-}
-
-Com isso ao clicar no botão a cordo texto muda.
-
-Caso queira que a cor seja mudada automaticamente com o passar dos segundos:
-
-import React,{useState} from 'react'
-
-export default function App() {
-
-	const [cor, setCor] = useState(1)
-	
-	const vermelho = {color: 'red'}
-	const verde = {color: 'green'}
-	const azul = {color: 'blue'}
-	
-	const voltaCor = (c) =>{
-		if(c == 1) {
-			return vermelho
-		}
-		else if (c == 2){
-			return verde
-		}
-		else{
-			return azul
-		}
-	}
-	
-	const mudaCor = () => {
-		setCor(cor+1)
-		if(cor > 2) {
-			setCor(1)
-		}
-	}
-	
-	setInterval(mudaCor, 1000)        /* adicione um setInterval */
-
-	return (
-		<>
-			<h1 style = {voltaCor(cor)}>TEXTO</h1>
-			<button onClick={() => mudaCor()}>Muda Cor</button>
-		</>
-	);
-}
-
 
 ////////////////////////////////////////&&&
 
@@ -1922,7 +2279,326 @@ export default function App() {
 >>> Valter
 
 //////////////////////////////////////////////////&&&
+LISTAS / ARRAYS COM MAP (MODO ATUALIZADO)
 
+export default function App() {
+
+  const lista = ['item1' , 'item2' , 'item3' ,'item4' ,'item5' ]
+
+  return (
+    <>
+      {lista.map((item, indice) => (
+        <div key={indice}>
+          <p>{item}</p>
+        </div>
+      ))}
+    </>
+  );  
+}
+
+------------------ %%%
+
+export default function App() {
+
+  const frutas = ['banana' , 'maçã' , 'uva' ,'morango' ,'acerola' ]
+
+  return (
+    <>
+      {frutas.map((fruta, indice) => (
+        <ul key={indice}>
+          <li style={{listStyle: "none"}}>{fruta}</li>
+        </ul>
+      ))}
+    </>
+  );  
+}
+
+---------
+
+export default function App() {
+
+  const frutas = ['banana' , 'maçã' , 'uva' ,'morango' ,'acerola' ]
+
+  const listafrutas = frutas.map((fruta, indice) => (
+      <div key={indice}>  
+        <li style={{listStyle: "none"}}>{fruta}</li>
+      </div>
+    )
+  )
+
+  return (
+    <>
+      {listafrutas}
+    </>
+  );  
+}
+
+------------------ %%%
+
+export default function App() {
+
+	const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+	];
+	
+	return (
+		<>
+			{pessoas.map(pessoa => (
+        <div key={pessoa.id}>                     //É obrigatório declarar uma key
+          <p>{pessoa.nome}</p>
+        </div>
+      ))}
+		</>
+	);
+}
+
+------------------- ###
+ORDENAR ARRAYS
+
+export default function App() {
+
+  const frutas = ['banana' , 'maçã' , 'uva' ,'morango' ,'acerola' ]
+
+  frutas.sort()         //Colocar em ordem alfabética. NÃO FUNCIONA COM NÚMEROS!
+
+  return (
+    <>
+      {frutas.map((fruta, indice) => (
+        <div key={indice}>
+          <h1>{fruta}</h1>
+        </div>
+      ))}
+    </>
+  );  
+}
+
+------------------ %%%
+
+export default function App() {
+
+	const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Ana", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Mario", sexo: "Masculino", idade: "36"}
+	];
+
+  pessoas.sort((a, b) => a.nome.localeCompare(b.nome))        //Strings em ordem crescente
+  // pessoas.sort((a, b) => b.nome.localeCompare(a.nome))     //Strings em ordem decrescente
+	
+	return (
+		<>
+			{pessoas.map(pessoa => (
+        <div key={pessoa.id}>                     
+          <p>{pessoa.nome}</p>
+        </div>
+      ))}
+		</>
+	);
+}
+
+---------
+
+export default function App() {
+
+	const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Ana", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Mario", sexo: "Masculino", idade: "36"}
+	];
+
+  pessoas.sort((a, b) => a.idade - b.idade)        //Numeros em ordem crescente
+  // pessoas.sort((a, b) => b.idade - a.idade)     //Numeros em ordem decrescente
+	
+	return (
+		<>
+			{pessoas.map(pessoa => (
+        <div key={pessoa.id}>                     
+          <p>{pessoa.nome}: {pessoa.idade} anos</p>
+        </div>
+      ))}
+		</>
+	);
+}
+
+------------------ ###
+FILTRAR ARRAYS
+
+export default function App() {
+
+  const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  const pessoasFiltradas = pessoas.filter(pessoa => pessoa.sexo === "Feminino");
+
+  return (
+    <>
+      {pessoasFiltradas.map(pessoa => (
+        <div key={pessoa.id}>                     
+          <p>{pessoa.nome}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+-------
+
+export default function App() {
+
+  const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  const pessoasFiltradas = pessoas.filter(pessoa => pessoa.idade < 30 );
+
+  return (
+    <>
+      {pessoasFiltradas.map(pessoa => (
+        <div key={pessoa.id}>                     
+          <p>{pessoa.nome}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+-------------------- ###
+ARRAYS COM PROPS
+
+-Arquivo Pessoas.jsx:
+
+export default function Pessoas(props) {
+
+  const ListaPessoas = props.pessoas
+
+  return (
+    <>
+      {ListaPessoas.map(pessoa => (
+        <div key={pessoa.id}>                     
+          <p>Nome: {pessoa.nome}</p>
+          <p>Setor: {props.setor}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import Pessoas from './components/Pessoas'
+
+export default function App() {
+
+  const funcionariosMarketing = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  const funcionariosRH = [                                    
+    {id: 4, nome: "José", sexo: "Masculino", idade: "30"},
+    {id: 5, nome: "Carla", sexo: "Feminino", idade: "29"},
+    {id: 6, nome: "Mario", sexo: "Masculino", idade: "22"}
+  ];
+
+  return (
+    <>
+      <Pessoas pessoas={funcionariosMarketing} setor="Marketing" />
+      <Pessoas pessoas={funcionariosRH} setor="RH" />
+    </>
+  );
+}
+
+////////////////////////////////////////////////////////// &&& 
+ATUALIZANDO VALORES DE UM ARRAY
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+-Usando onChange:
+
+import {useState} from 'react'
+
+export default function App(){
+  const [frutas, setFrutas] = useState(["Banana", "Morango", "Laranja"])
+  const [novaFruta, setNovaFruta] = useState("");
+
+  const addFruta = () => {
+    if (novaFruta.trim() !== "") {
+      setFrutas([...frutas, novaFruta]);
+      setNovaFruta("");
+    }
+  };
+
+  const removeFruta = (indice) => {
+    setFrutas(frutas.filter(( _ , index) => index !== indice));                 //elemento não está sendo usado
+    //OU setFrutas(frutas.filter(( elemento , index) => index !== indice));
+  };
+
+  return(
+    <>
+      <ul >
+        {frutas.map((fruta, indice) => (
+          <li key={indice}>
+            {fruta}
+            <button onClick={() => removeFruta(indice)}>Remover</button>
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" value={novaFruta} onChange={e => setNovaFruta(e.target.value)} />
+      <button onClick={addFruta}>Adicionar fruta</button>
+    </>
+  )
+}
+
+
+-------------
+Usando ID ao invés de onChange:
+
+import {useState} from 'react'
+
+export default function App(){
+  const [frutas, setFrutas] = useState(["Banana", "Morango", "Laranja"])
+
+  const addFruta = () => {
+    const novaFruta = document.getElementById("frutaInput").value
+    if (novaFruta.trim() !== "") {
+      setFrutas(prev => [...prev, novaFruta])                           //OU setFrutas([...frutas, novaFruta])
+    }
+    document.getElementById("frutaInput").value = ""
+  }
+
+  const removeFruta = (indice) => {
+    setFrutas(frutas.filter((elemento, index) => index !== indice))
+    //OU setFrutas(frutas.filter(( _ , index) => index !== indice))  pois elemento não está sendo usado
+  }
+
+  return(
+    <>
+      <ul >
+        {frutas.map((fruta, indice) => (
+          <li key={indice}>
+            {fruta}
+            <button onClick={() => removeFruta(indice)}>Remover</button>
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" id="frutaInput" />
+      <button onClick={addFruta}>Adicionar fruta</button>
+    </>
+  )
+}
+
+////////////////////////////////////////////////// &&&
+ONCHANGE
 PARA MANIPULAR E CAPTURAR ELEMENTOS DE UM FORMULÁRIO:
 VIDEO: https://www.youtube.com/embed/CmdBwXsbGOs?autoplay=1
 
@@ -2030,7 +2706,7 @@ export default function App() {
 Com isso, o nome da pessoa selecionada aparecerá automaticamente na tag <p>
 
 /////////////////////////////////////////&&&
-
+ONCHANGE + USESTATE
 PARA MANIPULAR VARIOS OBJETOS DO FORMULÁRIO COM STATE:
 VIDEO: https://www.youtube.com/embed/UUY3cYUif0Y?autoplay=1
 
@@ -2042,13 +2718,13 @@ export default function App() {
   const [form, setForm] = useState({"nome":"" , "curso":"" , "ano":""})         /* É um JSON dentro dos parenteses */
 
   const handle = (e) => {
-    if(e.target.getAttribute("name")== "fnome"){
+    if(e.target.getAttribute("name") == "fnome"){
       setForm({"nome":e.target.value , "curso":form.curso , "ano":form.ano})
     }
-    else if(e.target.getAttribute("name")== "fcurso"){
+    else if(e.target.getAttribute("name") == "fcurso"){
       setForm({"nome":form.nome , "curso":e.target.value , "ano":form.ano})
     }
-    else if(e.target.getAttribute("name")== "fano"){
+    else if(e.target.getAttribute("name") == "fano"){
       setForm({"nome":form.nome , "curso":form.curso , "ano":e.target.value})
     }
   }
@@ -2081,6 +2757,672 @@ const infos = {
 
 const [form, setForm] = useState({infos})
 ....
+
+--------------------------- ###
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [nome, setNome] = useState("")
+  const [numero, setNumero] = useState("")
+  const [texto, setTexto] = useState("")
+  const [select, setSelect] = useState("")
+  const [radio, setRadio] = useState("")
+
+  const handleChangeNome = (e) => {
+    setNome(e.target.value)
+  }
+
+  const handleChangeNumero = (e) => {
+    setNumero(e.target.value)
+  }
+
+  const handleChangeTexto = (e) => {
+    setTexto(e.target.value)
+  }
+
+  const handleChangeSelect = (e) => {
+    setSelect(e.target.value)
+  }
+
+  const handleChangeRadio = (e) => {
+    setRadio(e.target.value)
+  }
+
+  return(
+    <>
+      <input value={nome} onChange={handleChangeNome} />
+      <p>Nome: {nome}</p>
+
+      <input value={numero} onChange={handleChangeNumero} type="number" />
+      <p>Numero: {numero}</p>
+
+      <textarea value={texto} onChange={handleChangeTexto} />
+      <p>Texto: {texto}</p>
+
+      <select value={select} onChange={handleChangeSelect}>
+        <option value="">Selecione uma opção</option>
+        <option value="Opção 1">Opção 1</option>
+        <option value="Opção 2">Opção 2</option>
+        <option value="Opção 3">Opção 3</option>
+      </select>
+      <p>Opção escolhida: {select}</p>
+
+      <label>
+        <input 
+          type="radio"
+          value="Opção 1"
+          checked={radio === "Opção 1"}
+          onChange={handleChangeRadio}
+        />
+          Opção 1
+      </label>
+      <label>
+        <input 
+          type="radio"
+          value="Opção 2"
+          checked={radio === "Opção 2"}
+          onChange={handleChangeRadio}
+        />
+          Opção 2
+      </label>
+      <label>
+        <input 
+          type="radio"
+          value="Opção 3"
+          checked={radio === "Opção 3"}
+          onChange={handleChangeRadio}
+        />
+          Opção 3
+      </label>
+      <p>Opção escolhida: {radio}</p>
+    </>
+  )
+}
+
+------
+Outra forma de fazer o Radio:
+
+...
+  {["Opção 1", "Opção 2", "Opção 3"].map((opcao) => (
+    <label key={opcao}>
+      <input
+        type="radio"
+        value={opcao}
+        checked={radio === opcao}
+        onChange={handleChangeRadio}
+      />
+      {opcao}
+    </label>
+  ))}
+  <p>Opção escolhida: {radio}</p>
+...
+
+----------------------- ###
+COLOR PICKER
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+import {useState} from 'react'
+
+export default function App() {
+
+  const [color, setColor] = useState("#FFFFFF")
+
+  const handleChangeColor = (e) => {
+    setColor(e.target.value)
+  }
+
+  return (
+    <>
+      <div style={{backgroundColor: color}}>
+        <p>Cor selecionada: {color}</p>
+      </div>
+      <input type="color" value={color} onChange={handleChangeColor} />
+    </>
+  );
+}
+
+//////////////////////////////////////////////////&&&
+UPDATER FUNCTION = PREV
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+import {useState} from 'react'
+
+export default function App(){
+  const [numero, setNumero] = useState(0)
+
+  const maisNumero = () => {
+    setNumero(numero + 1)
+    setNumero(numero + 1)
+  }
+
+  return(
+    <>
+      <p>Numero: {numero}</p>
+      
+      <button onClick={maisNumero}>Aumentar</button>
+    </>
+  )
+}
+
+-Ao clicar no botão, apenas será adicionado 1 ao número e não 2 vezes.
+Para resolver isso, é necessário usar um updater function (PREV)
+
+------
+
+import {useState} from 'react'
+
+export default function App(){
+  const [numero, setNumero] = useState(0)
+
+  const addNumero = () => {
+    setNumero(prevNumero => prevNumero + 1)                  //OU  setNumero(n => n + 1)
+    setNumero(prevNumero => prevNumero + 1)
+  }
+
+  return(
+    <>
+      <p>Numero: {numero}</p>
+      
+      <button onClick={addNumero}>Aumentar</button>
+    </>
+  )
+}
+
+//////////////////////////////////////////////////&&&
+ATUALIZANDO VALORES DE OBJETOS
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [pessoas, setPessoas] = useState({nome: "", idade: "", sexo: "", status: false})
+
+  const handleNomeChange = (e) => {
+    setPessoas(prev => ({...prev, nome: e.target.value}) )             //OU setPessoas({...pessoas, nome: e.target.value})
+  }
+
+  const handleIdadeChange = (e) => {
+    setPessoas(prev => ({...prev, idade: e.target.value}) )            //OU setPessoas({...pessoas, idade: e.target.value})
+  }
+
+  const handleSexoChange = (e) => {
+    setPessoas(prev => ({...prev, sexo: e.target.value}) )            //OU setPessoas({...pessoas, sexo: e.target.value})
+  }
+
+  const handleChangeStatus = (e) => {
+    setPessoas(prev => ({...prev, status: e.target.value === "true"}) )     
+    //OU setPessoas({...pessoas, status: e.target.value === "true"})
+  }
+
+  return(
+    <>
+      <p>Nome: {pessoas.nome}</p>
+      <p>Idade: {pessoas.idade} anos</p>
+      <p>Sexo: {pessoas.sexo}</p>
+      <p>Casado(a): {pessoas.status ? "Sim" : "Não"}</p>
+
+      <hr />
+
+      <div>
+        <input 
+          type="text" 
+          value={pessoas.nome}
+          onChange={handleNomeChange}
+          placeholder= "Digite seu nome"
+        />
+      </div>
+
+      <div>
+        <input 
+          type="number" 
+          value={pessoas.idade} 
+          onChange={handleIdadeChange}
+          placeholder= "Digite sua idade"
+        />
+      </div>
+
+      <select value={pessoas.sexo} onChange={handleSexoChange}>
+        <option value="">Selecione uma opção</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Feminino">Feminino</option>
+      </select>
+
+      <div>
+        <label>
+          <input type="radio" value={true} checked={pessoas.status === true} onChange={handleChangeStatus} />
+            Casado(a)
+        </label>
+        <label>
+          <input type="radio" value={false} checked={pessoas.status === false} onChange={handleChangeStatus} />
+            Solteiro(a)
+        </label>
+      </div>
+
+    </>
+  )
+}
+
+---------
+Outra forma de fazer atualizar o valor de um radio com objetos sem usar booleans:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [pessoas, setPessoas] = useState({nome: "", idade: "", sexo: "", status: ""})
+
+  const handleChangeStatus = (e) => {
+    setPessoas(prev => ({...prev, status: e.target.value}) ) 
+    //OU setPessoas({...pessoas, status: e.target.value})
+  }
+
+  return(
+    <>
+      <p>Status: {pessoas.status}</p>
+
+      <div>
+        <label>
+          <input type="radio" value="Casado(a)" checked={pessoas.status === "Casado(a)"} onChange={handleChangeStatus} />
+            Casado(a)
+        </label>
+        <label>
+          <input type="radio" value="Solteiro(a)" checked={pessoas.status === "Solteiro(a)"} onChange={handleChangeStatus} />
+            Solteiro(a)
+        </label>
+      </div>
+
+    </>
+  )
+}
+
+------------###
+OBS: Radio sem objetos:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [status, setStatus] = useState(false)
+
+  const handleChangeStatus = (e) => {
+    setStatus(e.target.value === "true")
+  }
+
+  return(
+    <>
+      <p>Casado(a): {status ? "Sim" : "Não"}</p>
+
+      <div>
+        <label>
+          <input
+            type="radio"
+            value={true}                           //OU value="true"
+            checked={status === true}
+            onChange={handleChangeStatus}
+          />
+          Sim
+        </label>
+        <label>
+          <input
+            type="radio"
+            value={false}                           //OU value="false"
+            checked={status === false}
+            onChange={handleChangeStatus}
+          />
+          Não
+        </label>
+      </div>
+
+    </>
+  )
+}
+
+------
+OU sem usar booleans:
+
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [status, setStatus] = useState("")
+
+  const handleChangeStatus = (e) => {
+    setStatus(e.target.value)
+  }
+
+  return(
+    <>
+      <p>Status: {status}</p>
+
+      <div>
+        <label>
+          <input
+            type="radio"
+            value="Casado(a)"                           
+            checked={status === "Casado(a)"}
+            onChange={handleChangeStatus}
+          />
+          Casado(a)
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="Solteiro(a)"                          
+            checked={status === "Solteiro(a)"}
+            onChange={handleChangeStatus}
+          />
+          Solteiro(a)
+        </label>
+      </div>
+
+    </>
+  )
+}
+
+------------------------ ###
+Usando uma única função para mudar os valores dos objetos:  (Não funciona com Radio)
+
+import {useState} from 'react'
+
+export default function App(){
+  const [pessoas, setPessoas] = useState({nome: "", idade: ""})
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPessoas(prev => ({...prev, [name]: value}) );
+  }
+
+  return(
+    <>
+      <p>Nome: {pessoas.nome}</p>
+      <p>Idade: {pessoas.idade} anos</p>
+
+      <hr />
+
+      <input type="text" name="nome" value={pessoas.nome} onChange={handleInputChange} />
+
+      <input type="number" name="idade" value={pessoas.idade} onChange={handleInputChange} />
+
+    </>
+  )
+}
+
+//////////////////////////////////////////////////&&& ***
+ATUALIZANDO OS VALORES DE UM ARRAY DE OBJETOS
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [carros, setCarros] = useState([])
+  const [nomeCarro, setNomeCarro] = useState("")
+  const [anoCarro, setAnoCarro] = useState(new Date().getFullYear())
+  const [marcaCarro, setMarcaCarro] = useState("")
+
+  const addCarro = () => {
+    const novoCarro = {nome: nomeCarro, ano: anoCarro, marca: marcaCarro}
+
+    setCarros(prev => [...prev, novoCarro])
+
+    setNomeCarro("")
+    setAnoCarro(new Date().getFullYear())
+    setMarcaCarro("")
+  }
+
+  const removeCarro = (index) => {
+    setCarros(prev => prev.filter(( _ , i ) => i !== index))
+  }
+
+  const changeNome = (e) => {
+    setNomeCarro(e.target.value)
+  }
+
+  const changeAno = (e) => {
+    setAnoCarro(e.target.value)
+  }
+
+  const changeMarca = (e) => {
+    setMarcaCarro(e.target.value)
+  }
+
+  return(
+    <>
+      <ul>
+        {carros.map((carro, index) => (
+          <li key={index}>
+            <p>{carro.nome} - {carro.ano} - {carro.marca}</p>
+            <button onClick={() => removeCarro(index)}>Remover</button>
+            <hr />
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" value={nomeCarro} onChange={changeNome} placeholder="Digite o nome" />
+      <input type="number" value={anoCarro} onChange={changeAno} />
+      <input type="text" value={marcaCarro} onChange={changeMarca} placeholder="Digite a marca" />
+
+      <button onClick={addCarro}>Adicionar</button>
+    </>
+  )
+}
+
+-----------------------%%%
+OUTRAS FORMAS: (Mais complicadas)
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [carros, setCarros] = useState([])
+  const [novoCarro, setNovoCarro] = useState(
+    {
+      nome: "", 
+      ano: new Date().getFullYear(),
+      marca: ""
+  })
+
+  const addCarro = () => {
+    if(novoCarro.nome !== "" && novoCarro.ano !== "" && novoCarro.marca !== ""){
+      setCarros(prev => [...prev, novoCarro])
+      setNovoCarro({
+        nome: "", 
+        ano: new Date().getFullYear(),
+        marca: ""
+    })
+    }
+  }
+
+  const removeCarro = (index) => {
+    setCarros(prev => prev.filter(( _ , i ) => i !== index))
+  }
+
+  const changeNome = (e) => {
+    setNovoCarro(prev => ({...prev, nome: e.target.value}))
+  }
+
+  const changeAno = (e) => {
+    setNovoCarro(prev => ({...prev, ano: e.target.value}))
+  }
+
+  const changeMarca = (e) => {
+    setNovoCarro(prev => ({...prev, marca: e.target.value}))
+  }
+
+  return(
+    <>
+      <ul>
+        {carros.map((carro, index) => (
+          <li key={index}>
+            <p>{carro.nome} - {carro.ano} - {carro.marca}</p>
+            <button onClick={() => removeCarro(index)}>Remover</button>
+            <hr />
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" value={novoCarro.nome} onChange={changeNome} placeholder="Digite o nome" />
+      <input type="number" value={novoCarro.ano} onChange={changeAno} />
+      <input type="text" value={novoCarro.marca} onChange={changeMarca} placeholder="Digite a marca" />
+
+      <button onClick={addCarro}>Adicionar</button>
+    </>
+  )
+}
+
+----------------
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [carros, setCarros] = useState([])
+  const [novoCarro, setNovoCarro] = useState({nome: "", ano: "", marca: ""})
+
+  const handleChange = (e) => {
+    setNovoCarro({...novoCarro, [e.target.placeholder.split(" ")[2].toLowerCase()]: e.target.value})
+  }
+
+  const addCarro = () => {
+    if(novoCarro.nome !== "" && novoCarro.ano !== "" && novoCarro.marca !== "") {
+      setCarros(prev => [...prev, novoCarro])
+      setNovoCarro({nome: "", ano: "", marca: ""})
+    }
+  }
+
+  const removeCarro = (index) => {
+    setCarros(prev => prev.filter(( _ , i ) => i !== index))
+  }
+
+  return(
+    <>
+      <ul>
+        {carros.map((carro, index) => (
+          <li key={index}>
+            <p>{carro.nome} - {carro.ano} - {carro.marca}</p>
+            <button onClick={() => removeCarro(index)}>Remover</button>
+            <hr />
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" value={novoCarro.nome} onChange={handleChange} placeholder="Digite o nome" />
+      <input type="number" value={novoCarro.ano} onChange={handleChange} placeholder="Digite o ano" />
+      <input type="text" value={novoCarro.marca} onChange={handleChange} placeholder="Digite a marca" />
+
+      <button onClick={addCarro}>Adicionar</button>
+    </>
+  )
+}
+
+------------------ ###
+MELHOR FORMA: *** (CRUD)
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [carros, setCarros] = useState([])
+  const [novoCarro, setNovoCarro] = useState({nome: '', ano: '', marca: ''})
+
+  const handleChange = (e) => {
+    setNovoCarro(prev => ({...prev, [e.target.name]: e.target.value }));
+  }  
+
+  const addCarro = () => {
+    if (novoCarro.nome && novoCarro.ano && novoCarro.marca) {
+      setCarros(prev => [...prev, { ...novoCarro, id: Date.now() }]);
+      setNovoCarro({nome: '', ano: '', marca: ''});
+    }
+  }
+
+  const removeCarro = (id) => {
+    setCarros(prev => prev.filter((carro) => carro.id !== id));
+  }
+
+  return(
+    <>
+      <ul>
+        {carros.map((carro) => (
+          <li key={carro.id}>
+            <p>{carro.nome} - {carro.ano} - {carro.marca}</p>
+            <button onClick={() => removeCarro(carro.id)}>Remover</button>
+            <hr />
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" name="nome" value={novoCarro.nome} onChange={handleChange} placeholder="Digite o nome" />
+      <input type="number" name="ano" value={novoCarro.ano} onChange={handleChange} placeholder="Digite o ano" />
+      <input type="text" name="marca" value={novoCarro.marca} onChange={handleChange} placeholder="Digite a marca" />
+
+      <button onClick={addCarro}>Adicionar</button>
+    </>
+  )
+}
+
+------
+Criando ids com número seguinte ao id do último item criado:
+
+  const addCarro = () => {
+    if (novoCarro.nome && novoCarro.ano && novoCarro.marca) {
+      setCarros(prev => [...prev, { ...novoCarro, id: prev.length > 0 ? prev[prev.length - 1].id + 1 : 1 }]);
+      setNovoCarro({nome: '', ano: '', marca: ''});
+    }
+  }
+
+------
+Versão alternativa de handleChange e AddCarro:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [carros, setCarros] = useState([])
+  const [novoCarro, setNovoCarro] = useState({nome: "", ano: "", marca: ""})
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNovoCarro(prev => ({...prev, [name]: value }));
+  }
+
+  const addCarro = () => {
+    if(novoCarro.nome.trim() !== "" || novoCarro.ano.trim() !== "" || novoCarro.marca.trim() !== ""){                           
+      setCarros(prev => [...prev, { id: Date.now(), nome: novoCarro.nome, ano: novoCarro.ano, marca: novoCarro.marca}])   
+      setNovoCarro({nome: "", ano: "", marca: ""})
+    }
+  }
+
+  const removeCarro = (index) => {
+    setCarros(prev => prev.filter((carro) => carro.id !== index))
+  }
+
+  return(
+    <>
+      <ul>
+        {carros.map((carro) => (
+          <li key={carro.id}>
+            <p>{carro.nome} - {carro.ano} - {carro.marca}</p>
+            <button onClick={() => removeCarro(carro.id)}>Remover</button>
+            <hr />
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" name="nome" value={novoCarro.nome} onChange={handleChange} placeholder="Digite o nome" />
+      <input type="number" name="ano" value={novoCarro.ano} onChange={handleChange} placeholder="Digite o ano" />
+      <input type="text" name="marca" value={novoCarro.marca} onChange={handleChange} placeholder="Digite a marca" />
+
+      <button onClick={addCarro}>Adicionar</button>
+    </>
+  )
+}
+
 
 //////////////////////////////////////////////////&&&
 
@@ -5175,110 +6517,6 @@ export default function App() {
 };
 
 
-
-////////////////////////////////////////////////////////////////&&&
-HOOK: Use state (forma recomendada)
-VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
-
-Forma simples:
-
-import { usestate } from "react";
-
-const App = () => {
-  const [count, setCount] = usestate(0);
-  const incrementCount = () => {
-    setCount(count + 1);                           //ERRADO
-  }
-  return (
-    <div>
-      <h1>{count}</h1>
-      <button onClick={incrementCount}>Increment</button>
-    </div>
-  )
-}
-export default App;
-
--------
-
-Forma CORRETA:
-
-import { usestate } from "react";
-
-const App = () => {
-
-  const [count, setCount] = usestate(0);
-
-  const incrementCount = () => {
-    setCount((prevState) = prevState + 1);            //CERTO
-  }
-
-  return (
-    <div>
-      <h1>{count}</h1>
-      <button onClick={incrementCount}>Increment</button>
-    </div>
-  )
-}
-
-export default App;
-
-----------
-
-import { usestate } from "react";
-
-const App = () => {
-
-  const [state, setState] = usestate({count: 0, theme: "light"});
-
-  const incrementcount = () => {
-    setState((prevState) => {
-      return {
-        ...prevState,
-        count: prevState.count + 1,
-        theme: "dark"
-      }
-    })
-  }
-
-  return (
-    <div>
-      <h1>{state.count}</h1>
-      <button onClick={incrementCount}>Increment</button>
-    </div>
-  )
-}
-
-export default App;
-
---------------
-
-import { useState } from "react";
-
-export default function App() {
-
-  const [user, setUser] = useState({
-    nome: "Ana",
-    idade: 15,
-    hobbies: ["Leitura","Musica"],
-  })
-
-  const aumentaIdade = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      idade: prevUser.idade + 1,
-    }))
-  }
-
-  return (
-    <div>
-      <p>Nome: {user.nome}</p>
-      <p>Idade: {user.idade}</p>
-      <button onClick={aumentaIdade}>Aumentar idade</button>
-    </div>
-  )
-
-}
-
 ////////////////////////////////////////////////////////////////&&&
 HOOK: Use Effect FORMA CORRETA
 VIDEO: https://www.youtube.com/embed/L-1sP3Ljhsg
@@ -7508,35 +8746,10 @@ const App = () => {
   );
 };
 
-/////////////////////////////////////////////////////////////// &&&
-DESTRUCTION / DESESTRUTURAÇÃO (ao invés de props)
-VIDEO: https://www.youtube.com/embed/playlist?list=PLyRd2qM1TnCriAHRluaT2vmPpfmC1OonK
 
--Usando props:
-
-export default function Teste(props){
-  return (
-    <>
-      <p>{props.nome}</p>
-      <p>{props.idade}</p>
-    </>
-  )
-}
-
-
--Usando destruction:
-
-export default function Teste({nome, idade}){
-  return (
-    <>
-      <p>{nome}</p>
-      <p>{idade}</p>
-    </>
-  )
-}
 
 /////////////////////////////////////////////////////////////// &&&
-Renderização Condicional 
+RENDERIZAÇÃO CONDICIONAL NO REACT:
 VIDEO: https://www.youtube.com/embed/ERflhpiMc1o
 
 {condição && verdadeiro}
@@ -7681,6 +8894,334 @@ const onSubmit = async (values) => {
   </div>
 )}
 ...
+
+---------------------------------------------- ###
+VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
+
+-Arquivo Pessoa.jsx:
+
+export default function Pessoa(props) {
+
+	return (
+		<>
+			{props.casada && <p>{props.nome}</p>}              //OU  {props.casada ? <p>{props.nome}</p> : ""}
+		</>
+	);
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import Pessoa from './components/Pessoa'
+
+export default function App() {
+
+	return (
+		<>
+			<Pessoa nome="Maria" casada={true} />
+		</>
+	);
+}
+
+------------%%%
+
+-Arquivo Pessoa.jsx:
+
+export default function Pessoa(props) {
+  if (props.status) {
+    return <p>Bem vindo(a), {props.nome}.</p>
+  } else {
+    return <p>Por favor, faça o login.</p>
+  }
+}
+
+OU
+
+export default function Pessoa(props) {
+    return (
+      props.status ? <p>Bem vindo(a), {props.nome}</p> : <p>Por favor, faça o login</p>
+    )
+}
+
+OU
+
+export default function Pessoa(props) {
+    return (
+      <p>{props.status ? `Bem vindo(a), ${props.nome}` : "Por favor, faça o login"}</p>
+    )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import Pessoa from './components/Pessoa'
+
+export default function App() {
+
+	return (
+		<>
+			<Pessoa nome="Maria" status={true} />
+		</>
+	);
+}
+
+------------%%%
+
+-Arquivo Tarefa.jsx:
+
+export default function Tarefa(props) {
+  return(
+    <>
+      {props.status 
+      ? 
+        <h3 style={{color: "green"}}>{props.nome} já foi realizado</h3>
+      :
+        <h3 style={{color: "red"}}>{props.nome} não foi realizado</h3>
+      }
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import Terefa from './components/Tarefa'
+
+export default function App() {
+
+	return (
+		<>
+			<Tarefa nome="Estudar React" status={true} />
+		</>
+	);
+}
+
+-------------------- ###
+VIDEO: https://www.youtube.com/embed/lanKyPZQG_4?autoplay=1
+
+
+Exemplo 1:
+
+import React from 'react'
+
+export default function App() {
+
+	const cumprimento = () => {
+		const hora = new Date().getHours()
+		if(hora >= 0 && hora < 13) {
+			return <p>Bom dia</p>
+		}
+		else if(hora >=13 && hora < 18){
+			return <p>Boa tarde</p>
+		}
+		else{
+			return <p>Boa noite</p>
+		}
+	}
+
+	return (
+		<>
+			{cumprimento()}
+		</>
+	);
+}
+
+Com isso, dependendo da hora do sistema ele apresentaráum texto diferente.
+
+--------------
+
+Exemplo 2:
+
+import React,{useState} from 'react'
+
+export default function App() {
+
+	const [log , setLog] = useState(false)
+	
+	const msglogin = () => {
+		return 'Usuário Logado'
+	}
+
+	const msglogoff = () => {
+		return 'Faça o login'
+	}
+
+	return (
+		<>
+			<p>{log ? msglogin() : msglogoff()}</p>
+
+			<button onClick = { () => setLog(!log)}> 
+				{ log ? 'Logoff' : 'Login' } 
+			</button> 
+		</>
+	);
+}
+
+----------------
+
+Exemplo 3:
+
+import React,{useState} from 'react'
+
+export default function App() {
+
+	const [cor, setCor] = useState(1)
+	
+	const vermelho = {color: 'red'}
+	const verde = {color: 'green'}
+	const azul = {color: 'blue'}
+	
+	const voltaCor = (c) =>{
+		if(c == 1) {
+			return vermelho
+		}
+		else if (c == 2){
+			return verde
+		}
+		else{
+			return azul
+		}
+	}
+	
+	const mudaCor = () => {
+		setCor(cor+1)
+		if(cor > 2) {
+			setCor(1)
+		}
+	}
+
+	return (
+		<>
+			<h1 style = {voltaCor(cor)}>TEXTO</h1>
+			<button onClick={() => mudaCor()}>Muda Cor</button>
+		</>
+	);
+}
+
+Com isso ao clicar no botão a cordo texto muda.
+
+Caso queira que a cor seja mudada automaticamente com o passar dos segundos:
+
+import React,{useState} from 'react'
+
+export default function App() {
+
+	const [cor, setCor] = useState(1)
+	
+	const vermelho = {color: 'red'}
+	const verde = {color: 'green'}
+	const azul = {color: 'blue'}
+	
+	const voltaCor = (c) =>{
+		if(c == 1) {
+			return vermelho
+		}
+		else if (c == 2){
+			return verde
+		}
+		else{
+			return azul
+		}
+	}
+	
+	const mudaCor = () => {
+		setCor(cor+1)
+		if(cor > 2) {
+			setCor(1)
+		}
+	}
+	
+	setInterval(mudaCor, 1000)        /* adicione um setInterval */
+
+	return (
+		<>
+			<h1 style = {voltaCor(cor)}>TEXTO</h1>
+			<button onClick={() => mudaCor()}>Muda Cor</button>
+		</>
+	);
+}
+
+--------------------------------- ###
+Condicional com arrays
+
+-Usando operador ternário:
+
+export default function App() {
+
+  const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  return (
+    <>
+      {pessoas.length > 0                      //Se a lista não estiver vazia
+        ? 
+        pessoas.map(pessoa => (
+          <div key={pessoa.id}>                     
+            <p>Nome: {pessoa.nome}</p>
+          </div>
+        ))
+        :
+          <p>Nenhuma pessoa encontrada</p>            //Ou null
+      }
+    </>
+  );
+}
+
+------- %%%
+
+-Usando short-circuit:
+
+-Arquivo Pessoas.jsx:
+
+export default function Pessoas(props) {
+
+  const ListaPessoas = props.pessoas
+
+  return (
+    <>
+      {ListaPessoas.map(pessoa => (
+        <div key={pessoa.id}>                     
+          <p>Nome: {pessoa.nome}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+¨¨¨¨¨
+-Arquivo App.jsx:
+
+import Pessoas from './components/Pessoas'
+
+export default function App() {
+
+  const pessoas = [                                    
+    {id: 1, nome: "Renato", sexo: "Masculino", idade: "31"},
+    {id: 2, nome: "Maria", sexo: "Feminino", idade: "24"},
+    {id: 3, nome: "Valter", sexo: "Masculino", idade: "36"}
+  ];
+
+  const numeros = []                       //Array vazio
+
+  return (
+    <>
+      {pessoas.length > 0 && 
+        <Pessoas pessoas={pessoas} />
+      }
+      
+      {numeros.length > 0 &&               //Não será mostrado pois o array está vazio
+        <p>{numeros}</p>
+      }
+    </>
+  );
+}
+
+------------------ ###
+
+
 
 ////////////////////////////////////////////////////////////////&&&
 MAP EM LISTAS
@@ -10642,14 +12183,17 @@ Dentro deste arquivo, serão colocadas os states.
 -Arquivo store.js:
 
 import {configureStore} from "@reduxjs/toolkit"
+import nome_do_reducer1 from './nomedoSlice1'
+import nome_do_reducer2 from './nomedoSlice2'
 
 const store = configureStore({ 
   reducer: {
-    nome_do_state : nome_do_reducer
+    nome_do_state1 : nome_do_reducer1,
+    nome_do_state2 : nome_do_reducer2
   } 
 })
 
----- ***
+---- 
 
 É necessário importar o Provider do Redux no arquivo main.jsx: (ou index.jsx)
 
@@ -10657,6 +12201,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
+
 import {Provider} from 'react-redux'
 import {store} from './store.js'
 
@@ -10668,11 +12213,308 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>
 )
 
+-------------------------- ###
+Básico:
+
+-Arquivo testeSlice.js:
+
+
+import {createSlice} from "@reduxjs/toolkit"
+
+const initialState = {                                    //O nome InitialState é obrigatório
+  pessoas: [
+    {id: 1, name: "Ana"},
+    {id: 2, name: "Carlos"},
+  ],
+}
+
+const testeSlice = createSlice({                          //createSlice({name, initialState, reducers})
+  name: "nome_do_slice",
+  initialState,
+  reducers: {
+    funcao1: (state, action) => {
+      console.log("State: " + state.pessoas[0].id)
+      console.log("Action: " + action.payload)            //action.payload recebe o valor enviado pelo dispatch em handleClick
+    },
+    funcao2: (state, action) => {
+      alert("Clicou função 2")
+    },
+  },
+})
+
+export const {funcao1, funcao2} = testeSlice.actions
+export default testeSlice.reducer
+
+¨¨¨¨
+-Arquivo store.js:
+
+import {configureStore} from "@reduxjs/toolkit"
+import testeReducer from "./components/testeSlice"
+
+export const store = configureStore({ 
+  reducer: {
+    teste: testeReducer,
+  }, 
+})
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import {funcao1} from './components/testeSlice'
+import {useSelector, useDispatch} from 'react-redux'
+
+export default function App() {
+
+  const tudo = useSelector((state) => state.teste.pessoas)
+
+  const dispatch = useDispatch() 
+
+  const handleClick = (parametro) => {
+    dispatch(funcao1(parametro))
+  }
+
+  const handleClick2 = () => {
+    dispatch(funcao2())
+  }
+  
+  return (
+    <>
+      <p>{tudo[0].name}</p>
+
+      <button onClick={() => handleClick(tudo[0].name)}>Clique</button>
+
+      <button onClick={handleClick2}>Clique</button>
+    </>
+  )
+}
+
 ------------- ###
+-Arquivo testeSlice.js:
+
+import {createSlice} from "@reduxjs/toolkit"
+
+const initialState = {
+  pessoas: [],
+}
+
+const testeSlice = createSlice({
+  name: "nome_deste_state",
+  initialState,
+  reducers: {
+    funcaoAdd: (state, action) => {
+      const newPessoa = { id: Date.now(), name: action.payload };
+      state.pessoas.push(newPessoa);
+    },
+    funcaoRemove: (state, action) => {
+      state.pessoas = state.pessoas.filter((pessoa) => pessoa.id !== action.payload)
+    },
+  },
+})
+
+export const {funcaoAdd, funcaoRemove} = testeSlice.actions
+export default testeSlice.reducer
+
+¨¨¨¨
+-Arquivo store.js:
+
+import {configureStore} from "@reduxjs/toolkit"
+import pessoaReducer from "./components/testeSlice"
+
+export const store = configureStore({ 
+  reducer: {
+    teste: pessoaReducer,
+  }, 
+})
+
+¨¨¨¨
+-Arquivo App.jsx:
+
+import {funcaoAdd, funcaoRemove} from './components/testeSlice'
+import {useSelector, useDispatch} from 'react-redux'
+import {useState} from 'react'
+
+export default function App() {
+
+  const [novaPessoa, setNovaPessoa] = useState("")
+  
+  const todos = useSelector((state) => state.teste.pessoas)
+
+  const dispatch = useDispatch() 
+
+  const handleAdd = () => {
+    if(novaPessoa) {
+      dispatch(funcaoAdd(novaPessoa))
+      setNovaPessoa("")
+    }
+  }
+
+  const handleRemove = (id) => {
+    dispatch(funcaoRemove(id))
+  }
+  
+  return (
+    <>
+        <div>
+          <input 
+            type="text" 
+            placeholder="Digite o nome" 
+            value={novaPessoa}
+            onChange={(e) => setNovaPessoa(e.target.value)}
+          /> 
+          <button onClick={() => handleAdd()}>Adicionar</button>
+        </div>
+      
+      {todos.map((pessoa) => (
+        <div key={pessoa.id}>          
+          <h3>{pessoa.name}</h3>
+          <button onClick={() => handleRemove(pessoa.id)}>Remover</button>
+          <hr />
+        </div>
+      ))}
+    </>
+  )
+}
+
+--------------------------- ###
+VIDEO: https://www.youtube.com/embed/YPVUPpKADb8?autoplay=1
+
+Redux possui:
+
+//Store:
+{
+  count: {value : 0}
+  isLoggedIn: {value: false}
+}
+
+state.count.value
+state.isLoggedIn.value
+
+//Actions:
+const increment = {type: "INCREMENT", payload: 10}
+
+//Reducers:
+ACTION -> REDUCER -> CHANGE STATE
+
+----------
+-Arquivo cartCountSlice.js:
+
+import {createSlice} from "@reduxjs/toolkit"
+
+const initialState = {
+  value: 0,
+}
+
+const cartCountSlice = createSlice({
+  name: "cartCount",
+  initialState,
+  reducers: {
+    increment: (state) => {
+      state.value += 1
+    },
+    decrement: (state) => {
+      state.value -= 1
+    },
+    incrementByAmount: (state, action) => {
+      if (action.payload){                          //para evitar que algo seja enviado se o input estiver vazio
+        state.value += action.payload
+      } 
+    }
+  },
+})
+
+export const {increment, decrement, incrementByAmount} = cartCountSlice.actions
+export default cartCountSlice.reducer
+
+--------
+
+Arquivo main.jsx: (ou index.jsx)
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+import {configureStore} from "@reduxjs/toolkit"
+import {Provider} from 'react-redux'
+import cartCountReducer from './cartCountSlice'
+
+const store = configureStore({ 
+  reducer: {
+    cartCount : cartCountReducer
+  } 
+})
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </StrictMode>
+)
+
+OBS: Neste exemplo, o store não foi criado em um arquivo separado, sendo inserido diretamente no main/index
+
+-------
+-Arquivo Pagina1.jsx:
+
+import {useSelector} from 'react-redux'
+
+export function Pagina1() {
+
+  const cartCount = useSelector(state => state.cartCount.value)
+
+  return(
+    <div>
+      <h2>Contagem de itens: {cartCount}</h2>
+    </div>
+  )
+}
 
 
+-------
+-Arquivo Pagina2.jsx:
 
+import {useState} from 'react'
+import {useDispatch} from 'react-redux'
+import {increment, decrement, incrementByAmount} from './components/cartCountSlice'
+import {useSelector} from 'react-redux'      //**Opcional para pegar e usar o valor do state neste componente
 
+export function Pagina2() {
+
+  const [incrementAmount, setIncrementAmount] = useState(0)
+
+  const cartCount = useSelector(state => state.cartCount.value)      //**Opcional 
+
+  const dispatch = useDispatch()
+
+  return (
+    <div>
+      <button onClick={() => dispatch(increment())}>Aumentar</button>
+
+      <button onClick={() => dispatch(decrement())}>Diminuir</button>
+
+      <input onChange={(e) => setIncrementAmount(parseInt(e.target.value))} />
+
+      <button onClick={() => dispatch(incrementByAmount(incrementAmount))}>Add X items</button>
+
+      <h3>Número de itens: {cartCount}</h3>           //**Opcional 
+    </div>
+  )
+}
+
+--------
+-Arquivo App.jsx:
+
+import {Pagina1} from './components/Pagina1'
+import {Pagina2} from './components/Pagina2'
+
+export default function App(){
+  return(
+    <>
+      <Pagina1 />
+      <Pagina2 />
+    </>
+  )
+}
 
 -------------###
 CRUD (Add e Remove) COM REDUX TOOLKIT
@@ -10725,7 +12567,7 @@ Forma alternativa de criar id (criará o id com o número seguinte ao último id
 import {configureStore} from "@reduxjs/toolkit"
 import movieReducer from "./movieSlice"
 
-const store = configureStore({ 
+export const store = configureStore({ 
   reducer: {
     movies: movieReducer,
   }, 
@@ -10749,7 +12591,7 @@ export const MovieList = () => {
 
   return (
     <div>
-      <h1>Lista de filmes</h1>
+      <h2>Lista de filmes</h2>
 
       {AllMovies.map((movie) => (
         <div key={movie.id}>
@@ -10807,6 +12649,27 @@ export default function App() {
 }
 
 ----------------------------- ###
+
+
+
+////////////////////////////////////////////////////////////////&&&
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
