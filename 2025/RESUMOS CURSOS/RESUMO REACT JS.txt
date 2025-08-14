@@ -3152,7 +3152,7 @@ export default function App(){
   )
 }
 
-//////////////////////////////////////////////////&&& ***
+//////////////////////////////////////////////////&&& 
 ATUALIZANDO OS VALORES DE UM ARRAY DE OBJETOS
 VIDEO: https://www.youtube.com/embed/CgkZ7MvWUAA
 
@@ -7438,10 +7438,6 @@ export default function App() {
   )
 }
 
------------------------ ###
-VIDEO: 
-
-
 
 ////////////////////////////////////////////////////////////////&&&
 HOOK: useContext
@@ -9219,9 +9215,6 @@ export default function App() {
   );
 }
 
------------------- ###
-
-
 
 ////////////////////////////////////////////////////////////////&&&
 MAP EM LISTAS
@@ -10122,6 +10115,2085 @@ npm run build
 Será gerada a pasta dist
 
 O conteúdo dentro da pasta dist é o que será colocado na pasta public de um site de hospedagem
+
+//////////////////////////////////////////////////////////////// &&&
+TESTES COM VITEST e REACT TESTING LIBRARY
+
+Instalação apenas do Vitest:
+npm install -D vitest 
+
+Porém, para interagir com o React, é necessário instalar o React Testing Library também:
+npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
+
+Adicione o script do vitest no arquivo package.json:
+
+{
+  "scripts": {
+    "test": "vitest"
+  }
+}
+
+Para rodar o teste:
+npm run test
+
+------------------------------- ###
+Teste de uma função isolada (sem react):
+
+-Arquivo Soma.js:
+
+export function sum(a, b) {
+  return a + b
+}
+
+¨¨¨¨
+-Arquivo Soma.test.js:
+
+import { expect, test } from 'vitest'
+import { soma } from './Soma.js'
+
+test('soma 1 com 2 dando o resultado 3', () => {
+  expect(soma(1, 2)).toBe(3)
+})
+
+------------------------------ ###
+VIDEO: https://www.youtube.com/embed/iLZHFDelYpQ?autoplay=1
+Testes com componentes no react:
+
+Para usar o vitest com o React, é necessário adicionar o código abaixo no arquivo vite.config.js.
+
+-Arquivo vite.config.js:
+
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+  }
+})
+
+-------- %%%
+Criando um teste simples de debug:
+
+-Arquivo ComponenteA.jsx:
+
+export default function ComponenteA(){
+  return(
+    <>
+      <div>TEXTO DE EXEMPLO</div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA.test.jsx:         //Extensão precisa ser a mesma do arquivo original
+
+import '@testing-library/jest-dom'
+import { render } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  test('Should be able to see the initial text on screen', () => {
+    const {debug} = render(<ComponenteA />)   
+    debug()
+  })
+})
+
+-Para rodar o teste, no terminal, vá até a pasta onde estão os 2 arquivos e execute:
+npm run test
+
+
+-Com o debug, será mostrado no terminal a árvore do DOM.
+
+----------------- %%%
+Criando um teste para saber se o texto aparece na tela: 
+
+-Arquivo ComponenteA.test.jsx:        
+
+import '@testing-library/jest-dom'
+import { render } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  test('Should be able to see the initial text on screen', () => {
+    const {getByText} = render(<ComponenteA />)   
+    expect(getByText("TEXTO DE EXEMPLO")).toBeInTheDocument()
+  })
+})
+
+---------------- %%%
+
+-Arquivo Button.jsx:
+
+export default function Button({children}){
+
+  return(
+    <>
+      <button data-testid="btn">
+        {children}
+      </button>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo Button.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import Button from './Button'
+
+describe('Button', () => {
+  test('Should be able to render the button', () => {
+    const {getByTestId} = render(<Button>CLIQUE</Button>)   
+    expect(getByTestId("btn")).toBeInTheDocument()
+  })
+})
+
+------------- %%%
+
+-Arquivo Button.jsx:
+
+export default function Button({children}){
+
+  return(
+    <>
+      <button data-testid="btn">
+        {children}
+      </button>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo Button.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import Button from './Button'
+
+describe('Button', () => {
+
+  beforeEach(() => {
+    render(<Button>CLIQUE</Button>)
+  })
+
+  test('Should be able to render the button', () => {  
+    expect(screen.getByTestId("btn")).toBeInTheDocument()
+  })
+
+  test('Should be able to render based on the children prop', () => {  
+    expect(screen.getByTestId("btn")).toHaveTextContent("CLIQUE")
+  })
+})
+
+--------------------- %%%
+Teste com estilo/style css:
+
+-Arquivo ComponenteA.jsx:
+
+export default function ComponenteA(){
+
+  return(
+    <>
+      <h1 style={{color: "#ffffff", backgroundColor: "#000000"}} data-testid="txt">Texto de exemplo</h1>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  test('Should be able to have a default style', () => {
+    render(<ComponenteA />)
+
+    const texto = screen.getByTestId('txt')       
+    expect(texto).toHaveStyle({
+      color: "#ffffff",
+      backgroundColor: "#000000"
+    })
+  })
+})
+
+
+------------------------------------- ###
+USANDO ID:
+
+-Arquivo ComponenteA.jsx:
+
+export default function ComponenteA(){
+
+  return(
+    <>
+      <button data-testid="btn">CLIQUE</button>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render , screen } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  test('Should be able to render the button', () => {
+    render(<ComponenteA />)
+
+    const button = screen.getByTestId('btn', { name: "CLIQUE" })       //OU const button = screen.getByTestId('btn')
+    expect(button).toBeInTheDocument()
+  })
+})
+
+OBS: Com ids não é necessário especificar o name
+
+-----------------
+USANDO ROLE:
+
+-Arquivo ComponenteA.jsx:
+
+export default function ComponenteA(){
+
+  return(
+    <>
+      <button>CLIQUE</button>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render , screen } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  test('Should be able to render the button', () => {
+    render(<ComponenteA />)
+
+    const button = screen.getByRole('button', { name: "CLIQUE" })
+    expect(button).toBeInTheDocument()
+  })
+})
+
+OBS: Com roles, é necessário especificar o name, pois pode haver outros elementos com o mesmo role, por exemplo, mais de 1 button.
+
+------------------------------- ###
+IT x TEST
+
+-Exemplo usando test:
+
+import '@testing-library/jest-dom'
+import { render , screen } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  test('Should be able to render the button', () => {
+    render(<ComponenteA />)
+    const button = screen.getByRole('button', { name: "CLIQUE" })
+    expect(button).toBeInTheDocument()
+  })
+})
+
+¨¨¨¨
+Exemplo usando it:
+
+import '@testing-library/jest-dom'
+import { render , screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  it('Should be able to render the button', () => {
+    render(<ComponenteA />)
+    const button = screen.getByRole('button', { name: "CLIQUE" })
+    expect(button).toBeInTheDocument()
+  })
+})
+
+----------------------- ###
+
+-Arquivo ComponenteA.jsx:
+
+import {useState} from 'react'
+
+export default function ComponenteA(){
+
+  const [num, setNum] = useState(0)
+
+  function soma(a, b) {
+    setNum(a + b)
+  }
+
+  return(
+    <>
+      <h1>{num}</h1>
+      <button onClick={() => soma(1,2)}>SOMAR</button>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA.test.js:
+
+import '@testing-library/jest-dom'           
+import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+
+  it('deve renderizar o componente com valor inicial 0', () => {
+    render(<ComponenteA />)
+    const heading = screen.getByRole('heading', { level: 1 })
+    expect(heading).toHaveTextContent('0')
+  })
+
+  it('deve renderizar o botão com o texto "SOMAR"', () => {
+    render(<ComponenteA />)
+    const button = screen.getByRole('button', { name: /somar/i })
+    expect(button).toBeInTheDocument()
+  })
+
+  it('deve somar 1 + 2 e exibir o resultado quando o botão for clicado', () => {
+    render(<ComponenteA />)   
+    const heading = screen.getByRole('heading', { level: 1 })
+    const button = screen.getByRole('button', { name: /somar/i })
+    expect(heading).toHaveTextContent('0')
+    fireEvent.click(button)
+    expect(heading).toHaveTextContent('3')
+  })
+
+  it('deve manter o último valor após múltiplos cliques', () => {
+    render(<ComponenteA />)
+    const heading = screen.getByRole('heading', { level: 1 })
+    const button = screen.getByRole('button', { name: /somar/i })
+
+    // Primeiro clique
+    fireEvent.click(button)
+    expect(heading).toHaveTextContent('3')
+    
+    // Segundo clique (substitui o valor anterior)
+    fireEvent.click(button)
+    expect(heading).toHaveTextContent('3')
+  })
+
+  it('deve verificar se a função soma está funcionando corretamente', () => {
+    render(<ComponenteA />)
+    
+    const heading = screen.getByRole('heading', { level: 1 })
+    const button = screen.getByRole('button')
+    
+    // Estado inicial
+    expect(heading.textContent).toBe('0')
+    
+    // Após clicar, deve mostrar o resultado de 1 + 2
+    fireEvent.click(button)
+    expect(heading.textContent).toBe('3')
+  })
+})
+
+OBS: Também era possível colocar o jest-dom em um arquivo separado:
+
+-Arquivo vite.config.js:
+
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js'
+  }
+})
+
+
+¨¨¨¨
+-Crie o arquivo src/test/setup.js:
+
+import '@testing-library/jest-dom'
+
+---------------------------- ###
+-Arquivo Counter.jsx:
+
+import {useState} from 'react'
+
+export default function Counter({initialCount}){
+
+  const [count, setCount] = useState(initialCount)
+
+  const increment = () => {
+    setCount(prev => prev + 1)
+  }
+
+  const decrement = () => {
+    setCount(prev => prev - 1)
+  }
+
+  const restart = () => {
+    setCount(0)
+  }
+
+  const switchSigns = () => {
+    setCount(prev => prev * -1)
+  }
+
+  return(
+    <>
+      <h3 data-testid='count'>{count}</h3>
+      <div>
+        <button onClick={increment}>Increment</button>
+        <button onClick={decrement}>Decrement</button>
+        <button onClick={restart}>Restart</button>
+        <button onClick={switchSigns}>Switch Signs</button>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo Counter.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import Counter from './Counter'
+
+describe('Counter Component', () => {
+  it('should render with initial count value', () => {
+    render(<Counter initialCount={5} />)
+    
+    const countElement = screen.getByTestId('count')
+    expect(countElement).toHaveTextContent('5')
+  })
+
+  it('should render with 0 when no initialCount is provided', () => {
+    render(<Counter />)
+    
+    const countElement = screen.getByTestId('count')
+    expect(countElement).toHaveTextContent('0')
+  })
+
+  it('should increment count when increment button is clicked', () => {
+    render(<Counter initialCount={3} />)
+    
+    const incrementButton = screen.getByRole('button', { name: 'Increment' })      //OU screen.getByText('Increment')
+    const countElement = screen.getByTestId('count')
+    
+    fireEvent.click(incrementButton)
+    
+    expect(countElement).toHaveTextContent('4')
+  })
+
+  it('should decrement count when decrement button is clicked', () => {
+    render(<Counter initialCount={3} />)
+    
+    const decrementButton = screen.getByRole('button', { name: 'Decrement' })      //OU screen.getByText('Decrement')
+    const countElement = screen.getByTestId('count')
+    
+    fireEvent.click(decrementButton)
+    
+    expect(countElement).toHaveTextContent('2')
+  })
+
+  it('should reset count to 0 when restart button is clicked', () => {
+    render(<Counter initialCount={10} />)
+    
+    const restartButton = screen.getByRole('button', { name: 'Restart' })
+    const countElement = screen.getByTestId('count')
+    
+    fireEvent.click(restartButton)
+    
+    expect(countElement).toHaveTextContent('0')
+  })
+
+  it('should switch signs when switch signs button is clicked', () => {
+    render(<Counter initialCount={5} />)
+    
+    const switchSignsButton = screen.getByRole('button', { name: 'Switch Signs' })
+    const countElement = screen.getByTestId('count')
+    
+    fireEvent.click(switchSignsButton)
+    
+    expect(countElement).toHaveTextContent('-5')
+  })
+
+  it('should switch signs from negative to positive', () => {
+    render(<Counter initialCount={-3} />)
+    
+    const switchSignsButton = screen.getByRole('button', { name: 'Switch Signs' })
+    const countElement = screen.getByTestId('count')
+    
+    fireEvent.click(switchSignsButton)
+    
+    expect(countElement).toHaveTextContent('3')
+  })
+
+  it('should handle multiple operations correctly', () => {
+    render(<Counter initialCount={0} />)
+    
+    const incrementButton = screen.getByRole('button', { name: 'Increment' })
+    const decrementButton = screen.getByRole('button', { name: 'Decrement' })
+    const switchSignsButton = screen.getByRole('button', { name: 'Switch Signs' })
+    const countElement = screen.getByTestId('count')
+    
+    // Increment twice: 0 -> 1 -> 2
+    fireEvent.click(incrementButton)
+    fireEvent.click(incrementButton)
+    expect(countElement).toHaveTextContent('2')
+    
+    // Switch signs: 2 -> -2
+    fireEvent.click(switchSignsButton)
+    expect(countElement).toHaveTextContent('-2')
+    
+    // Decrement: -2 -> -3
+    fireEvent.click(decrementButton)
+    expect(countElement).toHaveTextContent('-3')
+  })
+
+  it('should restart to 0 regardless of current value', () => {
+    render(<Counter initialCount={0} />)
+    
+    const incrementButton = screen.getByRole('button', { name: 'Increment' })
+    const switchSignsButton = screen.getByRole('button', { name: 'Switch Signs' })
+    const restartButton = screen.getByRole('button', { name: 'Restart' })
+    const countElement = screen.getByTestId('count')
+    
+    // Change the value
+    fireEvent.click(incrementButton) // 0 -> 1
+    fireEvent.click(switchSignsButton) // 1 -> -1
+    
+    // Restart should reset to 0
+    fireEvent.click(restartButton)
+    expect(countElement).toHaveTextContent('0')
+  })
+
+  it('should render all buttons', () => {
+    render(<Counter initialCount={0} />)
+    
+    expect(screen.getByRole('button', { name: 'Increment' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Decrement' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Restart' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Switch Signs' })).toBeInTheDocument()
+  })
+})
+
+---------------
+-Arquivo Counter.jsx:
+
+import {useState} from 'react'
+
+export default function Counter({initialCount, txt}){
+
+  const [count, setCount] = useState(initialCount)
+
+  const increment = () => {
+    setCount(prev => prev + 1)
+  }
+
+  return(
+    <>
+      <h2>{txt}</h2>
+      <h3 data-testid='count'>{count}</h3>
+      <div>
+        <button onClick={increment}>Increment</button>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo Counter.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import Counter from './Counter'
+
+describe('Counter Component', () => {
+
+  it('should increment count when increment button is clicked', () => {
+    render(<Counter initialCount={3} />)
+    
+    const incrementButton = screen.getByRole('button', { name: 'Increment' })
+    const countElement = screen.getByTestId('count')
+    
+    fireEvent.click(incrementButton)
+    
+    expect(countElement).toHaveTextContent('4')
+  })
+
+  it('txt should display the text "Contagem"', () => {
+    render(<Counter txt={"Contagem"} />)
+    
+    const txtElement = screen.getByRole('heading', {level: 2})
+    
+    expect(txtElement).toHaveTextContent('Contagem')
+  })
+})
+
+------------------------------------------------------ ###
+TESTES NO VITEST EM TODOS E CRUDS:
+
+Exemplo 1:
+
+-Arquivo App.jsx:
+
+import {useState} from 'react'
+
+export default function App(){
+
+  const [carros, setCarros] = useState([])
+  const [novoCarro, setNovoCarro] = useState({nome: '', ano: '', marca: ''})
+
+  const handleChange = (e) => {
+    setNovoCarro(prev => ({...prev, [e.target.name]: e.target.value }));
+  }  
+
+  const addCarro = () => {
+    if (novoCarro.nome && novoCarro.ano && novoCarro.marca) {
+      setCarros(prev => [...prev, { ...novoCarro, id: Date.now() }]);
+      setNovoCarro({nome: '', ano: '', marca: ''});
+    }
+  }
+
+  const removeCarro = (id) => {
+    setCarros(prev => prev.filter((carro) => carro.id !== id));
+  }
+
+  return(
+    <>
+      <ul>
+        {carros.map((carro) => (
+          <li key={carro.id}>
+            <p>{carro.nome} - {carro.ano} - {carro.marca}</p>
+            <button onClick={() => removeCarro(carro.id)}>Remover</button>
+            <hr />
+          </li>
+        ))}
+      </ul>
+
+      <input type="text" name="nome" value={novoCarro.nome} onChange={handleChange} placeholder="Digite o nome" />
+      <input type="number" name="ano" value={novoCarro.ano} onChange={handleChange} placeholder="Digite o ano" />
+      <input type="text" name="marca" value={novoCarro.marca} onChange={handleChange} placeholder="Digite a marca" />
+
+      <button onClick={addCarro}>Adicionar</button>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.test.jsx:
+
+import '@testing-library/jest-dom'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { render, screen, fireEvent, cleanup } from '@testing-library/react'
+import App from './App'
+
+// Mock do Date.now para testes consistentes
+const mockDateNow = vi.fn()
+mockDateNow.mockReturnValue(1234567890)
+global.Date.now = mockDateNow
+
+describe('App - Gerenciador de Carros', () => {
+  beforeEach(() => {
+    cleanup()
+    mockDateNow.mockClear()
+    mockDateNow.mockReturnValue(1234567890)
+  })
+
+  it('deve renderizar o componente corretamente', () => {
+    render(<App />)
+    
+    // Verifica se os campos de input estão presentes
+    expect(screen.getByPlaceholderText('Digite o nome')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Digite o ano')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Digite a marca')).toBeInTheDocument()
+    expect(screen.getByText('Adicionar')).toBeInTheDocument()
+  })
+
+  it('deve atualizar os valores dos inputs ao digitar', () => {
+    render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const inputMarca = screen.getByPlaceholderText('Digite a marca')
+
+    // Simula digitação nos campos
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Honda' } })
+
+    // Verifica se os valores foram atualizados
+    expect(inputNome.value).toBe('Civic')
+    expect(inputAno.value).toBe('2022')
+    expect(inputMarca.value).toBe('Honda')
+  })
+
+  it('deve adicionar um carro quando todos os campos estão preenchidos', () => {
+    render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const inputMarca = screen.getByPlaceholderText('Digite a marca')
+    const botaoAdicionar = screen.getByText('Adicionar')
+
+    // Preenche os campos
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Honda' } })
+
+    // Clica no botão adicionar
+    fireEvent.click(botaoAdicionar)
+
+    // Verifica se o carro foi adicionado à lista
+    expect(screen.getByText('Civic - 2022 - Honda')).toBeInTheDocument()
+    expect(screen.getByText('Remover')).toBeInTheDocument()
+  })
+
+  it('deve limpar os campos após adicionar um carro', () => {
+    render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const inputMarca = screen.getByPlaceholderText('Digite a marca')
+    const botaoAdicionar = screen.getByText('Adicionar')
+
+    // Preenche e adiciona um carro
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Honda' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Verifica se os campos foram limpos
+    expect(inputNome.value).toBe('')
+    expect(inputAno.value).toBe('')
+    expect(inputMarca.value).toBe('')
+  })
+
+  it('não deve adicionar carro se algum campo estiver vazio', () => {
+    render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const botaoAdicionar = screen.getByText('Adicionar')
+
+    // Preenche apenas nome e ano (deixa marca vazia)
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Verifica que nenhum carro foi adicionado
+    expect(screen.queryByText('Civic - 2022 -')).not.toBeInTheDocument()
+  })
+
+  it('deve adicionar múltiplos carros', () => {
+    render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const inputMarca = screen.getByPlaceholderText('Digite a marca')
+    const botaoAdicionar = screen.getByText('Adicionar')
+
+    // Adiciona primeiro carro
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Honda' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Mock para simular um ID diferente para o segundo carro
+    mockDateNow.mockReturnValue(1234567891)
+
+    // Adiciona segundo carro
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Corolla' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2023' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Toyota' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Verifica se ambos os carros estão na lista
+    expect(screen.getByText('Civic - 2022 - Honda')).toBeInTheDocument()
+    expect(screen.getByText('Corolla - 2023 - Toyota')).toBeInTheDocument()
+    expect(screen.getAllByText('Remover')).toHaveLength(2)
+  })
+
+  it('deve remover um carro específico da lista', () => {
+    render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const inputMarca = screen.getByPlaceholderText('Digite a marca')
+    const botaoAdicionar = screen.getByText('Adicionar')
+
+    // Adiciona primeiro carro
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Honda' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Mock para simular um ID diferente
+    mockDateNow.mockReturnValue(1234567891)
+
+    // Adiciona segundo carro
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Corolla' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2023' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Toyota' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Verifica que ambos estão na tela
+    expect(screen.getByText('Civic - 2022 - Honda')).toBeInTheDocument()
+    expect(screen.getByText('Corolla - 2023 - Toyota')).toBeInTheDocument()
+
+    // Remove o primeiro carro
+    const botoesRemover = screen.getAllByText('Remover')
+    fireEvent.click(botoesRemover[0])
+
+    // Verifica que apenas o segundo carro permanece
+    expect(screen.queryByText('Civic - 2022 - Honda')).not.toBeInTheDocument()
+    expect(screen.getByText('Corolla - 2023 - Toyota')).toBeInTheDocument()
+    expect(screen.getAllByText('Remover')).toHaveLength(1)
+  })
+
+  it('deve renderizar lista vazia inicialmente', () => {
+    render(<App />)
+    
+    // Verifica que não há carros na lista inicialmente
+    expect(screen.queryByText('Remover')).not.toBeInTheDocument()
+  })
+
+  it('deve renderizar elementos hr para separação visual', () => {
+    const { container } = render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const inputMarca = screen.getByPlaceholderText('Digite a marca')
+    const botaoAdicionar = screen.getByText('Adicionar')
+
+    // Adiciona um carro
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Honda' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Verifica se o elemento hr está presente
+    const hrElements = container.querySelectorAll('hr')
+    expect(hrElements).toHaveLength(1)
+  })
+
+  it('deve usar Date.now() para gerar IDs únicos', () => {
+    render(<App />)
+    
+    const inputNome = screen.getByPlaceholderText('Digite o nome')
+    const inputAno = screen.getByPlaceholderText('Digite o ano')
+    const inputMarca = screen.getByPlaceholderText('Digite a marca')
+    const botaoAdicionar = screen.getByText('Adicionar')
+
+    // Adiciona um carro
+    fireEvent.change(inputNome, { target: { name: 'nome', value: 'Civic' } })
+    fireEvent.change(inputAno, { target: { name: 'ano', value: '2022' } })
+    fireEvent.change(inputMarca, { target: { name: 'marca', value: 'Honda' } })
+    fireEvent.click(botaoAdicionar)
+
+    // Verifica se Date.now foi chamado
+    expect(mockDateNow).toHaveBeenCalled()
+  })
+})
+
+------------------------------------- %%%
+Exemplo 2: *** TODO LIST COM BOTÃO ÚNICO DE REMOVER TAREFAS SELECIONADAS
+
+-Arquivo App.jsx:
+
+import {useState, useEffect} from 'react'
+
+export default function App(){
+
+  const [tasks, setTasks] = useState(() => localStorage.getItem('tasks') ? JSON.parse(localStorage.getItem('tasks')) : []);
+  //OU const [tasks, setTasks] = useState( JSON.parse(localStorage.getItem("tasks")) ?? []);
+
+  const [newTask, setNewTask] = useState("")
+
+  useEffect(() => {
+    const temp = JSON.stringify(tasks)
+    localStorage.setItem("tasks", temp)
+  }, [tasks])
+
+  function addTask(e){                             
+    e.preventDefault()                                     
+
+    if(newTask.trim() !== ""){ 
+      setTasks(prev => [...prev, { id: Date.now(), txt: newTask.trim(), completed: false }])            
+      setNewTask("")
+    }
+  }
+
+  function deleteTask() {
+    setTasks(tasks.filter((task) => !task.completed))
+  } 
+
+  function toggleComplete(id) {
+    setTasks(prev => prev.map(task =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTask}>
+        <input type="text" value={newTask} onChange={(e) => setNewTask(e.target.value)} placeholder="Digite a tarefa" />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {tasks.some(task => task.completed) ? <button onClick={deleteTask}>Remover selecionados</button> : ''}
+
+      {tasks.map((task) => 
+        <div key={task.id}>
+
+          <h2 
+            style={{ 
+              textDecoration: task.completed ? "line-through" : "", 
+              color: task.completed ? "#00ff15ff" : "#ff0000ff", 
+            }}>
+              {task.txt}
+          </h2>
+
+          <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+
+        </div>)
+      }
+    </div>
+  )
+}
+
+¨¨¨¨
+-App.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import App from './App'
+
+// Mock do localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+}
+
+// Substitui o localStorage global pelo mock
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+})
+
+describe('App - Lista de Tarefas', () => {
+  
+  beforeEach(() => {
+    // Limpa todos os mocks antes de cada teste
+    vi.clearAllMocks()
+    // Define o comportamento padrão do localStorage.getItem
+    localStorageMock.getItem.mockReturnValue(null)
+  })
+///////
+  describe('Renderização inicial', () => {
+  
+    it('deve renderizar o formulário de adicionar tarefa', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      const button = screen.getByRole('button', { name: /adicionar/i })
+      
+      expect(input).toBeInTheDocument()
+      expect(button).toBeInTheDocument()
+    })
+////
+    it('deve renderizar sem tarefas quando localStorage está vazio', () => {
+      render(<App />);
+      
+      const tasks = screen.queryAllByTestId('task-item');
+      expect(tasks).toHaveLength(0);
+    });
+
+    // OUTRA FORMA:
+    //  it('deve inicializar com array vazio quando localStorage estiver vazio', () => {
+    //    localStorageMock.getItem.mockReturnValue(null)
+    //
+    //    render(<App />)
+    //
+    //    // Verifica se não há tarefas renderizadas
+    //    expect(screen.queryByRole('heading')).not.toBeInTheDocument()
+    //  })
+////
+    it('deve carregar tarefas do localStorage na inicialização', () => {
+      const tasksMock = [
+        { id: 1, txt: 'Tarefa 1', completed: false },
+        { id: 2, txt: 'Tarefa 2', completed: true }
+      ]
+      localStorageMock.getItem.mockReturnValue(JSON.stringify(tasksMock))
+
+      render(<App />)
+
+      expect(screen.getByText('Tarefa 1')).toBeInTheDocument()
+      expect(screen.getByText('Tarefa 2')).toBeInTheDocument()
+    })
+  });
+/////////
+  describe('Adição de tarefas', () => {
+
+    it('deve adicionar uma nova tarefa quando o formulário for enviado', async () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      const button = screen.getByRole('button', { name: /adicionar/i })
+      
+      // Adiciona texto no input
+      fireEvent.change(input, { target: { value: 'Nova tarefa' } })
+      fireEvent.click(button)
+      
+      // Verifica se a tarefa foi adicionada
+      await waitFor(() => {
+        expect(screen.getByText('Nova tarefa')).toBeInTheDocument()
+      })
+      
+      // Verifica se o input foi limpo
+      expect(input.value).toBe('')
+
+      // Verifica se localStorage.setItem foi chamado
+      expect(localStorageMock.setItem).toHaveBeenCalled()
+    })
+////
+    it('não deve adicionar tarefa vazia ou apenas com espaços', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      const button = screen.getByRole('button', { name: /adicionar/i })
+      
+      // Tenta adicionar tarefa vazia
+      fireEvent.change(input, { target: { value: '' } })
+      fireEvent.click(button)
+      
+      expect(screen.queryByRole('heading')).not.toBeInTheDocument()
+      
+      // Tenta adicionar tarefa apenas com espaços
+      fireEvent.change(input, { target: { value: '   ' } })
+      fireEvent.click(button)
+      
+      expect(screen.queryByRole('heading')).not.toBeInTheDocument()
+    })
+////
+    it('deve remover espaços em branco das extremidades da tarefa', async () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      const button = screen.getByRole('button', { name: /adicionar/i })
+      
+      fireEvent.change(input, { target: { value: '  Tarefa com espaços  ' } })
+      fireEvent.click(button)
+      
+      await waitFor(() => {
+        expect(screen.getByText('Tarefa com espaços')).toBeInTheDocument()
+      })
+    })
+  })
+//////////////////////
+  describe('Marcar tarefas como completas', () => {
+
+    it('deve marcar/desmarcar tarefa como completa ao clicar no checkbox', async () => {
+      render(<App />)
+      
+      // Adiciona uma tarefa primeiro
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      fireEvent.change(input, { target: { value: 'Tarefa para completar' } })
+      fireEvent.submit(input.closest('form'))
+      
+      await waitFor(() => {
+        expect(screen.getByText('Tarefa para completar')).toBeInTheDocument()
+      })
+      
+      const checkbox = screen.getByRole('checkbox')
+      const taskText = screen.getByText('Tarefa para completar')
+      
+      // Verifica estado inicial (não completada)
+      expect(checkbox.checked).toBe(false)                         //OU expect(checkbox).not.toBeChecked()
+      expect(taskText).toHaveStyle('color: #ff0000ff')
+      expect(taskText).toHaveStyle('text-decoration: ')
+      
+      // Marca como completa
+      fireEvent.click(checkbox)
+      
+      await waitFor(() => {
+        expect(checkbox.checked).toBe(true)                         //OU expect(checkbox).toBeChecked()
+        expect(taskText).toHaveStyle('color: #00ff15ff')
+        expect(taskText).toHaveStyle('text-decoration: line-through')
+      })
+      
+      // Desmarca como completa
+      fireEvent.click(checkbox)
+      
+      await waitFor(() => {
+        expect(checkbox.checked).toBe(false)                       //OU expect(checkbox).not.toBeChecked()
+        expect(taskText).toHaveStyle('color: #ff0000ff')
+        expect(taskText).toHaveStyle('text-decoration: ')
+      })
+    })
+  })
+/////////////////////
+  describe('Remover tarefas marcadas com checked', () => {
+    it('deve mostrar botão de remover apenas quando há tarefas completas', async () => {
+      render(<App />)
+      
+      // Adiciona uma tarefa
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      fireEvent.change(input, { target: { value: 'Tarefa teste' } })
+      fireEvent.submit(input.closest('form'))
+      
+      await waitFor(() => {
+        expect(screen.getByText('Tarefa teste')).toBeInTheDocument()
+      })
+      
+      // Verifica que não há botão de remover inicialmente
+      expect(screen.queryByText(/remover selecionados/i)).not.toBeInTheDocument()
+      
+      // Marca a tarefa como completa
+      const checkbox = screen.getByRole('checkbox')
+      fireEvent.click(checkbox)
+      
+      // Verifica que o botão de remover aparece
+      await waitFor(() => {
+        expect(screen.getByText(/remover selecionados/i)).toBeInTheDocument()
+      })
+    })
+////
+    it('deve remover todas as tarefas marcadas com checked ao clicar em remover', async () => {
+      const tasksMock = [
+        { id: 1, txt: 'Tarefa 1', completed: false },
+        { id: 2, txt: 'Tarefa 2', completed: true },
+        { id: 3, txt: 'Tarefa 3', completed: true }
+      ]
+      localStorageMock.getItem.mockReturnValue(JSON.stringify(tasksMock))
+
+      render(<App />)
+      
+      // Verifica se todas as tarefas estão presentes
+      expect(screen.getByText('Tarefa 1')).toBeInTheDocument()
+      expect(screen.getByText('Tarefa 2')).toBeInTheDocument()
+      expect(screen.getByText('Tarefa 3')).toBeInTheDocument()
+      
+      // Clica no botão remover
+      const removeButton = screen.getByText(/remover selecionados/i)
+      fireEvent.click(removeButton)
+      
+      // Verifica que apenas a tarefa não completa permanece
+      await waitFor(() => {
+        expect(screen.getByText('Tarefa 1')).toBeInTheDocument()
+        expect(screen.queryByText('Tarefa 2')).not.toBeInTheDocument()
+        expect(screen.queryByText('Tarefa 3')).not.toBeInTheDocument()
+      })
+      
+      // Verifica que o botão de remover desaparece
+      expect(screen.queryByText(/remover selecionados/i)).not.toBeInTheDocument()
+    })
+  })
+////////////////////////
+  describe('LocalStorage', () => {
+
+    it('deve carregar tarefas do localStorage', () => {
+      // Mock do localStorage com tarefas existentes
+      const existingTasks = [
+        { id: 1, txt: 'Tarefa do localStorage', completed: false }
+      ]
+      localStorageMock.getItem.mockReturnValue(JSON.stringify(existingTasks))
+      
+      render(<App />)
+      
+      // Verifica se a tarefa do localStorage foi carregada
+      expect(screen.getByText('Tarefa do localStorage')).toBeInTheDocument()
+    })
+////
+    it('deve salvar tarefas no localStorage quando uma tarefa for adicionada', async () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      const form = input.closest('form')
+
+      // Adiciona uma tarefa
+      fireEvent.change(input, { target: { value: 'Nova tarefa' } })
+      fireEvent.submit(form)
+      
+      // Verifica se setItem foi chamado com a tarefa correta
+      await waitFor(() => {
+        expect(localStorageMock.setItem).toHaveBeenCalledWith(
+          'tasks', 
+          expect.stringContaining('Nova tarefa')
+        )
+      })
+    })
+////
+    it('deve atualizar localStorage quando uma tarefa for marcada como completa', async () => {
+      const tasksMock = [{ id: 1, txt: 'Tarefa teste', completed: false }]
+      localStorageMock.getItem.mockReturnValue(JSON.stringify(tasksMock))
+
+      render(<App />)
+      
+      const checkbox = screen.getByRole('checkbox')
+      fireEvent.click(checkbox)
+      
+      await waitFor(() => {
+        expect(localStorageMock.setItem).toHaveBeenCalledWith(
+          'tasks',
+          expect.stringContaining('"completed":true')
+        )
+      })
+    })
+////
+    it('deve atualizar localStorage quando tarefas forem removidas', async () => {
+      const tasksMock = [
+        { id: 1, txt: 'Tarefa 1', completed: false },
+        { id: 2, txt: 'Tarefa 2', completed: true }
+      ]
+      localStorageMock.getItem.mockReturnValue(JSON.stringify(tasksMock))
+
+      render(<App />)
+      
+      const removeButton = screen.getByText(/remover selecionados/i)
+      fireEvent.click(removeButton)
+      
+      await waitFor(() => {
+        expect(localStorageMock.setItem).toHaveBeenCalledWith(
+          'tasks',
+          JSON.stringify([{ id: 1, txt: 'Tarefa 1', completed: false }])
+        )
+      })
+    })
+  })
+//////////////////////////
+  describe('Acessibilidade e UX', () => {
+
+    it('deve ter IDs únicos para cada tarefa (Checar a quantidade de checkbox)', async () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      
+      // Adiciona múltiplas tarefas
+      fireEvent.change(input, { target: { value: 'Tarefa 1' } })
+      fireEvent.submit(input.closest('form'))
+      
+      await waitFor(() => {
+        expect(screen.getByText('Tarefa 1')).toBeInTheDocument()
+      })
+      
+      fireEvent.change(input, { target: { value: 'Tarefa 2' } })
+      fireEvent.submit(input.closest('form'))
+      
+      await waitFor(() => {
+        expect(screen.getByText('Tarefa 2')).toBeInTheDocument()
+      })
+      
+      // Verifica se há dois checkboxes (um para cada tarefa)
+      const checkboxes = screen.getAllByRole('checkbox')
+      expect(checkboxes).toHaveLength(2)
+    })
+////
+    it('deve manter o foco no input após adicionar tarefa (Limpar o input após adicionar)', async () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText("Digite a tarefa")
+      
+      fireEvent.change(input, { target: { value: 'Teste foco' } })
+      fireEvent.submit(input.closest('form'))
+      
+      await waitFor(() => {
+        expect(screen.getByText('Teste foco')).toBeInTheDocument()
+      })
+      
+      // O input deve estar limpo e pronto para nova entrada
+      expect(input.value).toBe('')
+    })
+  })
+})
+
+
+
+TESTES COM A TECLA ENTER
+////
+  describe('Adição de tarefas com a tecla Enter', () => {
+    it('deve adicionar tarefa ao pressionar Enter', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const form = input.closest('form')
+      
+      // Digita o texto da tarefa
+      fireEvent.change(input, { target: { value: 'Nova tarefa de teste' } })
+      
+      // Simula pressionar Enter (que dispara o onSubmit do form)
+      fireEvent.submit(form)             
+      
+      // Verifica se a tarefa foi adicionada na tela
+      expect(screen.getByText('Nova tarefa de teste')).toBeInTheDocument()
+      
+      // Verifica se o input foi limpo
+      expect(input.value).toBe('')
+      
+      // Verifica se localStorage.setItem foi chamado
+      expect(localStorageMock.setItem).toHaveBeenCalled()
+    })
+////
+    it('não deve adicionar tarefa vazia ao pressionar Enter', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const form = input.closest('form')
+      
+      // Deixa o input vazio
+      fireEvent.change(input, { target: { value: '' } })
+      
+      // Pressiona Enter
+      fireEvent.submit(form)
+      
+      // Verifica que nenhuma tarefa foi adicionada
+      const tasks = screen.queryAllByRole('heading')
+      expect(tasks).toHaveLength(0)
+    })
+////
+    it('não deve adicionar tarefa com apenas espaços ao pressionar Enter', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const form = input.closest('form')
+      
+      // Digita apenas espaços
+      fireEvent.change(input, { target: { value: '   ' } })
+      
+      // Pressiona Enter
+      fireEvent.submit(form)
+      
+      // Verifica que nenhuma tarefa foi adicionada
+      const tasks = screen.queryAllByRole('heading')
+      expect(tasks).toHaveLength(0)
+    })
+////
+    it('deve remover espaços extras da tarefa ao adicionar via Enter', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const form = input.closest('form')
+      
+      // Digita tarefa com espaços extras
+      fireEvent.change(input, { target: { value: '  Tarefa com espaços  ' } })
+      
+      // Pressiona Enter
+      fireEvent.submit(form)
+      
+      // Verifica se a tarefa foi adicionada sem os espaços extras
+      expect(screen.getByText('Tarefa com espaços')).toBeInTheDocument()
+    })
+////
+    it('deve adicionar múltiplas tarefas ao pressionar Enter repetidas vezes', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const form = input.closest('form')
+      
+      // Adiciona primeira tarefa
+      fireEvent.change(input, { target: { value: 'Primeira tarefa' } })
+      fireEvent.submit(form)
+      
+      // Adiciona segunda tarefa
+      fireEvent.change(input, { target: { value: 'Segunda tarefa' } })
+      fireEvent.submit(form)
+      
+      // Adiciona terceira tarefa
+      fireEvent.change(input, { target: { value: 'Terceira tarefa' } })
+      fireEvent.submit(form)
+      
+      // Verifica se todas as tarefas estão presentes
+      expect(screen.getByText('Primeira tarefa')).toBeInTheDocument()
+      expect(screen.getByText('Segunda tarefa')).toBeInTheDocument()
+      expect(screen.getByText('Terceira tarefa')).toBeInTheDocument()
+    })
+  })
+////
+  
+//// ESTÁ DANDO ERRO
+  it('deve adicionar tarefa ao pressionar tecla Enter diretamente no input', () => {
+    render(<App />)
+    
+    const input = screen.getByPlaceholderText('Digite a tarefa')
+    
+    // Digita o texto da tarefa
+    fireEvent.change(input, { target: { value: 'Tarefa via Enter' } })
+    
+    // Simula pressionar Enter diretamente no input
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' })
+    
+    // Verifica se a tarefa foi adicionada
+    expect(screen.getByText('Tarefa via Enter')).toBeInTheDocument()
+    
+    // Verifica se o input foi limpo
+    expect(input.value).toBe('')
+  })
+////
+
+----------------------------------------- ###
+TODO COM BOTÃO REMOVER EM CADA TAREFA
+
+-Arquivo App.jsx:
+
+import {useState, useEffect} from 'react'
+
+export default function App(){
+
+  const [tasks, setTasks] = useState( JSON.parse(localStorage.getItem("tasks")) ?? []);
+  const [newTask, setNewTask] = useState("")
+
+  useEffect(() => {
+    const temp = JSON.stringify(tasks)
+    localStorage.setItem("tasks", temp)
+  }, [tasks])
+
+  function addTask(e){                             
+    e.preventDefault()                                     
+
+    if(newTask.trim() !== ""){ 
+      setTasks(prev => [...prev, { id: Date.now(), txt: newTask.trim(), completed: false }])            
+      setNewTask("")
+    }
+  }
+
+  function deleteTask(id) {
+    setTasks(prev => prev.filter((task) => task.id !== id)) 
+  } 
+
+  function toggleComplete(id) {
+    setTasks(prev => prev.map(task =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  }
+
+  return(
+    <div>
+      <form onSubmit={addTask}>
+        <input type="text" value={newTask} onChange={(e) => setNewTask(e.target.value)} placeholder="Digite a tarefa" />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      {tasks.map((task) => 
+        <div key={task.id}>
+
+          <h2 
+            style={{ 
+              textDecoration: task.completed ? "line-through" : "", 
+              color: task.completed ? "#01c511ff" : "#ff0000ff", 
+            }}>
+              {task.txt}
+              <input type="checkbox" onChange={() => toggleComplete(task.id)} checked={task.completed} />
+              <button onClick={() => deleteTask(task.id)}>Remover</button>
+          </h2>
+        </div>
+      )}
+      
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.test.jsx:
+
+import '@testing-library/jest-dom'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import App from './App'
+
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+}
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock
+})
+
+describe('App - Lista de Tarefas', () => {
+
+  beforeEach(() => {
+    // Limpa todos os mocks antes de cada teste
+    vi.clearAllMocks()
+    localStorageMock.getItem.mockReturnValue(null)
+  })
+  
+/////////////////////
+  describe('Renderização inicial', () => {
+    it('deve renderizar o formulário de adicionar tarefa', () => {
+      render(<App />)
+      
+      expect(screen.getByPlaceholderText('Digite a tarefa')).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Adicionar' })).toBeInTheDocument()
+    })
+////
+    it('deve carregar tarefas do localStorage na inicialização', () => {
+      const tasksMock = [
+        { id: 1, txt: 'Tarefa do localStorage', completed: false }
+      ]
+      localStorageMock.getItem.mockReturnValue(JSON.stringify(tasksMock))
+
+      render(<App />)
+      
+      expect(screen.getByText('Tarefa do localStorage')).toBeInTheDocument()
+      expect(localStorageMock.getItem).toHaveBeenCalledWith('tasks')
+    })
+////
+    it('deve inicializar com array vazio quando localStorage está vazio', () => {
+      localStorageMock.getItem.mockReturnValue(null)
+      
+      render(<App />)
+      
+      expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    })
+  })
+////////////////////
+  describe('Adicionar tarefas', () => {
+    it('deve adicionar uma nova tarefa quando o formulário é submetido', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const button = screen.getByRole('button', { name: 'Adicionar' })
+      
+      fireEvent.change(input, { target: { value: 'Nova tarefa' } })
+      fireEvent.click(button)
+      
+      expect(screen.getByText('Nova tarefa')).toBeInTheDocument()
+      expect(input.value).toBe('')
+    })
+////
+    it('deve adicionar tarefa pressionando Enter', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const form = input.closest('form')
+      
+      fireEvent.change(input, { target: { value: 'Tarefa com Enter' } })
+      fireEvent.submit(form)
+      
+      expect(screen.getByText('Tarefa com Enter')).toBeInTheDocument()
+    })
+////
+    it('não deve adicionar tarefa vazia', () => {
+      render(<App />)
+      
+      const button = screen.getByRole('button', { name: 'Adicionar' })
+      
+      fireEvent.click(button)
+      
+      expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    })
+////
+    it('não deve adicionar tarefa contendo apenas espaços', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const button = screen.getByRole('button', { name: 'Adicionar' })
+      
+      fireEvent.change(input, { target: { value: '   ' } })
+      fireEvent.click(button)
+      
+      expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    })
+////
+    it('deve remover espaços em branco das extremidades ao adicionar tarefa', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const button = screen.getByRole('button', { name: 'Adicionar' })
+      
+      fireEvent.change(input, { target: { value: '  Tarefa com espaços  ' } })
+      fireEvent.click(button)
+      
+      expect(screen.getByText('Tarefa com espaços')).toBeInTheDocument()
+    })
+  })
+////////////////
+  describe('Remover tarefas', () => {
+    it('deve remover uma tarefa quando o botão remover é clicado', () => {
+      render(<App />)
+      
+      // Adiciona uma tarefa primeiro
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      fireEvent.change(input, { target: { value: 'Tarefa para remover' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+      
+      // Remove a tarefa
+      const removeButton = screen.getByRole('button', { name: 'Remover' })
+      fireEvent.click(removeButton)
+      
+      expect(screen.queryByText('Tarefa para remover')).not.toBeInTheDocument()
+    })
+////
+    it('deve remover apenas a tarefa específica quando há múltiplas tarefas', () => {
+      render(<App />)
+      
+      // Adiciona duas tarefas
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      
+      fireEvent.change(input, { target: { value: 'Primeira tarefa' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+      
+      fireEvent.change(input, { target: { value: 'Segunda tarefa' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+      
+      // Remove apenas a primeira tarefa
+      const removeButtons = screen.getAllByRole('button', { name: 'Remover' })
+      fireEvent.click(removeButtons[0])
+      
+      expect(screen.queryByText('Primeira tarefa')).not.toBeInTheDocument()
+      expect(screen.getByText('Segunda tarefa')).toBeInTheDocument()
+    })
+  })
+/////////////////
+  describe('Marcar/desmarcar tarefas como completas', () => {
+    beforeEach(() => {
+      render(<App />)
+      
+      // Adiciona uma tarefa para os testes
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      fireEvent.change(input, { target: { value: 'Tarefa de teste' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+    })
+////
+    it('deve marcar tarefa como completa quando checkbox é clicado', () => {
+      const checkbox = screen.getByRole('checkbox')
+      
+      fireEvent.click(checkbox)
+      
+      expect(checkbox).toBeChecked()
+      
+      // Verifica se o estilo foi aplicado (texto riscado e cor verde)
+      const taskText = screen.getByText('Tarefa de teste').closest('h2')
+      expect(taskText).toHaveStyle({
+        textDecoration: 'line-through',
+        color: '#01c511ff'
+      })
+    })
+////
+    it('deve desmarcar tarefa completa quando checkbox é clicado novamente', () => {
+      const checkbox = screen.getByRole('checkbox')
+      
+      // Marca como completa primeiro
+      fireEvent.click(checkbox)
+      expect(checkbox).toBeChecked()
+      
+      // Desmarca
+      fireEvent.click(checkbox)
+      expect(checkbox).not.toBeChecked()
+      
+      // Verifica se o estilo foi removido
+      const taskText = screen.getByText('Tarefa de teste').closest('h2')
+      expect(taskText).toHaveStyle({
+        textDecoration: '',
+        color: '#ff0000ff'
+      })
+    })
+  })
+/////////////////
+  describe('Estilos visuais', () => {
+    it('deve aplicar estilo de tarefa não completa por padrão', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      fireEvent.change(input, { target: { value: 'Tarefa não completa' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+      
+      const taskText = screen.getByText('Tarefa não completa').closest('h2')
+      expect(taskText).toHaveStyle({
+        textDecoration: '',
+        color: '#ff0000ff'
+      })
+    })
+  })
+/////////////////
+  describe('localStorage', () => {
+    it('deve salvar tarefas no localStorage quando uma nova tarefa é adicionada', async () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      fireEvent.change(input, { target: { value: 'Tarefa para salvar' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+      
+      await waitFor(() => {
+        expect(localStorageMock.setItem).toHaveBeenCalledWith(
+          'tasks',
+          expect.stringContaining('Tarefa para salvar')
+        )
+      })
+    })
+////
+    it('deve atualizar localStorage quando tarefa é removida', async () => {
+      render(<App />)
+      
+      // Adiciona uma tarefa
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      fireEvent.change(input, { target: { value: 'Tarefa para remover' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+      
+      // Remove a tarefa
+      const removeButton = screen.getByRole('button', { name: 'Remover' })
+      fireEvent.click(removeButton)
+      
+      await waitFor(() => {
+        expect(localStorageMock.setItem).toHaveBeenLastCalledWith('tasks', '[]')
+      })
+    })
+////
+    it('deve atualizar localStorage quando tarefa é marcada como completa', async () => {
+      render(<App />)
+      
+      // Adiciona uma tarefa
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      fireEvent.change(input, { target: { value: 'Tarefa para completar' } })
+      fireEvent.click(screen.getByRole('button', { name: 'Adicionar' }))
+      
+      // Marca como completa
+      const checkbox = screen.getByRole('checkbox')
+      fireEvent.click(checkbox)
+      
+      await waitFor(() => {
+        const lastCall = localStorageMock.setItem.mock.calls[localStorageMock.setItem.mock.calls.length - 1]
+        const savedTasks = JSON.parse(lastCall[1])
+        expect(savedTasks[0].completed).toBe(true)
+      })
+    })
+  })
+////////////////
+  describe('Múltiplas tarefas', () => {
+    it('deve gerenciar corretamente múltiplas tarefas', () => {
+      render(<App />)
+      
+      const input = screen.getByPlaceholderText('Digite a tarefa')
+      const addButton = screen.getByRole('button', { name: 'Adicionar' })
+      
+      // Adiciona três tarefas
+      fireEvent.change(input, { target: { value: 'Primeira tarefa' } })
+      fireEvent.click(addButton)
+      
+      fireEvent.change(input, { target: { value: 'Segunda tarefa' } })
+      fireEvent.click(addButton)
+      
+      fireEvent.change(input, { target: { value: 'Terceira tarefa' } })
+      fireEvent.click(addButton)
+      
+      // Verifica se todas as tarefas estão presentes
+      expect(screen.getByText('Primeira tarefa')).toBeInTheDocument()
+      expect(screen.getByText('Segunda tarefa')).toBeInTheDocument()
+      expect(screen.getByText('Terceira tarefa')).toBeInTheDocument()
+      
+      // Verifica se há 3 checkboxes
+      expect(screen.getAllByRole('checkbox')).toHaveLength(3)
+      
+      // Verifica se há 3 botões de remover
+      expect(screen.getAllByRole('button', { name: 'Remover' })).toHaveLength(3)
+    })
+  })
+})
+
+
+------------------------------------------ ###
+userEvent:  (Necessário instalar @testing-library/user-event)
+
+import userEvent from '@testing-library/user-event';     
+
+describe('Adição de tarefas', () => {
+    it('deve adicionar uma nova tarefa quando o formulário é enviado', async () => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      const input = screen.getByRole('textbox');
+      const button = screen.getByRole('button', { name: /adicionar/i });
+
+      await user.type(input, 'Nova tarefa');
+      await user.click(button);
+
+      expect(screen.getByText('Nova tarefa')).toBeInTheDocument();
+      expect(input.value).toBe('');
+    });
+});
+  
+
+/////////////////////////////////////////////////////////////////////// &&&
+TESTE COM JEST E REACT TEST LIBRARY 
+
+Instalação do Jest e React Test Library:
+npm install -D jest @testing-library/react @testing-library/jest-dom jest-environment-jsdom
+
+¨¨¨¨
+-Arquivo jest.config.js:
+
+module.exports = {
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
+  moduleNameMapping: {
+    '\\.(css|less|scss)$': 'identity-obj-proxy'
+  },
+  transform: {
+    '^.+\\.(js|jsx)$': 'babel-jest'
+  }
+}
+
+¨¨¨¨
+-Arquivo src/setupTests.js:
+
+import '@testing-library/jest-dom'
+
+¨¨¨¨
+-Arquivo package.json scripts:
+
+{
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  }
+}
+
+----------------------- ###
+
+-Arquivo ComponenteA.jsx:
+
+import {useState} from 'react'
+
+export default function ComponenteA(){
+
+  const [num, setNum] = useState(0)
+
+  function soma(a, b) {
+    setNum(a + b)
+  }
+
+  return(
+    <>
+      <h1>{num}</h1>
+      <button onClick={() => soma(1,2)}>SOMAR</button>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA.test.js:
+
+import { render, screen, fireEvent } from '@testing-library/react'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  it('deve renderizar o componente com valor inicial 0', () => {
+    render(<ComponenteA />)
+    
+    const heading = screen.getByRole('heading', { level: 1 })
+    expect(heading).toHaveTextContent('0')
+  })
+
+  it('deve renderizar o botão com o texto "SOMAR"', () => {
+    render(<ComponenteA />)
+    
+    const button = screen.getByRole('button', { name: /somar/i })
+    expect(button).toBeInTheDocument()
+  })
+
+  it('deve somar 1 + 2 e exibir o resultado quando o botão for clicado', () => {
+    render(<ComponenteA />)
+    
+    const heading = screen.getByRole('heading', { level: 1 })
+    const button = screen.getByRole('button', { name: /somar/i })
+    
+    // Verifica o valor inicial
+    expect(heading).toHaveTextContent('0')
+    
+    // Clica no botão
+    fireEvent.click(button)
+    
+    // Verifica se o valor foi atualizado para 3 (1 + 2)
+    expect(heading).toHaveTextContent('3')
+  })
+
+  it('deve manter o último valor após múltiplos cliques', () => {
+    render(<ComponenteA />)
+    
+    const heading = screen.getByRole('heading', { level: 1 })
+    const button = screen.getByRole('button', { name: /somar/i })
+    
+    // Primeiro clique
+    fireEvent.click(button)
+    expect(heading).toHaveTextContent('3')
+    
+    // Segundo clique (substitui o valor anterior)
+    fireEvent.click(button)
+    expect(heading).toHaveTextContent('3')
+  })
+
+  it('deve verificar se a função soma está funcionando corretamente', () => {
+    render(<ComponenteA />)
+    
+    const heading = screen.getByRole('heading', { level: 1 })
+    const button = screen.getByRole('button')
+    
+    // Estado inicial
+    expect(heading.textContent).toBe('0')
+    
+    // Após clicar, deve mostrar o resultado de 1 + 2
+    fireEvent.click(button)
+    expect(heading.textContent).toBe('3')
+  })
+})
+
+
+---------------------- ###
+VIDEO: https://www.youtube.com/embed/JBSUgDxICg8
+
+Crie um arquivo de testes para o componente que quiser testar com o seguinte nome: (Ex: ComponenteA)
+ComponenteA.test.js
+
+Dentro do arquivo, irá descrever o que o componente faz com o seguinte código:
+
+import ComponenteA from './ComponenteA'
+import {render} from "@testing-library/react"
+
+describe(ComponenteA, () => {
+  it("Descrição do que o componente faz", () => {
+    const {getByTestId} = render(<ComponenteA variavel={valor} />)
+    ...
+    expect(variavelValue).toEqual(valor)
+  })
+})
+
+E no arquivo ComponenteA:
+
+...
+  <h3 data-testId="variavel">{variavel}</h3>
+...
+
+Para realizar o teste, digite o script de testes do jest gravado no package.json:
+npm test
+ou 
+yarn test
+
+------------------ ###
+
+Exemplo de teste com um componente com botões para alterar o valor de uma variavel chamada count.
+O componente possui:
+-Um botão para aumentar o valor de count em 1
+-Um botão para dimunuir o valor de count em 1
+-Um botão para resetar o valor de count
+-Um botão para reverter o sinal de count
+
+-Arquivo Counter.jsx:
+
+import {useState} from 'react'
+
+export default function Counter({initialCount}){
+
+  const [count, setCount] = useState(initialCount)
+
+  const increment = () => {
+    setCount(prev => prev + 1)
+  }
+
+  const decrement = () => {
+    setCount(prev => prev - 1)
+  }
+
+  const restart = () => {
+    setCount(0)
+  }
+
+  const switchSigns = () => {
+    setCount(prev => prev * -1)
+  }
+
+  return(
+    <>
+      <h3 data-testid='count'>{count}</h3>
+      <div>
+        <button onClick={increment}>Increment</button>
+        <button onClick={decrement}>Decrement</button>
+        <button onClick={restart}>Restart</button>
+        <button onClick={switchSigns}>Switch Signs</button>
+      </div>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo Counter.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render, fireEvent } from '@testing-library/react'
+//import { describe, it, expect } from 'vitest'                        (Não é preciso ao usar o Jest)
+import Counter from "./Counter";
+
+describe(Counter, () => {
+  it("counter displays correct initial count", () => {
+    const { getByTestId } = render(<Counter initialCount={0} />);
+    const countValue = Number(getByTestId("count").textContent);
+    expect(countValue).toEqual(0);
+  });
+
+  it("count should increment by 1 if the increment button is clicked", () => {
+    const { getByTestId, getByRole } = render(<Counter initialCount={0} />);
+    const incrementBttn = getByRole("button", { name: "Increment" });
+    const countValue1 = Number(getByTestId("count").textContent);                 //**Forma 1 usando uma variavel
+    expect(countValue1).toEqual(0);
+    fireEvent.click(incrementBttn);
+    const countValue2 = Number(getByTestId("count"). textContent);
+    expect(countValue2).toEqual(1);
+  });
+
+  it("count should decrement by 1 if the decrement button is clicked", () => {
+    const { getByTestId, getByRole } = render(<Counter initialCount={0} />);
+    const decrementBttn = getByRole("button", { name: "Decrement" });
+    expect(Number(getByTestId("count").textContent)).toEqual(0);                  //**Forma 2 sem usar uma variavel
+    fireEvent.click(decrementBttn);
+    expect(Number(getByTestId("count").textContent)).toEqual(-1);
+  });
+
+  it("count should be 0 if the restart button is clicked", () => {
+    const { getByTestId, getByRole } = render(<Counter initialCount={50} />);
+    const restartBttn = getByRole("button", { name: "Restart" });
+    expect(Number(getByTestId("count").textContent)).toEqual(50);
+    fireEvent.click(restartBttn);
+    expect(Number(getByTestId("count").textContent)).toEqual(0);
+  });  
+
+  it("count should invert signs if the switch signs button is clicked", () => {
+    const { getByTestId, getByRole } = render(<Counter initialCount={50} />);
+    const switchBttn = getByRole("button", { name: "Switch Signs" });
+    expect(Number(getByTestId("count").textContent)).toEqual(50);
+    fireEvent.click(switchBttn);
+    expect(Number(getByTestId("count").textContent)).toEqual(-50);
+  });    
+})
+
+
+----------------------------------- ###
+
 
 //////////////////////////////////////////////////////////////// &&&
 TODO LIST / TO-DO LIST
@@ -11155,6 +13227,7 @@ export default function App(){
     return storedTasks ? JSON.parse(storedTasks) : [];
   })
   //const [todos, setTodos] = useState( JSON.parse(localStorage.getItem("todos")) ?? []);
+  //const [todos, setTodos] = useState(() => localStorage.getItem('todos') ? JSON.parse(localStorage.getItem('todos')) : []);
   const [todo, setTodo] = useState("")
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
