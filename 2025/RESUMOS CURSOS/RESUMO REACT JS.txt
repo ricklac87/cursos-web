@@ -10394,6 +10394,50 @@ describe('ComponenteA', () => {
 
 OBS: Com roles, é necessário especificar o name, pois pode haver outros elementos com o mesmo role, por exemplo, mais de 1 button.
 
+--------------------------------###
+USANDO CLASSNAMES (não recomendado)
+
+Important Considerations:
+
+Prioritize user-centric queries:
+Whenever possible, use queries like getByRole, getByText, or getByLabelText as they lead to more robust and user-friendly tests.
+
+Use class name queries as a last resort:
+If other, more accessible queries are not feasible for your specific testing need, then using class names can be a fallback.
+
+-----
+
+-Arquivo ComponenteA.jsx:
+
+export default function ComponenteA(){
+
+  return(
+    <>
+      <h1 className="txt" style={{color: "#ff0000ff"}}>TEXTO DE EXEMPLO</h1>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo ComponenteA.test.jsx:
+
+import '@testing-library/jest-dom'
+import { render , screen } from '@testing-library/react'
+import { describe, expect, test } from 'vitest'
+import ComponenteA from './ComponenteA'
+
+describe('ComponenteA', () => {
+  test('Should be able to render the text', () => {
+    const {container} = render(<ComponenteA />)
+
+    const texto = container.querySelector('.txt')
+
+    expect(texto).toBeInTheDocument();
+    expect(texto).toHaveStyle({color: "#ff0000ff"});
+    expect(texto).toHaveTextContent("TEXTO DE EXEMPLO");
+  })
+})
+
 ------------------------------- ###
 IT x TEST
 

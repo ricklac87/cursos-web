@@ -1,0 +1,924 @@
+
+
+//////////////////////////////////////////////////////////////// &&&
+CRIANDO UM PROJETO EM NEXT JS
+
+Para criar um projeto, dentro da pasta do projeto, digite no terminal:
+npx create-next-app@latest
+
+Um dos arquivos criados é o next.config.js (ou next.config.ts para typescript).
+Dentro dele estarão os códigos para personalizar e configurar tudo dentro do aplicativo, desde enviroment variables até instruções de construção.
+
+//////////////////////////////////////////////////////// &&&
+LAYOUT
+
+O arquivo layout.jsx ou layout.tsx é onde estará o layout da página como fontes e metadata, além da estrutura da página. 
+É o equivalente ao arquivo main.jsx ou main.tsx no React normal.
+
+//////////////////////////////////////////////////////// &&&
+TIPOS DE ROUTER
+VIDEO: https://www.youtube.com/embed/xnOwOBYaA3w
+
+O NextJS já possui algo similar ao React Router Dom.
+Há 2 tipos de routing no NextJS.
+
+-App router    (Forma moderna e mais escalável)
+Cria uma pasta com o nome da route e dentro dela o componente a ser renderizado
+
+Estrutura de pastas:
+app
+  layout.jsx
+  page.jsx
+  about             (pasta da route)
+    page.jsx        (o componente about route)
+public
+styles
+components
+lib
+middleware.js
+next.config.js
+jsconfig.json
+
+¨¨
+-Pages router:   (Forma antiga e desatualizada)   
+Cria uma pasta chamada pages e dentro dela terá os arquivos ou pastas em que se tornarão a route.
+
+Estrutura de pastas:
+.next
+node_modules
+pages             (pasta pages no nextjs)
+  api
+  _app.js
+  index.js        (página index no nextjs)
+public
+styles
+.gitignore
+package.json
+README.md
+
+/////////////////////////////////////////////////////////// &&&
+PAGES
+VIDEO: https://www.youtube.com/embed/KAQCHfu_3jw
+
+O arquivo principal do Next é o page.tsx dentro da pasta app, que fica dentro da pasta src:
+
+src
+  app
+    favicon.ico
+    globals.css
+    layout.tsx
+    page.tsx
+
+Este arquivo seria o equivalente ao App.tsx no React.
+
+Para rodar este arquivo, digite no terminal:
+npm run dev
+
+-Exemplo de arquivo page.tsx:
+
+export default function Home() {
+  return (
+    <>
+      <h1>Conteúdo da página Home</h1>
+    </>
+  );
+}
+
+Este arquivo será mostrado na url http://localhost:3000/
+
+---------- ###
+
+Para criar uma outra página, crie uma pasta dentro da pasta app:
+
+src
+  app
+    posts
+      page.tsx
+
+
+Para acessar essa página, vá até a url http://localhost:3000/posts
+
+-Exemplo de arquivo page.tsx:
+
+export default function Posts() {
+  return (
+    <>
+      <h1>Conteúdo da página posts</h1>
+    </>
+  );
+}
+
+////////////////////////////////////////////////////////// &&&
+Importando componentes
+VIDEO: https://www.youtube.com/embed/KAQCHfu_3jw
+
+Segue o mesmo padrão do React normal:
+
+-Arquivo page.tsx: (dentro da pasta posts)
+
+export default function Posts() {
+  return (
+    <>
+      <h1>Conteúdo da página posts</h1>
+    </>
+  );
+}
+
+¨¨¨¨
+-Arquivo page.tsx: (arquivo principal)
+
+import Posts from './posts/page'
+
+export default function Home() {
+  return (
+    <>
+      <h1>Conteúdo da página Home</h1>
+      <Posts />
+    </>
+  );
+}
+
+-------------------- ###
+Props:
+
+-Arquivo page.tsx: (dentro da pasta posts)
+
+interface Props {
+  nome: string;
+}
+
+export default function Posts({nome}: Props) {
+  return (
+    <>
+      <h1>{nome}</h1>
+    </>
+  );
+}
+
+¨¨¨¨
+-Arquivo page.tsx: (arquivo principal)
+
+import Posts from './posts/page'
+
+export default function Home() {
+  return (
+    <>
+      <Posts nome="Maria" />
+    </>
+  );
+}
+
+///////////////////////////////////////////////////////////// &&&
+CRIANDO UM HEADER E UM FOOTER
+VIDEO: https://www.youtube.com/embed/KAQCHfu_3jw
+
+Crie uma pasta chamada components dentro da pasta src (ou da pasta app, se quiser).
+Crie os arquivos header.tsx e footer.tsx dentra da pasta components.
+
+-Arquivo header.tsx:
+
+import Link from "next/link"
+
+export default function Header() {
+  return (
+    <div>
+      <div>Logo</div>
+
+      <ul>
+        <li>
+          <Link href="/">Home</Link>
+        </li>
+        <li>
+          <Link href="/posts">Posts</Link>
+        </li>
+      </ul>
+
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo footer.tsx:
+
+export default function Footer() {
+  return (
+    <div>
+      <div>Footer</div>
+    </div>
+  )
+}
+
+-Importando os componentes Header e Footer no arquivo layout.tsx (que é o equivalente ao main.tsx no React):
+
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+import Header from './components/header'
+import Footer from './components/footer'
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Titulo da página",
+  description: "Descrição da página",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="pt-BR">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <Header />
+          {children}
+        <Footer />
+      </body>
+    </html>
+  );
+}
+
+//////////////////////////////////////////////////////////////////// &&&
+IMAGES
+VIDEO: https://www.youtube.com/embed/KAQCHfu_3jw
+
+O Next possui uma tag própria de imagens:
+
+import Image from 'next/image'
+
+<Image 
+  src="/logo.png"             //dentro da pasta public
+  alt="Logo"
+  width={30}
+  height={30}
+  priority
+/>
+
+--------
+Para adicionar imagens vindas de urls, é necessário adicionar o seguinte código no arquivo next.config.ts:
+
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+  images: {
+    remotePatterns: [new URL('https://placehold.co/**')],
+  },
+};
+
+export default nextConfig;
+
+
+-Arquivo page.tsx:
+
+import Image from 'next/image'
+
+<Image 
+  src="https://placehold.co/600x400"
+  alt="Logo"
+  width={30}
+  height={30}
+  priority
+  unoptimized
+/>
+
+/////////////////////////////////////////////////////////////// &&&
+PEGANDO OS DADOS DE UMA API EXTERNA
+VIDEO: https://www.youtube.com/embed/KAQCHfu_3jw
+
+Sem NextJS, o fetch seria feito da seguinte forma:
+
+import {useState, useEffect} from 'react'
+
+export default function Posts() {
+
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    fetch(...)
+    ...
+  }, [])
+
+  return (
+    <>
+      ...
+    </>
+  );
+}
+
+Porém, essa forma só roda no componente cliente.
+
+-----
+
+No NEXTJS, os componentes também são do lado servidor. Então é possível usar async da seguinte forma:
+
+export default async function Posts() {
+
+  const response = await fetch("https://dummyjson.com/posts")
+  const data = await response.json()
+
+  return (
+    <>
+      {data.posts.map((post: {id: number; title: string}) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+
+////////////////////////////////////////////////////////////// &&&
+NEXTJS + MYSQL
+VIDEO: https://www.youtube.com/embed/uUElHXmXMRM
+
+-Exemplo fazendo a conexão dentro do próprio arquivo:
+
+// app/page.tsx (Server Component)
+
+import mysql from 'mysql2/promise';
+require("dotenv").config();
+
+async function PegarDados() {
+    const db = { 
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE      
+    };
+    const connection = await mysql.createConnection(db);
+    const [rows] = await connection.execute('SELECT * FROM city');
+    connection.end();
+    return rows;
+}
+
+export default async function Posts() {
+
+  const cidades: any = await PegarDados();
+
+  return (
+    <>
+      {cidades.map((cidade: {ID: number; Name: string}) => (
+        <div key={cidade.ID}>
+          <p>{cidade.Name}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+OU
+
+import mysql from 'mysql2/promise';
+require("dotenv").config();
+
+interface City {
+  ID: number;
+  Name: string;
+}
+
+async function PegarDados(): Promise<City[]> {
+    const db = { 
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE      
+    };
+    const connection = await mysql.createConnection(db);
+    const [rows] = await connection.execute('SELECT * FROM city');
+    connection.end();
+    return rows as City[];
+}
+
+export default async function Posts() {
+
+  const cidades: City[] = await PegarDados();
+
+  return (
+    <>
+      {cidades.map((cidade) => (
+        <div key={cidade.ID}>
+          <p>{cidade.Name}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+-------
+
+// components/UserList.tsx (Client Component)
+
+import { useEffect, useState } from 'react';
+
+export default function UserList() {
+  const [cidades, setCidades] = useState([]);
+
+  useEffect(() => {
+    async function PegarDados() {
+      const response = await fetch('/api/cidades');
+      const data = await response.json();
+      setCidades(data);
+    }
+    PegarDados();
+  }, []);
+
+  return (
+    <>
+      {cidades.map((cidade: {ID: number; Name: string}) => (
+        <div key={cidade.ID}>
+          <p>{cidade.Name}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+----------------------------------- ###
+CONEXÃO EM UM ARQUIVO EXTERNO
+
+Primeiro crie uma pasta chamada lib dentro da pasta app. 
+Dentro dela estará o arquivo db.js onde estará o código de conexão ao banco de dados (MongoDB, MySQL, etc.)
+
+-Versão com Javascript: 
+
+import mysql from 'mysql2/promise'
+import 'dotenv/config'
+
+let connection;
+
+export const createConnection = async () => {
+  if(!connection) {
+    connection = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,      
+    })
+  }
+  return connection;
+}
+
+----
+
+-Versão com Typescript:
+
+import mysql from 'mysql2/promise'
+import 'dotenv/config'
+
+let connection: mysql.Connection;
+
+export const createConnection = async (): Promise<mysql.Connection> => {
+  if (!connection) {
+    connection = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,      
+    })
+  }
+  return connection;
+}
+
+------------------------------------ %%%
+Exemplo usando um arquivo externo (db.js ou db.ts) para fazer a conexão com o banco de dados:
+
+-Arquivo app/cidades/route.tsx:    (SERVER)       //OU app/api/cidades/route.tsx
+
+import {createConnection} from "../lib/db"
+import {NextResponse} from 'next/server'
+
+export async function GET() {
+  try {
+    const db = await createConnection()
+    const sql = "SELECT * FROM city"
+    const [cidades] = await db.query(sql)
+    return NextResponse.json(cidades)
+  } catch (error: any) {
+    console.log(error)
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
+
+¨¨¨¨
+-Arquivo app/components/cidades.tsx:    (CLIENT)
+
+"use client";
+import {useState, useEffect} from 'react'
+
+export default function Cidades() {
+
+  const [cidades, setCidades] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/cidades')            //OU  await fetch('/api/cidades')
+        const data = await response.json()
+        setCidades(data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchData()
+  }, [])
+
+  return (
+    <>
+      {cidades.map((cidade: {ID: number; Name: string}) => (
+        <div key={cidade.ID}>
+          <p>{cidade.Name}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+¨¨¨¨
+-Arquivo app/page.tsx:
+
+import Cidades from './components/cidades'
+
+export default function Home() {
+  return(
+    <>
+      <Cidades />
+    </>
+  )
+}
+
+----------------------------------------------- ###
+EXEMPLO ClaudeAI:
+
+// 1. app/lib/db.ts
+import mysql from 'mysql2/promise'
+import 'dotenv/config'
+
+let connection: mysql.Connection;
+
+export const createConnection = async (): Promise<mysql.Connection> => {
+  if (!connection) {
+    connection = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,      
+    })
+  }
+  return connection;
+}
+
+// ============================================
+
+// 2. app/api/cidades/route.ts
+import { createConnection } from "../lib/db"
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  try {
+    const db = await createConnection()
+    const sql = "SELECT * FROM city"
+    const [cidades] = await db.query(sql)
+    return NextResponse.json(cidades)
+  } catch (err: any) {
+    console.log(err)
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+// ============================================
+
+// 3. app/components/cidades.tsx
+"use client";
+import { useState, useEffect } from 'react'
+
+interface Cidade {
+  ID: number;
+  Name: string;
+}
+
+export default function Cidades() {
+  const [cidades, setCidades] = useState<Cidade[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/cidades')
+        
+        if (!response.ok) {
+          throw new Error('Erro ao buscar cidades')
+        }
+        
+        const data = await response.json()
+        setCidades(data)
+      } catch (err: any) {
+        console.log(err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return <div>Carregando cidades...</div>
+  }
+
+  if (error) {
+    return <div>Erro: {error}</div>
+  }
+
+  return (
+    <div>
+      <h1>Lista de Cidades</h1>
+      {cidades.length === 0 ? (
+        <p>Nenhuma cidade encontrada</p>
+      ) : (
+        cidades.map((cidade) => (
+          <div key={cidade.ID}>
+            <p>{cidade.Name}</p>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
+// ============================================
+
+// 4. app/page.tsx
+import Cidades from './components/cidades'
+
+export default function Home() {
+  return (
+    <>
+      <Cidades />
+    </>
+  )
+}
+
+------------------------------------------------ ###
+
+
+
+
+
+
+///////////////////////////////////////////////////////////// &&&
+NEXTJS + MONGODB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////// &&&
+NEXTJS + PRISMA
+VIDEO: https://www.youtube.com/embed/KAQCHfu_3jw
+
+import {prisma} from '@/lib/db'
+
+export default async function Posts() {
+
+  const posts = await prisma.post.findMany()
+
+  return (
+    <>
+      {posts.map((post) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+------------------------------------- ###
+Criando uma url dinamica:
+
+Crie uma pasta chamada [id] e dentro um arquivo chamado page.tsx:
+
+src
+  app
+    posts
+      [id]
+        page.tsx
+
+Usando prisma:
+
+import {prisma} from '@/lib/db'
+import Link from 'next/link'
+
+export default async function Posts() {
+
+  const posts = await prisma.post.findMany()
+
+  return (
+    <div>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            <Link href={`/posts/${post.id}`}>{post.title}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+-Arquivo page.tsx dentro da pasta [id]:
+
+export default async function Page({params,}: {params: Promise<{id: string}>}) {
+
+  const id = (await params).id
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    }
+  })
+
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+    </div>
+  );
+}
+
+------------------------------------- ###
+POST 
+
+-Arquivo page.tsx:
+
+"use server";
+import {prisma} from "@/lib/db"
+
+export default async function createPost(formData: FormData) {
+  const title = formData.get("title")
+  const content = formData.get("content")
+
+  await prisma.post.create({
+    data: {
+      title,
+      content,
+    }
+  })
+
+  revalidatePath("/posts")      //opcional para aparecer o post criado sem precisar atualizar
+
+  return (
+    <>  
+      <form action={createPost}>
+        <input type="text" placeholder="Title" name="title" />
+        <textarea placeholder="Content" name="content" />
+        <button type="submit">Criar post</button> 
+      </form>
+    </>
+  )
+}
+
+
+É possível também separar a função de envio em um arquivo chamado actions.ts dentro de uma pasta chamada actions.
+
+
+/////////////////////////////////////////////////// &&&
+NOT FOUND
+
+Em qualquer pasta de um componente ou página, crie um arquivo chamado not-found.tsx. 
+Nele estará o conteúdo que aparecerá caso não seja possível encontrar a página escolhida na url.
+
+src
+  app
+    posts
+      page.tsx
+      not-found.tsx
+
+¨¨¨¨
+-Arquivo not-found.tsx:
+
+export default function NotFound() {
+  return (
+    <>  
+      <h1>404 - Page Not Found</h1>
+      <p>The page you are looking for does not exist.</p>
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo page.tsx:
+
+import {notFound} from 'next/navigation'
+
+export default async function Posts() {
+
+  const response = await fetch("https://dummyjson.com/posts/inexistente")
+  if (!response.ok) {
+    notFound()
+  }
+  const data = await response.json()
+
+  return (
+    <>
+      {data.posts.map((post: {id: number; title: string}) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+    </>
+  );
+}
+
+Como a url https://dummyjson.com/posts/inexistente não existe, irá para a página de erro
+
+Geralmente é usado com url dinâmicas:
+
+import { notFound } from 'next/navigation';
+
+async function getUser(id) {
+  const res = await fetch(`https://api.example.com/users/${id}`);
+  if (!res.ok) {
+    notFound(); 
+  }
+  return res.json();
+}
+
+
+////////////////////////////////////////////////////////// &&&
+SERVER x CLIENT
+VIDEO: https://www.youtube.com/embed/xnOwOBYaA3w
+
+Por padrão, os componentes da pasta App rodam no lado servidor e apenas enviam HTML. E não há acesso a coisas interativas ou hooks do lado cliente (onClick, onChange, onMouseOver, useState, useEffect...). Para isso, é usado o use client:
+
+-Componente servidor:  (rotas e páginas)
+
+import ButtonClient from './ButtonClient'
+
+export default function PaginaServidor() {
+  return (
+    <div>
+      <ButtonClient />
+    </div>
+  )
+}
+
+¨¨¨¨
+-Componente cliente:   (hooks ou coisas interativas)
+
+'use client'       //necessário para interatividade do lado cliente
+
+export default function ButtonClient(){
+  const handleClick = () => {
+    console.log("Clicou")   //Não rodará no browser sem o use client
+  }
+
+  return (
+    <button onClick={handleClick}>CLIQUE</button>
+  )
+}
+
+
+Componentes de servidor são ótimos para performance e SEO
+
+////////////////////////////////////////////////////////////////////// &&&
+AUTENTICAÇÃO
+VIDEO: https://www.youtube.com/embed/KAQCHfu_3jw
+
+
+
+
+
+
+
+
+
+
+
+
+

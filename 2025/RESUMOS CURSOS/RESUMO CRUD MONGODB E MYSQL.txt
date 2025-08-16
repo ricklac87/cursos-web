@@ -4300,7 +4300,7 @@ Iniciar:
 npm init -y
 
 Instalação das dependencias:
-npm install express mysql2 axios cors
+npm install express mysql2 axios cors dotenv
 
 -------
 

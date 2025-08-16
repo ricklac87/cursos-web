@@ -1,5 +1,7 @@
-
+ 
 ////////////////////////////////////////////////////////// &&& ###
+TYPESCRIPT SOZINHO (SEM REACT OU NEXTJS)
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4
 
 instalação do Typescript
 npm install -g typescript
@@ -8,26 +10,6 @@ Na pasta do projeto, digite:
 tsc --init
 
 Será gerado o arquivo tsconfig.json
-
-////////////////////////////////////////////////////////// &&& ###
-CRIANDO VARIAVEIS
-
-Modo javascript:
-let id = 5;
-
-Modo typescript:
-let id: number = 5;
-
-É preciso especificar o tipo de variavel.
-
-let name: string = "Carlos";
-let isPublished: boolean = true;
-
-Para aceitar qualquer tipo de variavel: (Use apenas se não souber o tipo da variavel!)
-let x: any = "pedro";
-let x: any = 40;
-let x: any = true;
-let x: any = [];
 
 //////////////////////////////////////////////// &&& ###
 Rodando o arquivo:
@@ -54,6 +36,39 @@ node teste.js
 Então, sempre antes de rodar o arquivo, digite tsc para atualizar o arquivo .js 
 Depois rode o arquivo com: node nome_do_arquivo.js
 
+////////////////////////////////////////////////////////// &&& ###
+VARIAVEIS
+
+Modo javascript:
+let id = 5;
+
+Modo typescript:
+let id: number = 5;
+
+É preciso especificar o tipo de variavel.
+
+let name: string = "Carlos";
+let isPublished: boolean = true;
+
+Para aceitar qualquer tipo de variavel: (Use apenas se não souber o tipo da variavel!)
+let x: any = "pedro";
+let x: any = 40;
+let x: any = true;
+let x: any = [];
+
+//////////////////////////////////////////////// &&& ###
+TIPOS DE VARIÁVEIS
+
+const nome: string = "Carlos";
+const idade: number = 30;
+const status: boolean = true;
+const vazio: null = null;
+const indefinido: undefined = undefined;
+
+Caso o tipo errado seja atribuído, o typescript mostrará o erro, mas o código rodará normalmente no browser:
+
+const nome: number = "Carlos"
+
 //////////////////////////////////////////////// &&& ###
 ARRAYS
 
@@ -75,9 +90,12 @@ printID([1, 2, 3]);
 >>> IDs: 1,2,3
 
 //////////////////////////////////////////////// &&& ###
+FUNÇÕES
 Tipos de variaveis em funções:
 
 Strings:
+
+Forma errada:
 
 const juntarValores = (a, b) => {
   return a + b;
@@ -103,7 +121,7 @@ const juntarValores = (a: string , b: string) => {
   return a + b;
 }
 
-console.log(juntarValores("10", "5"))
+console.log(juntarValores("10", "5"))      //Soma de strings
 >>> 105
 
 -------
@@ -112,7 +130,7 @@ const juntarValores = (a: number, b: number) => {
   return a + b;
 }
 
-console.log(juntarValores(10, 5))
+console.log(juntarValores(10, 5))       //Soma de números
 >>> 15
 
 ------------------- ###
@@ -157,6 +175,196 @@ export default function App() {
     </>
   )
 }
+
+----------------------------- ###
+O valor de saída não precisa necessariamente ser um tipo (string, number, etc.):
+
+function Maioridade(idade: any): "Maior de idade" | "Menor de idade" | "Não sei" {
+  if (idade >= 18) {
+    return "Maior de idade"
+  } else if (idade <18) {
+    return "Menor de idade"
+  } else {
+    return "Não sei"
+  }
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>{Maioridade(20)}</h1>
+    </div>
+  );
+}
+
+-------------------------------------- ###
+TIPO VOID
+
+Para funções que não possuem um valor de retorno, o seu será void:
+
+function Pessoa(nome: string): void {
+  alert(`Olá, ${nome}`);                  //OU console.log(`Olá, ${nome}`);
+}
+
+export default function App() {
+  return (
+    <>
+      <button onClick={() => Pessoa("João")}>Clique aqui</button>
+    </>
+  );
+}
+
+//////////////////////////////////////////////// &&& ###
+TYPE ALIAS EM FUNÇÔES
+
+É possível criar um tipo persolnalizado em funções:
+
+Exemplos:
+type UserName = string;
+type Point = { x: number; y: number; };
+type Status = "success" | "error" | "pending";
+
+------------------ ###
+
+type Ano = number
+
+const carYear: Ano = 2001
+
+export default function App() {
+  return (
+    <>
+      <h1>{carYear}</h1>
+    </>
+  );
+}
+
+-------
+
+type Ano = number
+type Tipo = string
+type Modelo = string
+type Carro = {
+  year: Ano,
+  type: Tipo,
+  model: Modelo
+}
+
+const carYear: Ano = 2001
+const carType: Tipo = "Toyota"
+const carModel: Modelo = "Corolla"
+const car: Carro = {
+  year: carYear,
+  type: carType,
+  model: carModel
+};
+
+export default function App() {
+  return (
+    <>
+      <h1>{carYear}</h1>
+      <h1>{carType}</h1>
+      <h1>{carModel}</h1>
+      <p>{car.year} - {car.type} - {car.model}</p>
+    </>
+  );
+}
+
+--------------
+
+type Soma = (a: number, b: number) => number;
+
+const add: Soma = (a, b) => {
+  return a + b;
+};
+
+export default function App() {
+  return (
+    <div>
+      <h1>{add(5, 3)}</h1>
+    </div>
+  )
+}
+
+------------- 
+
+type Pessoa = {
+  nome: string;
+};
+
+function Hello(pessoa: Pessoa) {
+  return `Olá, ${pessoa.nome}`;
+}
+
+function Goodbye(pessoa: Pessoa) {
+  return `Adeus, ${pessoa.nome}`;
+}
+
+export default function App() {
+  return (
+    <>
+      <h1>{Hello({ nome: "João" })}</h1>
+      <p>{Goodbye({ nome: "João" })}</p>
+    </>
+  );
+}
+
+--------------- %%%
+
+type TiposDeID = string | number;
+
+const printID = (id: TiposDeID) => {      
+  console.log("ID: " + id);
+};
+
+printID(123);       //OU printID("123");
+>>> ID: 123
+
+---------
+Interfaces are similar to type aliases, except they only apply to object types.
+
+Example
+interface Rectangle {
+  height: number,
+  width: number
+}
+
+const rectangle: Rectangle = {
+  height: 20,
+  width: 10
+};
+
+--------------------------------------- ###
+IMPORTANDO TYPE ALIAS 
+
+-Arquivo models.ts:
+
+export type Soma = (a: number, b: number) => number;
+export type Nome = (nome: string, sobrenome: string) => string;
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import type {Soma, Nome} from "./models"
+// ou import {type Soma, type Nome} from "./models"
+
+const add: Soma = (a, b) => {
+  return a + b;
+};
+
+const pessoa: Nome = (nome, sobrenome) => {
+  return `${nome} ${sobrenome}`;
+};
+
+export default function App() {
+  return (
+    <div>
+      <h1>{add(5, 3)}</h1>
+      <h1>{pessoa("João", "Silva")}</h1>
+    </div>
+  )
+}
+
+
 
 /////////////////////////////////////////////////////// &&&
 INTERFACE
@@ -209,8 +417,8 @@ User.age = 40           //tipo number
 console.log(User.age)
 >>> 40
 
-------------------------- ###
-Interface com campos faltando:
+------------------------- ### &&&
+Interface com campos faltando: (campo opcional)
 
 interface UserInterface {
   id: number;
@@ -359,10 +567,11 @@ const printID = (id: string) => {
 printID("123");   
 >>> ID: 123
 
--------- ###
+//////////////////////////////////////////////// &&& ###
 UNION
+Aceita um tipo ou outro tipo
 
-Porém, e se não souber qual tipo de dados virá para id?
+Porém, e se não souber qual tipo de dados virá para o parâmetro?
 É possível usar o | (significa ou) para resolver o problema:
 
 const printID = (id: string | number) => {      
@@ -373,7 +582,7 @@ printID(123);       //OU printID("123");
 >>> ID: 123
 
 ------
-Colocando as opções de tipos em uma variavel:
+Colocando as opções de tipos em uma variavel: (type alias)
 
 type TiposDeID = string | number;
 
@@ -406,6 +615,189 @@ InfoPessoa({
   nome: "Carlos", 
   idade: 32
 })
+
+///////////////////////////////////////////////&&&
+PARAMETROS OPCIONAIS (?)
+
+Ao colocar ? no parametro, ele automaticamente passa a aceitar o tipo undefined também.
+
+function pessoa(nome: string, sobrenome?: string): string {
+  if (sobrenome) {
+    return `Olá, ${nome} ${sobrenome}.`;
+  }
+  return `Olá, ${nome}.`
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>{pessoa("João")}</h1>
+    </div>
+  )
+}
+
+Atenção!!!
+O parâmetro opcional NUNCA pode ser o primeiro a ser passado! Por exemplo:
+
+function pessoa(sobrenome?: string, nome: string): string {
+  ...
+}
+
+Os parâmetros opcionais serão sempre os últimos a serem passados.
+
+---------------------------------------- ###
+DEFAULT PARAMS (PARAMETROS INICIAIS)
+
+function pessoa(nome: string, sobrenome: string = "Sem nome"): string {
+  return `Nome: ${nome} - Sobrenome: ${sobrenome}.`;
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>{pessoa("João")}</h1>
+    </div>
+  )
+}
+
+---------
+Não é necessário especificar o tipo da variavel se declarar um valor inicial para ela
+
+function Texto (txt = "Texto de exemplo"): void {
+  alert(txt)
+}
+
+export default function App() {
+  return (
+    <div>
+      <button onClick={() => Texto()}>Clique aqui</button>
+    </div>
+  )
+}
+
+/////////////////////////////////////////////// &&&
+PARAMETROS LITERAIS
+
+function pessoa(nome: "João") {
+  if(nome === "João") {
+    return `Olá, ${nome}.`;
+  }
+  return "Nome inválido!"
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>{pessoa("Carlos")}</h1>
+    </div>
+  )
+}
+
+Dará Nome inválido pois foi especificado que a variavel nome só pode aceitar o valor João.
+O typescript apresentará um erro sinalizando que o valor passado é diferente do especificado.
+
+É possível declarar mais de um tipo de valor para o parametro:
+
+function pessoa(nome: "João" | "Carlos") {
+  if(nome === "João") {
+    return `Olá, ${nome}.`;
+  }
+  return "Nome inválido!"
+}
+
+export default function App() {
+  return (
+    <div>
+      <h1>{pessoa("Carlos")}</h1>
+    </div>
+  )
+}
+
+>>> Olá, Carlos.
+
+------------------------ ###
+Armazenando em um type alias:
+
+type Direction = "norte" | "sul" | "leste" | "oeste"
+
+function Mover(caminho: Direction) {
+  alert(`Foi para a direção ${caminho}`)
+}
+
+export default function App() {
+  return (
+    <div>
+      <button onClick={() => Mover("norte")}>Mover</button>  
+    </div>
+  )
+}
+
+---------
+
+type Prioridade = 1 | 2 | 3
+
+function setPrioridade (nivel: Prioridade) {
+  switch(nivel) {
+    case 1 : {
+      return alert("Prioridade baixa")
+    }
+    case 2 : {
+      return alert("Prioridade média")
+    }
+    case 3 : {
+      return alert("Prioridade alta")
+    }
+    default:
+      return alert("Prioridade não estabelecida")
+  }
+}
+
+export default function App() {
+  return (
+    <div>
+      <button onClick={() => setPrioridade(3)}>Enviar</button>  
+    </div>
+  )
+}
+
+---------------------------- ###
+SUPER UNION TYPE ALIAS
+
+type estadoCivil = "casado" | "solteiro" | "divorciado" | string
+
+function handleClick(status: estadoCivil) {
+  alert(`Fulano é ${status}`)
+}
+
+export default function App() {
+  return (
+    <div>
+      <button onClick={() => handleClick("viúvo")}>Enviar</button>  
+    </div>
+  )
+}
+
+------------------------------- ###
+TEMPLATE LITERAL UNIONS
+juntar mais de 1 type alias
+
+type Sobrenome = "Silva" | "Souza" | "Costa"
+type Nome = `Carlos ${Sobrenome}`
+
+function handleClick(username: Nome) {
+  alert(`Olá, ${username}`)
+}
+
+export default function App() {
+  return (
+    <div>
+      <button onClick={() => handleClick("Carlos Silva")}>Enviar</button>  
+    </div>
+  )
+}
+
+OBS: Cuidado com muitos tipos de template unions pois pode causar erro devido a quantidade gigante de variações que o sistema terá que guardar.
+
 
 ///////////////////////////////////////////////&&&
 ENUM
