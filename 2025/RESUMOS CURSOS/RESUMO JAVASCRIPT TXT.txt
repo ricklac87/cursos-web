@@ -2949,6 +2949,28 @@ VIDEO: https://www.youtube.com/watch?v=XdkW62tkAgU&list=PLHz_AreHm4dlsK3Nr9GVvXC
     >>> Os valores anteriores são 20,60,70
     >>> O total é igual a 74
 
+    //////
+    Com valor inicial:
+
+    Sintaxe:
+    reduce(callbackFn)      //Sem valor inicial
+    ou
+    reduce(callbackFn, initialValue)
+
+    ¨¨¨¨
+    const array = [1, 2, 3, 4];
+
+    const initialValue = 0;
+
+    const sumWithInitial = array.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    initialValue,
+    );
+
+    console.log(sumWithInitial);
+
+    >>> 10      (0 + 1 + 2 + 3 + 4)
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ////    PARA SEPARAR ELEMENTOS DE UM ARRAY / VETOR USANDO SLICE
@@ -6280,6 +6302,45 @@ VIDEO: https://www.youtube.com/watch?v=slLoLLCd-k0&list=PLHz_AreHm4dlsK3Nr9GVvXC
                     } 
             })
         }
+
+    //////////////////////////////////////////////////////////////////////
+    FIND INDEX (findIndex)
+    Para achar o indice de um elemento de um array
+
+    findIndex() returns the index of the first element that passes a test (provided by a function).
+
+    const ages = [4, 10, 18, 20];
+
+    ages.findIndex(checkAge);
+
+    function checkAge(age) {
+        return age > 18;
+    }
+
+    >>> 3         (3 é o indice de 20)
+
+    ----------
+
+    The findIndex() method executes a function for each array element.
+
+    The findIndex() method returns the index (position) of the first element that passes a test.
+
+    The findIndex() method returns -1 if no match is found.
+
+    The findIndex() method does not execute the function for empty array elements.
+
+    The findIndex() method does not change the original array.
+
+    --------------
+
+    const lista = ["item0", "item1", "item2", "item3", "item4", "item5"]
+
+    const indice = lista.findIndex(i => i === "item2")
+
+    alert(indice)
+
+    >>> 2              (retorna o indice do elemento do array)
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////
 

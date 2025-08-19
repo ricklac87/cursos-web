@@ -1,0 +1,227 @@
+
+Não é necessário terminar com ;
+
+Uma característica marcante da comunidade de desenvolvedores Python é manter uma lista de propostas de melhorias, chamadas PEP.
+
+Python suporta a maioria das técnicas da programação orientada a objetos
+
+A linguagem Python é desenvolvida sob uma licença de código aberto aprovada pela OSI, tornando-a livremente utilizável e distribuível, mesmo para uso comercial.
+
+////////////////////////////////////////////////////////// &&&
+VARIÁVEIS
+
+Em python não é necessário declarar o tipo de variável
+
+nome = "Carlos"       //OU nome = 'Carlos'
+idade = 33
+status = true
+
+Os identificadores das variáveis podem ser compostos por Letras, o underline (_) e, com exceção do primeiro caractere, números de 0 a 9.
+
+MinhaVariavel, _variavel, salario1 e salario1_2
+São válidos.
+
+1variavel e salario-1
+Não são válidos.
+
+MinhaVariavel e minhavariavel
+São identificadores de duas variáveis distintas.
+
+-------------
+Atribuição múltipla:
+
+1a forma:
+a = 1
+b = 2
+
+2a forma (atribuição múltipla):
+a, b = 1, 2
+
+--------------
+Inversão ou troca de valores:
+
+a=1
+b=2
+
+x=a
+a=b
+b=x
+
+ou
+
+a,b=b,a
+
+
+////////////////////////////////////////////////////////// &&&
+PALAVRAS RESERVADAS
+
+Algumas palavras são consideradas reservadas e não podem ser usadas como identificadores de variáveis em Python. São elas:
+
+and, as, assert, break, class, continue, def, del, elif, else, except, exec, finally, for, from, global, if, import, in, is, lambda, not, or, pass, print, raise, return, try, while, with e yield.
+
+////////////////////////////////////////////////////////// &&&
+IMPRESSÃO
+
+print("Texto")     
+print(30)
+
+-------
+
+x = 10
+print(x)
+>>> 10
+
+-------
+
+nome = "Carlos"
+print(nome)
+>>> Carlos
+
+/////////////////////////////////////////////////////////// &&&
+.FORMAT
+misturando strings com numeros ou variaveis
+
+print('valor = {}'.format(12345))
+ou 
+print(f'valor = {12345}')
+
+>>> valor = 12345
+
+{ } = chaves
+Obs: A informação dentro dos parênteses após .format SÓ PODEM SER NÚMEROS.
+
+x = 10
+print(f'valor = {x}')
+
+>>> valor = 10
+
+---------
+
+a,b=1,2
+
+print(f"O valor das variáveis: a={a}, b={b}")
+
+>>> O valor das variáveis: a=1, b=2
+
+Se não colocar o f na frente, vai aparecer na tela:
+O valor das variáveis: a={a}, b={b}
+
+///////////////////////////////////////////////////////////// &&&
+PARA SABER O TIPO DE VARIAVEL  type()
+
+numero = 5
+print(type(numero))
+>>> <class 'int'>
+
+------
+
+valor='teste'
+type(valor)
+>>> str
+
+valor='teste'
+print(type(valor))
+>>> <class 'str'>
+
+///////////////////////////////////////////////////////////// &&&
+ESCOPO
+
+def multiplicador(numero):
+  x = 2                        # esta variável tem escopo local
+  print(f"Dentro da função, a variável x vale: {x}")
+  return x * numero
+
+x = 3                          # esta variável tem escopo global
+y = multiplicador(5)
+print(f"Fora da função, a variável x vale: {x}")
+
+>>> Dentro da função, a variável x vale: 2
+>>> Fora da função, a variável x vale: 3
+
+-----------
+
+def multiplicador(numero):
+  global x                    # todas as referências à variável x são para a global
+  x = 2                       # x global será alterado
+  print(f"Dentro da função, a variável x vale: {a}")
+  return x * numero
+
+x = 3                               # esta variável tem escopo global
+y = multiplicador(5)
+
+print(f"A variável y vale: {y}")
+print(f"Fora da função, a variável x vale: {x}")
+
+////////////////////////////////////////////////////////////// &&&
+Utilitário dir e Utilitário help
+
+Apresenta todos os atributos e métodos disponíveis para determinado tipo de dado.
+
+print(dir(int))
+ou
+print(help(int))
+
+No prompt interativo do Python, seja no Python Console do PyCharm ou em outro ambiente Python, basta digitar dir(int) e help(int) e pressionar a tecla [ENTER] ou [RETURN], sem a necessidade de usar a função print.
+
+//////////////////////////////////////////////////////////// &&&
+INDENTAÇÃO
+
+Diferente de C e Java, que usam as chaves { e } para delimitar os blocos, em Python todos os blocos são iniciados com o símbolo : (dois pontos) na linha superior e representados pelo acréscimo de 4 (quatro) espaços à esquerda.
+
+Em Javascript:
+
+if (condição) {
+  instrução 1;
+} else {
+  instrução 2;
+}
+
+¨¨¨¨
+
+Em Python:
+
+if (condição) :
+  instrução 1
+else:
+  instrução 2
+
+//////////////////////////////////////////////////////////////////// &&&
+COMENTÁRIOS
+
+Comentários com uma linha:
+Iniciados com #
+
+# Comentário 
+
+-------
+
+Comentários com várias linhas:
+Limitados por """ (três aspas duplas) no início e no fim
+
+"""
+comentário 1
+comentário 2
+"""
+//////////////////////////////////////////////////////////////////// &&&
+OPERADORES COMPOSTOS (SINAIS DE MATEMÁTICA)
+
++  (mais)
+-  (menos)
+*  (vezes)
+/  (dividido)
+%  (módulo = resto da divisão)
+
+//////////////////////////////////////////////////////////////////// &&&
+OPERADORES COMPOSTOS (SINAIS DE MATEMÁTICA)
+
++=  (mais igual)        // x = x + 2   é igual a  x += 2
+-=  (menos igual)
+*=  (vezes igual)
+/=  (dividido igual)
+%=  (módulo igual)
+
+(Provavelmente o operador //= também)
+
+///////////////////////////////////////////////////////////////////// &&&
+
+CONTINUAR A PARTIR DE TEMA 2 M3

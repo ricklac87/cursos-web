@@ -3321,7 +3321,7 @@ export default function App(){
 }
 
 ------------------ ###
-MELHOR FORMA: *** (CRUD)
+MELHOR FORMA: (CRUD)
 
 import {useState} from 'react'
 
@@ -6121,11 +6121,63 @@ export default function App(){
   )
 }
 
+------------------
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function App() {
+
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    axios.get('https://dummyjson.com/posts')
+      .then((res) => {
+          setPosts(res.data.posts)
+      })}, [])
+
+  return(
+    <div>
+      {posts.map((post) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 ////////////////////////////////////////////////////////////////&&&
 CONSUMINDO DADOS DA API COM FETCH
 VIDEO: https://www.youtube.com/embed/fTqOfPfOFJE?autoplay=1
 
 É possível consumir os dados da API sem precisar de nenhuma biblioteca como o Axios. Para isso, utiliza-se o Fetch.
+
+import {useState, useEffect} from 'react'
+
+export default function App() {
+
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    fetch('https://dummyjson.com/posts')
+      .then(res => res.json())
+      .then((res) => {
+          setPosts(res.posts)
+      })}, [])
+
+  return(
+    <div>
+      {posts.map((post) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+--------
 
 -Arquivo ListaNomes.js:
 
@@ -6210,6 +6262,395 @@ export default class ListaNomes extends React.Component{
     )
   }
 }
+
+//////////////////////////////////////////////////////////////// &&&
+CONSUMINDO DADOS DE UMA API AOS POUCOS (DE 10 EM 10, por exemplo)
+
+Forma 1: 
+(botão único que substitui os 10 últimos posts por 10 novos)
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function App() {
+
+  const [posts, setPosts] = useState([])
+  const [visiblePosts, setVisiblePosts] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
+
+  const loadMore = () => {
+    setStartIndex(startIndex + 10);
+  }
+
+  useEffect(() => {
+    axios.get('https://dummyjson.com/posts')
+      .then((res) => {
+          setPosts(res.data.posts)                            //OU res.data  dependendo dos dados no database
+          setVisiblePosts(res.data.posts.slice(0, 10))
+      })}, [])
+
+  useEffect(() => {
+    setVisiblePosts(posts.slice(startIndex, startIndex + 10));
+  }, [startIndex, posts]);
+
+  return(
+    <div>
+      {visiblePosts.map((post) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+      {posts.length > visiblePosts.length && (
+        <button onClick={loadMore}>Load More</button>
+      )}
+    </div>
+  )
+}
+
+----------------------------- ###
+
+Forma 2: 
+(botão único que adiciona 10 novos posts embaixo)
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function App() {
+
+  const [posts, setPosts] = useState([])
+  const [visiblePosts, setVisiblePosts] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
+
+  const loadMore = () => {
+    setStartIndex(startIndex + 10);
+  }
+
+  useEffect(() => {
+    axios.get('https://dummyjson.com/posts')
+      .then((res) => {
+          setPosts(res.data.posts)
+          setVisiblePosts(res.data.posts.slice(0, 10))
+      })}, [])
+
+  useEffect(() => {
+    setVisiblePosts(() => posts.slice(0, startIndex + 10));
+  }, [startIndex, posts]);
+
+  return(
+    <div>
+      {visiblePosts.map((post) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+
+      {posts.length > visiblePosts.length && (
+        <button onClick={loadMore}>Load More</button>
+      )}
+    </div>
+  )
+}
+
+---------------------------- ###
+
+Forma 3: 
+(com um botão para exibir novos posts e um para voltar para posts antigos)
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function App() {
+
+  const [posts, setPosts] = useState([])
+  const [visiblePosts, setVisiblePosts] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
+
+  const loadMore = () => {
+    setStartIndex(startIndex + 10);
+  }
+
+  useEffect(() => {
+    axios.get('https://dummyjson.com/posts')
+      .then((res) => {
+          setPosts(res.data.posts)
+          setVisiblePosts(res.data.posts.slice(0, 10))
+      })}, [])
+
+  useEffect(() => {
+    setVisiblePosts(posts.slice(startIndex, startIndex + 10));
+  }, [startIndex, posts]);
+
+  return(
+    <div>
+      {visiblePosts.map((post) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+      {posts.length > visiblePosts.length && (
+        <div>
+          <button onClick={() => setStartIndex(Math.max(0, startIndex - 10))} disabled={startIndex === 0}>Previous</button>
+          <button onClick={loadMore} disabled={startIndex + 10 >= posts.length}>Load More</button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+--------------------------------------- ###
+
+Forma 4:
+(Com botões numerados para ir e voltar de posts) (Sem botões para ir pró início ou fim)
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function App() {
+
+  const [posts, setPosts] = useState([])
+  const [visiblePosts, setVisiblePosts] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
+
+  useEffect(() => {
+    axios.get('https://dummyjson.com/posts')
+      .then((res) => {
+          setPosts(res.data.posts)
+          setVisiblePosts(res.data.posts.slice(0, 10))
+      })}, [])
+
+  useEffect(() => {
+    setVisiblePosts(posts.slice(startIndex, startIndex + 10));
+  }, [startIndex, posts]);
+
+  return(
+    <div>
+      {visiblePosts.map((post) => (
+        <div key={post.id}>
+          <p>{post.title}</p>
+        </div>
+      ))}
+      {posts.length > visiblePosts.length && (
+        <div>
+          {Array.from({ length: Math.ceil(posts.length / 10) }, (_, i) => i + 1).map((page) => (
+            <button key={page} onClick={() => setStartIndex((page - 1) * 10)} disabled={startIndex === (page - 1) * 10}>
+              {page}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+-------------------------------------- ### ***
+Exemplo pegando dados do MySQL:
+
+-Arquivo server.js:
+
+const express = require('express');
+const mysql = require('mysql2');
+const cors = require('cors');
+
+const app = express();
+const PORT = 3000;
+
+app.use(cors());                                 
+app.use(express.json());
+
+const db = mysql.createConnection({              
+  host: 'localhost',
+  user: 'root',                                    
+  password: 'password',                            
+  database: 'world'                                
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error('Erro ao conectar ao MySQL:', err);
+    return;
+  }
+  console.log('Conectado ao MySQL');
+});
+
+app.get('/', (req, res) => {
+	return res.json("Conteúdo da url http://localhost:3000/");
+})
+
+app.get('/cidades', (req, res) => {
+  const sql = 'SELECT * FROM city';                
+  db.query(sql, (err, result) => {
+    if (err) console.log(err);                         
+    res.json(result);                                    
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+¨¨¨¨
+-Arquivo App.jsx:
+(Apresenta no máximo 10 números de páginas)
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function App() {
+
+  const [cidades, setCidades] = useState([])
+  const [visible, setVisible] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/cidades')
+      .then((res) => {
+          setCidades(res.data)
+          setVisible(res.data.slice(0, 10))
+      })}, [])
+
+  useEffect(() => {
+    setVisible(cidades.slice(startIndex, startIndex + 10));
+    setCurrentPage(Math.floor(startIndex / 10) + 1);
+  }, [startIndex, cidades]);
+
+  const handlePageChange = (page) => {
+    setStartIndex((page - 1) * 10);
+  };
+
+  const renderPageButtons = () => {
+    const totalPages = Math.ceil(cidades.length / 10);
+    const visibleButtons = Math.min(10, totalPages);                     // Show at most 10 buttons
+
+    let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+    let endPage = startPage + visibleButtons - 1;
+
+    if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = Math.max(1, endPage - visibleButtons + 1);
+    }
+
+    const buttons = [];
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(
+        <button key={i} onClick={() => handlePageChange(i)} disabled={currentPage === i}>
+          {i}
+        </button>
+      );
+    }
+    return buttons;
+  };
+
+  return(
+    <div>
+      {visible.map((cidade) => (
+        <div key={cidade.ID}>
+          <p>{cidade.Name}</p>
+        </div>
+      ))}
+
+      {cidades.length > 0 && (
+        <div>
+          {renderPageButtons()}
+        </div>
+      )}
+    </div>
+  )
+}
+
+----------
+Outra forma:
+(com botões para ir pros primeiros ou últimos itens as serem listados)
+
+import {useState, useEffect} from 'react'
+import axios from 'axios'
+
+export default function App() {
+
+  const [cidades, setCidades] = useState([])
+  const [visible, setVisible] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    axios.get('http://localhost:3000/cidades')
+      .then((res) => {
+          setCidades(res.data)
+          setVisible(res.data.slice(0, 10))
+      })}, [])
+
+  useEffect(() => {
+    setVisible(cidades.slice(startIndex, startIndex + 10));
+    setCurrentPage(Math.floor(startIndex / 10) + 1);
+  }, [startIndex, cidades]);
+
+  const handlePageChange = (page) => {
+    setStartIndex((page - 1) * 10);
+  };
+
+  const handleFirstPage = () => {
+    setStartIndex(0);
+  };
+
+  const handleLastPage = () => {
+    const totalPages = Math.ceil(cidades.length / 10);
+    setStartIndex((totalPages - 1) * 10);
+  };
+
+  const renderPageButtons = () => {
+    const totalPages = Math.ceil(cidades.length / 10);
+    const visibleButtons = Math.min(10, totalPages); // Show at most 10 buttons
+
+    let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+    let endPage = startPage + visibleButtons - 1;
+
+    if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = Math.max(1, endPage - visibleButtons + 1);
+    }
+
+    const buttons = [];
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(
+        <button key={i} onClick={() => handlePageChange(i)} disabled={currentPage === i}>
+          {i}
+        </button>
+      );
+    }
+    return (
+      <>
+        {startPage !== 1 && (
+          <button onClick={handleFirstPage} disabled={currentPage === 1}>
+            First
+          </button>
+        )}
+        {buttons}
+        {endPage !== totalPages && (
+          <button onClick={handleLastPage} disabled={currentPage === totalPages}>
+            Last
+          </button>
+        )}
+      </>
+    );
+  };
+  
+  return(
+    <div>
+      {visible.map((cidade) => (
+        <div key={cidade.ID}>
+          <p>{cidade.Name}</p>
+        </div>
+      ))}
+
+      {cidades.length > 0 && (
+        <div>
+          {renderPageButtons()}
+        </div>
+      )}
+    </div>
+  )
+}
+
 
 ////////////////////////////////////////////////////////////////&&&
 BOTÕES / INTERATIVIDADE

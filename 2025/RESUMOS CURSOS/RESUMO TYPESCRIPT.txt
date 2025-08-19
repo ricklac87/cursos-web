@@ -50,12 +50,6 @@ let id: number = 5;
 let name: string = "Carlos";
 let isPublished: boolean = true;
 
-Para aceitar qualquer tipo de variavel: (Use apenas se não souber o tipo da variavel!)
-let x: any = "pedro";
-let x: any = 40;
-let x: any = true;
-let x: any = [];
-
 //////////////////////////////////////////////// &&& ###
 TIPOS DE VARIÁVEIS
 
@@ -69,25 +63,14 @@ Caso o tipo errado seja atribuído, o typescript mostrará o erro, mas o código
 
 const nome: number = "Carlos"
 
-//////////////////////////////////////////////// &&& ###
-ARRAYS
+/////////////////////////////////////////////////////////////// &&&
+TIPO ANY
 
-Criando variaveis:
-
-let ids: number[] = [1, 2, 3, 4, 5];
-let names: string[] = ["Ana", "Bruno", "Carlos"];
-let ArrayVariado: any[] = ["pedro", 0, true];
-
-------------
-
-Recebendo um array como parametro de uma função:
-
-const printID = (id: number[]) => {      
-  console.log("IDs: " + id);
-};
-
-printID([1, 2, 3]); 
->>> IDs: 1,2,3
+Para aceitar qualquer tipo de variavel: (Use apenas se não souber o tipo da variavel!)
+let x: any = "pedro";
+let x: any = 40;
+let x: any = true;
+let x: any = [];
 
 //////////////////////////////////////////////// &&& ###
 FUNÇÕES
@@ -215,7 +198,7 @@ export default function App() {
 }
 
 //////////////////////////////////////////////// &&& ###
-TYPE ALIAS EM FUNÇÔES
+TYPE ALIAS 
 
 É possível criar um tipo persolnalizado em funções:
 
@@ -269,7 +252,8 @@ export default function App() {
   );
 }
 
---------------
+-------------- ###
+Type alias em funções:
 
 type Soma = (a: number, b: number) => number;
 
@@ -285,7 +269,7 @@ export default function App() {
   )
 }
 
-------------- 
+------------- ###
 
 type Pessoa = {
   nome: string;
@@ -308,7 +292,7 @@ export default function App() {
   );
 }
 
---------------- %%%
+--------------- ###
 
 type TiposDeID = string | number;
 
@@ -363,8 +347,6 @@ export default function App() {
     </div>
   )
 }
-
-
 
 /////////////////////////////////////////////////////// &&&
 INTERFACE
@@ -536,7 +518,7 @@ User.funcao("Texto da mensagem")
 >>> Texto da mensagem
 
 ////////////////////////////////////////// &&& ###
-LIDANDO COM TIPOS DE VARIAVEIS INCERTAS
+LIDANDO COM TIPOS DE VARIAVEIS INCERTAS EM FUNÇÕES
 
 Modo javascript:
 
@@ -617,7 +599,7 @@ InfoPessoa({
 })
 
 ///////////////////////////////////////////////&&&
-PARAMETROS OPCIONAIS (?)
+PARAMETROS OPCIONAIS (?) EM FUNÇÕES
 
 Ao colocar ? no parametro, ele automaticamente passa a aceitar o tipo undefined também.
 
@@ -645,8 +627,8 @@ function pessoa(sobrenome?: string, nome: string): string {
 
 Os parâmetros opcionais serão sempre os últimos a serem passados.
 
----------------------------------------- ###
-DEFAULT PARAMS (PARAMETROS INICIAIS)
+/////////////////////////////////////////////////////// ### &&&
+DEFAULT PARAMS (PARAMETROS INICIAIS) EM FUNÇÕES
 
 function pessoa(nome: string, sobrenome: string = "Sem nome"): string {
   return `Nome: ${nome} - Sobrenome: ${sobrenome}.`;
@@ -676,7 +658,7 @@ export default function App() {
 }
 
 /////////////////////////////////////////////// &&&
-PARAMETROS LITERAIS
+PARAMETROS LITERAIS EM FUNÇÕES
 
 function pessoa(nome: "João") {
   if(nome === "João") {
@@ -798,8 +780,1016 @@ export default function App() {
 
 OBS: Cuidado com muitos tipos de template unions pois pode causar erro devido a quantidade gigante de variações que o sistema terá que guardar.
 
+//////////////////////////////////////////////// &&& ###
+ARRAYS
+
+Criando variaveis:
+
+let ids: number[] = [1, 2, 3, 4, 5];
+let names: string[] = ["Ana", "Bruno", "Carlos"];
+let ArrayVariado: any[] = ["pedro", 0, true];
+
+-----
+O tipo any evolve com o passar de informações em arrays:
+
+let lista = []      // lista: any[]
+lista.push(3)       // lista: number[]
+lista.push("A")     // lista: (number | string)[]
+
+/////////////////////////////////////////////// &&&
+ARRAYS HETEROGENEOS
+
+function handleClick(elementos: string | number) {
+  elementos.map(elemento => {
+    console.log(elemento)
+  })
+}
+
+export default function App() {
+  const lista = [1, 2, "A", "B"]       //Typescript irá inferir que é um tipo (string | number)[]
+  
+  return (
+    <div>
+      <button onClick={() => handleClick(lista)}>Enviar</button>  
+    </div>
+  )
+}
+
+
+¨¨¨¨ //Forma correta
+
+function handleClick(elementos: (string | number)[]) {         
+  elementos.map(elemento => {
+    console.log(elemento)
+  })
+}
+
+export default function App() {
+  const lista = [1, 2, "A", "B"]       
+  
+  return (
+    <div>
+      <button onClick={() => handleClick(lista)}>Enviar</button>  
+    </div>
+  )
+}
+
+OU
+
+function handleClick(elementos: (string | number)[]) {
+  elementos.map(elemento => {
+    console.log(elemento)
+  })
+}
+
+export default function App() {
+  const lista: (string | number)[] = [1, 2, "A", "B"]     
+  
+  return (
+    <div>
+      <button onClick={() => handleClick(lista)}>Enviar</button>  
+    </div>
+  )
+}
+
+/////////////////////////////////////////////// &&&
+ARRAYS EM PARAMETROS DE FUNÇÕES
+
+Recebendo um array como parametro de uma função:
+
+const printID = (id: number[]): void => {      
+  console.log("IDs: " + id);
+};
+
+printID([1, 2, 3]); 
+>>> IDs: 1,2,3
+
+---------------- ###
+
+function handleClick(frutas: string[]): void {
+  frutas.map(fruta => {
+    console.log(fruta)
+  })
+}
+
+export default function App() {
+  const frutas = ["Banana", "Uva", "Morango"]
+
+  return (
+    <div>
+      <button onClick={() => handleClick(frutas)}>Enviar</button>  
+    </div>
+  )
+}
+
+--------------- ###
+
+Arrays dentro de arrays também é válido:
+
+function handleClick(cidades: string[][]): void {
+  cidades.map(cidade => {
+    console.log(`${cidade[0]} - ${cidade[1]}`)
+  })
+}
+
+export default function App() {
+  const cidades = [["RJ", "Rio de Janeiro"], ["SP", "São Paulo"], ["MG", "Belo Horizonte"]]
+
+  return (
+    <div>
+      <button onClick={() => handleClick(cidades)}>Enviar</button>  
+    </div>
+  )
+}
+
+-------------------- ###
+Usando junto com UNION:
+
+function handleClick(elementos: (string | number)[]): void {
+  elementos.map(elemento => {
+    console.log(elemento)
+  })
+}
+
+export default function App() {
+  const elementos = ["Casa", 18, "Morango", 13]
+
+  return (
+    <div>
+      <button onClick={() => handleClick(elementos)}>Enviar</button>  
+    </div>
+  )
+}
+
+--------------------- ###
+
+function averageScore(ratings: number[]): void {
+  if (ratings.length === 0) return 0
+  const soma: number = ratings.reduce((sum, rating) => sum + rating, 0) 
+  alert(soma / ratings.length)
+}
+
+export default function App() {
+  const ratings = [7, 11, 42]
+
+  return (
+    <div>
+      <button onClick={() => averageScore(ratings)}>Enviar</button>  
+    </div>
+  )
+}
+
+>>> 20       (7 + 11 + 42 dividido por 3)
+
+//////////////////////////////////////////////////// &&&
+READONLY ARRAYS (NÃO PODEM SER MODIFICADOS)
+
+const cores = ["azul", "verde", "roxo"] as const             //cores passa a ser readonly e não pode ser modificado
+
+cores.push("laranja")                                        //Mostrará erro no typescript
+
+/////////////////////////////////////////////// &&&
+TYPE PARAMETERS PARA ARRAYS COMO PARAMETROS EM FUNÇÔES
+
+É um modo genérico de indicar o tipo de um array em uma função
+
+function handleClick(frutas: Array<string>): void {
+  frutas.map(fruta => {
+    console.log(fruta)
+  })
+}
+
+export default function App() {
+  const frutas = ["Banana", "Uva", "Morango"]
+
+  return (
+    <div>
+      <button onClick={() => handleClick(frutas)}>Enviar</button>  
+    </div>
+  )
+}
+
+
+É o mesmo que:
+
+function handleClick(frutas: string[]): void {
+  frutas.map(fruta => {
+    console.log(fruta)
+  })
+}
+...
+
+------------- ###
+
+Arrays dentro de arrays também é válido:
+
+function handleClick(cidades: Array<Array<string>>): void {
+  cidades.map(cidade => {
+    console.log(`${cidade[0]} - ${cidade[1]}`)
+  })
+}
+
+É o mesmo que:
+
+function handleClick(cidades: string[][]): void {
+  cidades.map(cidade => {
+    console.log(`${cidade[0]} - ${cidade[1]}`)
+  })
+}
+
+const cidades = [["RJ", "Rio de Janeiro"], ["SP", "São Paulo"], ["MG", "Belo Horizonte"]]
+
+handleClick(cidades)
 
 ///////////////////////////////////////////////&&&
+REST PARAMETERS EM FUNÇÕES (PARÂMETROS REST) ...REST
+
+Permite um número indefinido de argumentos:
+
+function Mostrar(...pessoas: string[]) {
+  return `${pessoas.join(", ")}`;
+}
+
+export default function App() {
+  return (
+    <div>
+      <p>{Mostrar("Maria", "Carlos", "Ana")}</p>
+    </div>
+  )
+}
+
+OU
+
+function Mostrar(...pessoas: string[]) {
+  pessoas.map(pessoa => {
+    console.log(pessoa)
+  })
+}
+
+export default function App() {
+  return (
+    <div>
+      <button onClick={() => Mostrar("Maria", "Carlos", "Ana")}>Mostrar</button>
+    </div>
+  )
+}
+
+¨¨¨¨
+
+function Mostrar(empresa: string, ...funcionario: string[]) {
+  return `Empresa: ${empresa} - Funcionarios: ${funcionario.join(", ")}`;
+}
+
+export default function App() {
+  return (
+    <div>
+      <p>{Mostrar("Santander", "Maria", "Carlos", "Ana")}</p>
+    </div>
+  )
+}
+
+///////////////////////////////////////////////&&& 
+OBJETOS EM FUNÇÕES
+
+Type alias para objetos literais:
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+}
+
+OU
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+OU
+
+type Pessoa = {
+  nome: string
+  idade: number
+}
+
+¨¨¨¨
+Atenção!!! 
+Não pode:
+
+type Pessoa = {
+  nome: string idade: number      //ERRADO!
+}
+
+type Pessoa = {
+  nome: string , idade: number      //CORRETO!
+}
+
+type Pessoa = {
+  nome: string ; idade: number      //CORRETO!
+}
+
+type Pessoa = {
+  nome: string ; idade: number , status: boolean      //CORRETO!
+}
+
+------------------------ ###
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+}
+
+function handleClick(funcionario: Pessoa) {
+  console.log(funcionario.nome);
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    nome: "João", 
+    idade: 33
+  };
+  
+  return (
+    <div>
+      <button onClick={() => handleClick(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+------------------------ ###
+Propriedades/Campos extras em objetos como parametros:
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+}
+
+function handleClick(funcionario: Pessoa) {
+  console.log(funcionario.status);
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    nome: "Maria",
+    idade: 33, 
+    status: "Casada",
+  }
+  
+  return (
+    <div>
+      <button onClick={() => handleClick(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+-Irá imprimir o resultado, mas o typescript apontará erro pois não existe status no type Pessoa
+
+--------
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+}
+
+function handleClick(funcionario: Pessoa) {
+  console.log(funcionario.status);
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <button onClick={() => handleClick({nome: "Maria", idade: 33, status: "Casada" })}>CLIQUE</button>
+    </div>
+  );
+}
+
+-Irá imprimir o resultado, mas o typescript apontará erro pois não existe status no type Pessoa
+(NO TYPESCRIPT PURO DARÁ ERRO!!!)
+
+-------------------------------------------- ###
+PARAMETROS OPCIONAIS (?) EM OBJETOS EM FUNÇÕES
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  status?: string;           //Parametro opcional. É o equivalente a:    string | undefined
+}
+
+function handleClick(funcionario: Pessoa) {
+  console.log(funcionario.status);
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    nome: "Maria",
+    idade: 33, 
+  }
+  
+  return (
+    <div>
+      <button onClick={() => handleClick(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+-Se pedisse para mostrar funcionario.status, daria undefined
+
+--------------------------------------- ###
+Type Alias em objetos vazios:
+
+const pessoa = {}
+pessoa.nome = "Maria"     // Dará erro
+
+let pessoa = {}
+pessoa = "Maria"          // OK
+
+----------
+
+function handleClick() {
+  let pessoa = {};
+  pessoa = "João";
+  console.log(pessoa);
+}
+
+export default function App() {
+  return (
+    <div>
+      <button onClick={() => handleClick()}>CLIQUE</button>
+    </div>
+  );
+}
+
+------------------------------------------- ###
+DISCRINATED UNIONS EM OBJETOS
+
+type RJ = {
+  ddd: 21;
+  sigla: string;
+  capital: string;
+}
+
+type SP = {
+  ddd: 11;
+  sigla: string;
+  capital: string;
+}
+
+type Estados = RJ | SP;
+
+function handleClick(estado: Estados): void {
+  console.log(estado.capital);
+}
+
+export default function App() {
+
+  const rio: Estados = {
+    ddd: 21,                       //Só aceitará 11 ou 21
+    sigla: "RJ",
+    capital: "Rio de Janeiro"
+  }
+
+  return (
+    <div>
+      <button onClick={() => handleClick(rio)}>CLIQUE</button>
+    </div>
+  );
+}
+
+---------------- %%%
+
+type RJ = {
+  ddd: 21;
+  sigla: string;
+  capital: string;
+}
+
+type SP = {
+  ddd: 11;
+  sigla: string;
+  capital: string;
+}
+
+type Estados = RJ | SP;
+
+function Mostrar(estado: Estados): string {
+  switch (estado.ddd){
+    case (11):
+      return "São Paulo"
+    case (21):
+      return "Rio de Janeiro"
+    default:
+      return "Outro estado"
+  }
+}
+
+export default function App() {
+
+  const rio: Estados = {
+    ddd: 21,                       
+    sigla: "RJ",
+    capital: "Rio de Janeiro"
+  }
+
+  return (
+    <div>
+      <h1>{Mostrar(rio)}</h1>
+    </div>
+  );
+}
+
+------------------ %%%
+
+Union em objetos pode ser usado ao tratar reultados de busca de dados de uma API, por exemplo:
+
+type Loading = {status: "loading"}
+type Error = {status: "loading"; error: number}
+type Success = {status: "loading"; data: string}
+
+type Result = Loading | Error | Success;
+
+------------------------------------------------- ### &&&
+SETS EM OBJETOS
+Sets = coleção de valores únicos
+
+
+function Mostrar(): string {
+  const pessoa = new Set<string>(["Maria", "João"]);
+  pessoa.add("Pedro");
+  pessoa.delete("João");
+  return `Nomes: ${Array.from(pessoa).join(', ')}`
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <h1>{Mostrar()}</h1>
+    </div>
+  );
+}
+
+>>> Nomes: Maria, Pedro
+
+---------------- %%%
+
+function Mostrar(): string {
+  const pessoa = new Set<string>();               //Set vazio
+  pessoa.add("Pedro");                            
+  pessoa.add("Maria");
+  pessoa.add("Pedro");                              //O Set ignora objetos já existentes
+  return `Nomes: ${Array.from(pessoa).join(', ')}`
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <h1>{Mostrar()}</h1>
+    </div>
+  );
+}
+
+>>> Nomes: Pedro, Maria
+
+---------------- %%%
+
+Com Set, usamos:
+
+objeto.add() = para adicionar
+objeto.delete() = para remover
+objeto.size = para saber o tamanho
+
+---------------- %%%
+
+Não consegui fazer funcionar passando o set como parâmetro.
+Então faria da forma normal mesmo:
+
+function Mostrar(pessoas: string[]): void {
+  pessoas.forEach((pessoa: string) => {
+    console.log(pessoa)
+  })
+}
+
+export default function App() {
+
+  const pessoas: Pessoas = ["Maria", "João"];
+  pessoas.push("Pedro");
+  pessoas.splice(pessoas.indexOf("João"), 1);
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(pessoas)}>CLIQUE</button>
+    </div>
+  );
+}
+
+OU
+
+function Mostrar(pessoas: string[]): void {
+  pessoas.forEach((pessoa: string) => {
+    console.log(pessoa)
+  })
+}
+
+export default function App() {
+
+  const pessoas = ["Maria", "João"];
+  pessoas.push("Pedro");
+  pessoas.splice(pessoas.indexOf("João"), 1);
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(pessoas)}>CLIQUE</button>
+    </div>
+  );
+}
+
+--------------- %%%
+Set aceitando mais de 1 tipo:
+
+function Mostrar(): string {
+  const pessoa = new Set<string | number>();
+  pessoa.add("Pedro");
+  pessoa.add(13);
+  return `Nomes: ${Array.from(pessoa).join(', ')}`
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <h1>{Mostrar()}</h1>
+    </div>
+  );
+}
+
+>>> Nomes: Pedro, 13
+
+
+--------------------------------------------------- ### &&&
+MAPS COM OBJETOS
+
+const objeto = new Map<string, number>(key, value)
+
+objeto.set("Chave", 1)
+
+Obs: A key é usada para identificar o objeto. É com ela que deletamos um objeto.
+
+------------- %%%
+
+Caso seja informado um valor inicial para o map, não é preciso especificar o tipo da key e do value:
+
+const objeto = new Map([["Chave1", "Valor1"]])            //Typescript entendeu que o tipo será <string, string>
+
+------------ %%%
+
+function Mostrar(): string {
+  const pessoa = new Map<string, string>();
+  pessoa.set("Pedro", " 20 anos");
+  pessoa.set("Maria", " 25 anos");
+  return `${Array.from(pessoa).join(' - ')}`
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <h1>{Mostrar()}</h1>
+    </div>
+  );
+}
+
+>>> Pedro, 20 anos - Maria, 25 anos
+
+-------------- %%%
+
+function Mostrar(): string {
+  const pessoa = new Map([["João", 15]]);             //Typescript entende que será <string, number>
+  pessoa.set("Pedro", 13);
+  pessoa.set("Maria", 19);
+  return `${Array.from(pessoa).join(' - ')}`
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <h1>{Mostrar()}</h1>
+    </div>
+  );
+}
+
+>>> João,15 - Pedro,13 - Maria,19
+
+---------------- %%%
+
+function Mostrar(): string {
+  const pessoa = new Map([["Carlos", "18 anos"]]);             //tipo <string, string>
+  pessoa.set("Pedro", " 20 anos");
+  pessoa.set("Maria", " 25 anos");
+  pessoa.set("Carlos", " 18 anos");                  //O Map ignora objetos já existentes
+  pessoa.delete("Pedro")
+  return `${Array.from(pessoa).join(' - ')}`
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <h1>{Mostrar()}</h1>
+    </div>
+  );
+}
+
+>>> Carlos, 18 anos - Maria, 25 anos
+
+-------------------------------------------- ### &&&
+DYNAMIC KEYS COM OBJETOS 
+(Chaves dinâmicas que podem ser strings ou numeros)
+
+type Pessoa = {
+  [chave: string]: number;                          //chave de qualquer tipo e valor do tipo number
+}
+
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.idade);                   //imprime a chave do tipo string
+  console.log(funcionario[75]);                     //imprime a chave do tipo number
+  //console.log(funcionario.nome);                  //Dará erro
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    idade: 33,                                      //chave do tipo string
+    75: 22,                                         //chave do tipo number
+    //nome: "Carlos",                               //Dará erro pois o valor precisa ser number
+  }
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+--------------------------- %%%
+
+type Pessoa = {
+  [chave: string]: number;                          
+}
+
+function Mostrar(funcionario: Pessoa): void {
+  funcionario["idade"] = 18                      //Alterou o valor de idade
+  console.log(funcionario.idade);                   
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    idade: 33,  
+    cpf: 12345678900,
+    tel: 21998765432                                      
+  }
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> 18
+
+-------------------------------- ### &&&
+OBJETOS
+RECORD
+
+type Pessoa = Record<string, number>
+
+É o mesmo que:
+
+type Pessoa = {
+  [chave: string]: number;                          
+}
+
+------------------------------------- ### &&&
+OBJETOS
+DYNAMIC DEFAULT PROPERTIES
+(Utilize com cuidado este tipo de abordagem, pois provavelmente deve haver uma maneira melhor de lidar com este caso.)
+
+Além de chaves dinâmicas, é possível incluir outros tipo de propriedades:
+
+type Pessoa = {
+  [campoextra: string]: string, 
+  nome: string,
+  idade: number,
+}
+
+-----
+
+type FormData = {
+  [field: string]: string, 
+  email: string,
+  password: string,
+}
+
+-----
+
+type FormData = {
+  [field: string]: string | number | boolean, 
+  email: string,
+  password: string,
+  age: number
+}
+
+--------------------------------------------- ### &&&
+OBJETOS
+PROPERTY KEYS
+(raramente usado)
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+type PropertyKey = string | number | symbol
+
+----
+
+type Tags = {
+  [key: string]: any,
+}
+
+const server: Tags = {
+  name: "Jane's server",
+  1: 420,
+  [Symbol("role")]: "Admin"
+}
+
+----------------------------------------------- ### &&&
+OBJETOS
+READONLY MODIFIER
+
+Parecido com const em Javascript, fazendo com que um objeto possa apenas ser lido e não alterado
+
+type Pessoa = {
+  readonly nome: string,      //Não pode ser modificado
+  idade: number,              //Pode ser modificado
+}
+
+---------
+
+type Pessoa = {
+  readonly nome: string,      
+  idade: number,              
+}
+
+function Mostrar(funcionario: Pessoa): void {
+  funcionario.nome = "Maria";                                  //Typescript dará erro apontando que não pode modificar 
+  funcionario.idade = 26;                                      //OK. Pode ser modificado
+  console.log(funcionario.nome + " - " + funcionario.idade);                   
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    nome: "João",
+    idade: 25
+  }
+  
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+---------------------------------------------------- ### &&&
+OBJETOS QUE NÃO MODEM SER MODIFICADOS
+AS CONST 
+
+Parecido com as const com arrays:
+
+const cores = ["azul", "verde", "roxo"] as const             //cores passa a ser readonly e não pode ser modificado
+
+cores.push("laranja")                                        //Mostrará erro no typescript
+
+----------
+
+Com objetos:
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+} 
+
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.nome)              
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    nome: "Maria",
+    idade: 23,
+  } as const;                             //objeto passa a ser readonly
+
+  funcionario = {                         // ERRO!!! funcionario não pode ser modificado
+    nome: "Carlos",
+    idade: 51,
+  }
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+---------------------------------------------------- ### &&&
+OBJETOS QUE NÃO MODEM SER MODIFICADOS
+OBJECT.FREEZE
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+  setor: {
+    cargo: string,
+    turno: string,
+  }
+} 
+
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.setor.cargo)              
+}
+
+export default function App() {
+
+  const funcionario = Object.freeze({          //objeto passa a ser readonly
+    nome: "Maria",
+    idade: 23,
+    setor: {
+      cargo: "Auxiliar",
+      turno: "Manhã",
+    }
+  });                                      
+
+  funcionario = {                              // ERRO!!! funcionario não pode ser modificado
+    nome: "Carlos",
+    idade: 51,
+    setor: {
+      cargo: "Fiscal",
+      turno: "Tarde",
+    }
+  }
+
+  funcionario.setor.cargo = "Gerente"                 //OK, pois nested properties não são congelados
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> Gerente
+
+----------------
+
+Object.freeze não permite modificar o objeto, mas é possível modificar ou incluir (com push) elementos aninhados dentro do objeto.
+
+type Pessoa = {
+  nomes: string[]
+} 
+
+function Mostrar(funcionario: Pessoa): void {
+  funcionario.nomes.map((nome) => console.log(nome))         
+}
+
+export default function App() {
+
+  const funcionario = Object.freeze({  
+    nomes: ["Maria", "Carlos", "João"]
+  });                                      
+
+  funcionario.nomes.push("Pedro")                        
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+------------------------------------------------------------ ###
+SATISFIES
+
+1:32:29
+
+
+
+
+//////////////////////////////////////////////////////////////////////////&&& ***
 ENUM
 
 enum MENSAGENS {
@@ -846,6 +1836,96 @@ const printErrorMsg = (error: LoginError) => {
 printErrorMsg(LoginError.NoUser)
 
 >>> No user was found with that username
+
+-------------------------------------- ###
+ENUM COM REACT
+
+enum MENSAGENS {
+  msg1 = "Texto da Mensagem1",
+  msg2 = "Texto da Mensagem2",
+  msg3 = "Texto da Mensagem3",
+}
+export default function App() {
+  return (
+    <>
+      <h1>{MENSAGENS.msg1}</h1>
+    </>
+  );
+}
+
+------
+
+Usando React.FC para tipar explicitamente o componente funcional:
+
+
+import React from 'react';
+
+enum MENSAGENS {
+  msg1 = "Texto da Mensagem1",
+  msg2 = "Texto da Mensagem2",
+  msg3 = "Texto da Mensagem3",
+}
+
+const App: React.FC = () => {
+  return (
+    <>
+      <h1>{MENSAGENS.msg1}</h1>
+    </>
+  );
+};
+
+export default App;
+
+------------------ ###
+Enum com props:
+
+-Arquivo Teste.tsx:
+
+interface EstadoInterface {
+  estado: Estados;
+}
+
+export enum Estados {
+  RJ = "Rio de Janeiro",
+  SP = "São Paulo",
+  MG = "Minas Gerais",
+}
+
+export const Teste = ({estado}: EstadoInterface) => {
+  return (
+    <div>
+      <h1>{estado}</h1>
+    </div>
+  )
+}
+
+-Arquivo App.tsx:
+
+import React from 'react';
+import {Teste, Estados} from './components/Teste'
+
+const App: React.FC<Estados> = () => {
+  return (
+    <>
+      <Teste estado={Estados.SP}/>
+    </>
+  );
+};
+
+export default App;
+
+OU
+
+import {Teste, Estados} from './components/Teste'
+
+export default function App() {
+  return (
+    <>
+      <Teste estado={Estados.MG}/>
+    </>
+  );
+};
+
 
 ///////////////////////////////////////////// &&&
 INTERFACE GENÉRICA (CONTAINER)
@@ -985,7 +2065,6 @@ Digite no terminal:
 npm run dev
 
 ///////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 Imprimindo resultados
 
 export default function App() {
@@ -1030,7 +2109,6 @@ export default function App() {
 }
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 Criando componente
 
 Exportando um componente sem default:
@@ -1087,7 +2165,6 @@ export default function App() {
 
 
 ///////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 PROPS E INTERFACES
 
 -Arquivo Teste.tsx:
@@ -1250,7 +2327,7 @@ export default function App() {
   )
 }
 
---------------------- ### ***
+--------------------- ### 
 Props sem campos:
 
 interface ComponenteProps {}
@@ -1298,7 +2375,6 @@ export default function App() {
 
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 USESTATE
 
 Modo implícito: (pode dar problema)
@@ -1551,7 +2627,6 @@ export default function App() {
 }
 
 ///////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 TOGGLE
 
 -Arquivo teste.tsx:
@@ -1627,7 +2702,6 @@ export default function App() {
 }
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 ONCHANGE COM INPUT
 
 import {useState} from 'react'
@@ -1649,7 +2723,6 @@ export default function App() {
 }
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 ONCHANGE COM SUBMIT
 
 import {useState} from 'react'
@@ -1834,7 +2907,6 @@ export default userUpdate;
 
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 USECONTEXT
 
 Passando apenas o valor através do contexto:
@@ -2077,7 +3149,7 @@ export default function App(){
 
 >>> Texto inicial
 
--------------------- ### ***
+-------------------- ### 
 
 -Arquivo ComponentePai.jsx:
 
@@ -2526,98 +3598,8 @@ export default function App() {
   )
 }
 
-//////////////////////////////////////////////////////////////// &&& ***
-TYPESCRIPT COM REACT
-ENUM
-
-enum MENSAGENS {
-  msg1 = "Texto da Mensagem1",
-  msg2 = "Texto da Mensagem2",
-  msg3 = "Texto da Mensagem3",
-}
-export default function App() {
-  return (
-    <>
-      <h1>{MENSAGENS.msg1}</h1>
-    </>
-  );
-}
-
-------
-
-Usando React.FC para tipar explicitamente o componente funcional:
-
-
-import React from 'react';
-
-enum MENSAGENS {
-  msg1 = "Texto da Mensagem1",
-  msg2 = "Texto da Mensagem2",
-  msg3 = "Texto da Mensagem3",
-}
-
-const App: React.FC = () => {
-  return (
-    <>
-      <h1>{MENSAGENS.msg1}</h1>
-    </>
-  );
-};
-
-export default App;
-
------------------- ###
-Usando props:
-
--Arquivo Teste.tsx:
-
-interface EstadoInterface {
-  estado: Estados;
-}
-
-export enum Estados {
-  RJ = "Rio de Janeiro",
-  SP = "São Paulo",
-  MG = "Minas Gerais",
-}
-
-export const Teste = ({estado}: EstadoInterface) => {
-  return (
-    <div>
-      <h1>{estado}</h1>
-    </div>
-  )
-}
-
--Arquivo App.tsx:
-
-import React from 'react';
-import {Teste, Estados} from './components/Teste'
-
-const App: React.FC<Estados> = () => {
-  return (
-    <>
-      <Teste estado={Estados.SP}/>
-    </>
-  );
-};
-
-export default App;
-
-OU
-
-import {Teste, Estados} from './components/Teste'
-
-export default function App() {
-  return (
-    <>
-      <Teste estado={Estados.MG}/>
-    </>
-  );
-};
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 REACT.FC COM PROPS E INTERFACES
 
 React.FC is a type that stands for "Function Component" in React. 
