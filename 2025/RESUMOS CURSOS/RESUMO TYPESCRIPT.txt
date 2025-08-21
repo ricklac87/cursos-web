@@ -63,6 +63,18 @@ Caso o tipo errado seja atribuído, o typescript mostrará o erro, mas o código
 
 const nome: number = "Carlos"
 
+-----
+Tipo Date:
+
+const data: Date = new Date()
+
+data.toLocaleDateString()
+ou
+data.getFullYear()
+ou
+data.getHours()
+...
+
 /////////////////////////////////////////////////////////////// &&&
 TIPO ANY
 
@@ -71,6 +83,63 @@ let x: any = "pedro";
 let x: any = 40;
 let x: any = true;
 let x: any = [];
+
+////////////////////////////////////////////////////////////////// &&&
+FORÇANDO TIPOS (TYPE INFERING)
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+let x: string | number             //variavel é string OU numero
+
+x.toLowerCase()                    //Não é possível
+
+(x as string).toLowerCase()        //É possível
+
+ou
+
+(<string>x).toLowerCase()        //É possível
+
+ou
+
+if(typeof x == "string"){          //É possível
+  x.toLowerCase()
+}
+
+OBS: Se der um valor para a variável, o erro sumirá pois o typescript entenderá qual é o tipo correto
+let x: string | number = "TEXTO"; 
+
+//////////////////////////////////////////////////////// &&&
+NON NULL (!)
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+const txt: string | null = "Texto"
+
+Enviar(txt!)         //A ! indica que a variavel Não pode ser null
+
+----
+
+export default function App() {
+
+  const txt: string | null = "Texto"
+
+  return (
+    <div>
+      {typeof txt!}
+    </div>
+  );
+}
+
+>>> string
+
+-----
+Mas é melhor fazer uma checagem ao invés de usar !:
+
+function Texto(txt: string | null) {
+  if (txt === null){
+    throw new Error("Texto é obrigatório")
+  }
+  sendText(txt)
+}
+
 
 //////////////////////////////////////////////// &&& ###
 FUNÇÕES
@@ -399,6 +468,19 @@ User.age = 40           //tipo number
 console.log(User.age)
 >>> 40
 
+-------------------------- ###
+Interface é bem parecido com type:
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+interface Pessoa {
+  nome: string,
+  idade: number,  
+}
+
 ------------------------- ### &&&
 Interface com campos faltando: (campo opcional)
 
@@ -517,7 +599,858 @@ const User: UserInterface = {
 User.funcao("Texto da mensagem")
 >>> Texto da mensagem
 
-////////////////////////////////////////// &&& ###
+------------------------------------------------- ###
+Herança com Interfaces:
+
+interface Pessoa {
+  nome: string,
+  idade: number
+}
+
+interface Funcionario extends Pessoa {
+  cargo: string,
+}
+
+-A interface Funcionario passará a herdar as propriedades nome e idade de Pessoa
+
+-------------------- %%%
+
+interface User {
+  id: string;
+  nome: string;
+  idade: number;
+  email: string;
+}
+
+interface UserSemEmail {
+  id: string;
+  nome: string;
+  idade: number;
+}
+
+Ao invés de fazer isso acima, faria:
+
+interface UserSemEmail {
+  id: string;
+  nome: string;
+  idade: number;
+}
+
+interface User extends UserSemEmail {
+  email: string;
+}
+
+------------------- %%%
+
+interface Personagem {
+  nome: string,
+  level: number
+}
+
+interface Mago extends Personagem {
+  magias: string[],
+  mana: number
+}
+
+const Merlin: Mago = {
+  nome: "Merlin",
+  level: 100,
+  magias: ["Fireball", "Alakazam", "Abracadabra"],
+  mana: 76
+}
+
+------------------------- %%%
+Herdando mais de 1 interface:
+
+interface Pessoa {
+  nome: string,
+  idade: number
+}
+
+interface Empregado {
+  turno: string,
+  salario: number,
+}
+
+interface Professor extends Pessoa, Empregado {
+  disciplina: string,
+  escola: string
+}
+
+------------------------------------------------ ### 
+Interfaces com React:
+
+interface Pessoa {
+  nome: string,
+  idade: number
+}
+
+function Mostrar(funcionario: Pessoa): string {
+  return funcionario.nome
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: 'João',
+    idade: 25
+  }
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+---------------------- %%%
+
+interface Pessoa {
+  nome: string,
+  idade: number
+}
+
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.nome)
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: 'João',
+    idade: 25
+  }
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+---------------------- %%%
+
+interface Pessoa {
+  nome: string,
+  idade: number
+}
+
+interface Funcionario extends Pessoa {
+  cargo: string,
+}
+
+function Mostrar(funcionario: Funcionario): void {
+  console.log(funcionario.cargo)
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: 'João',
+    idade: 25,
+    cargo: 'Desenvolvedor'
+  }
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+---------------------- %%%
+
+interface Personagem {
+  nome: string,
+  level: number
+}
+
+interface Mago extends Personagem {
+  magias: string[],
+  mana: number
+}
+
+function Mostrar(wizard: Mago): void {
+  console.log(wizard.magias)
+}
+
+export default function App() {
+
+  const wizard: Mago = {
+    nome: "Merlin",
+    level: 100,
+    magias: ["Fireball", "Alakazam", "Abracadabra"],
+    mana: 76
+  }
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(wizard)}>CLIQUE</button>
+    </div>
+  );
+}
+
+-------------------------------- %%%
+
+interface Pessoa {
+  nome: string,
+  idade: number
+}
+
+interface Empregado {
+  turno: string,
+  salario: number,
+}
+
+interface Professor extends Pessoa, Empregado {
+  disciplina: string,
+  escola: string
+}
+
+function Mostrar(funcionario: Professor): string {
+  return funcionario.escola
+}
+
+export default function App() {
+
+  const funcionario: Professor = {
+    nome: "Carlos",
+    idade: 23,
+    turno: "Manhã",
+    salario: 1200,
+    disciplina: "Matemática",
+    escola: "Escola Estadual",
+  }
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+------------------------------------------------ ###
+Substituindo um tipo de propriedade em uma interface:
+
+interface Pessoa {
+  nome: string,
+  idade: string | number
+}
+
+interface Funcionario extends Pessoa {
+  cargo: string,
+  idade: number                                  //idade deixou de aceitar string
+}
+
+export default function App() {
+
+  const funcionario: Funcionario = {
+    nome: 'João',
+    idade: "25",                           //Typescript mostrará erro pois idade só aceita number agora
+    cargo: 'Desenvolvedor'
+  }
+
+  return (
+    <div>
+      {funcionario.idade}
+    </div>
+  );
+}
+
+¨¨¨¨
+Atenção!
+Não é possível trocar para um tipo incompatível:
+
+interface Pessoa {
+  nome: string,
+  idade: string
+}
+
+interface Funcionario extends Pessoa {
+  cargo: string,
+  idade: number                                  //ERRO!!! Passará a ser do tipo Never
+}
+
+///////////////////////////////////////////// &&& ***
+INTERFACE GENÉRICA (CONTAINER)
+
+Uma interface pode ser passada para uma classe:
+
+interface UserInterface {
+  ...
+}
+
+class Pessoa <UserInterface> {
+  ...
+} 
+
+-------- ###
+
+Criando uma interface genérica que aceite vários tipos de dados:
+
+class Container <T> {
+  private contents: T[]
+
+  constructor() {
+    this.contents = []
+  }
+
+  addItem(item: T):void {
+    this.contents.push(item)
+  }
+
+  getItem(indice: number):T | undefined {
+    return this.contents[indice]
+  }
+}
+
+const pessoas = new Container <string> () 
+pessoas.addItem("Maria")
+const p1 = pessoas.getItem(0)
+console.log(p1)                    // >>> Maria
+
+const numeros = new Container <number> ()
+numeros.addItem(1)
+const num1 = numeros.getItem(0)
+console.log(num1)                  // >>> 1
+
+/////////////////////////////////////////////// &&&
+CAMPOS IMUTÁVEIS EM UMA INTERFACE
+
+Para proibir que valores de certos campos de uma interface possam ser alterados:
+
+interface PessoaInterface {
+  readonly id: number;            //Não pode ser alterado
+  readonly nome: string;          //Não pode ser alterado
+  readonly dataInicio: Date;       //Não pode ser alterado
+  idade: number;                    //Pode ser alterado
+}
+
+const funcionario: PessoaInterface = {
+  id: 12345,
+  nome: "Maria",
+  dataInicio: new Date(),
+  idade: 20,
+}
+
+funcionario.idade = 33
+
+console.log(funcionario)
+
+////////////////////////////////////////////////////////////// &&&
+INTERFACE vs TYPE
+
+INTERFACE:
+
+Extensibilidade: Interfaces são abertas, o que significa que você pode adicionar novas propriedades a uma interface existente em qualquer parte do seu código.
+
+interface User {
+  name: string;
+}
+
+interface User {
+  age: number;
+}
+¨
+¨¨¨¨
+Herança: Interfaces podem estender outras interfaces, facilitando a reutilização de tipos e a criação de tipos compostos.
+
+interface Person {
+  name: string;
+}
+
+interface User extends Person {
+  login: string;
+}
+
+¨¨¨¨
+Classes: Interfaces são comumente usadas para definir contratos para classes, especificando quais métodos e propriedades uma classe deve ter.
+
+interface Serializable {
+  serialize(): string;
+}
+
+class User implements Serializable {
+  serialize() {
+    return "User Data";
+  }
+}
+
+--------------------- %%%
+TYPE:
+
+Versatilidade: type permite criar tipos que não são apenas objetos. Isso inclui uniões, interseções, primitivos, entre outros.
+
+type ID = string | number;
+
+type User = { name: string } & { age: number };
+
+¨¨¨¨
+Composição: type pode ser usado para compor novos tipos a partir de tipos existentes.
+
+type PartialUser = Partial<User>;
+
+¨¨¨¨
+Expressões Condicionais: type pode expressar tipos condicionais e mapeados, oferecendo um alto grau de flexibilidade e funcionalidade.
+
+type ReadOnly<T> = { readonly [P in keyof T]: T[P] };
+
+---------------------- %%%
+DIFERENÇAS:
+
+Extensibilidade: interface é extensível, mas type não é. Isso significa que você pode adicionar novas propriedades a uma interface existente, mas não pode fazer isso com um type.
+
+Declaração vs. Expressão: interface é sempre uma declaração de forma, enquanto type pode ser uma declaração ou uma expressão.
+
+União e Interseção: type é mais flexível e pode ser usado para criar uniões e interseções de tipos.
+
+Use interface quando precisar de extensibilidade ou estiver definindo contratos para objetos ou classes.
+Use type para uniões, interseções, tipos primitivos, ou quando precisar de tipos complexos ou expressões condicionais.
+
+----------------------- %%%
+
+Podem existir interfaces com o mesmo nome:  
+
+interface Pessoa {
+  nome: string
+}
+
+interface Pessoa {
+  idade: number
+}
+
+Isso é o mesmo que:
+
+interface Pessoa {
+  nome: string,
+  idade: number
+}
+
+----
+
+interface Pessoa {
+  nome: string,
+}
+
+interface Pessoa {
+  idade: number,
+}
+
+function Mostrar(funcionario: Pessoa): string {
+  return funcionario.nome
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: 'João',
+    idade: 25
+  }
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+¨¨¨¨
+Se fizer o mesmo usando type, dará erro!!!
+
+type Pessoa = {
+  nome: string,
+}
+
+type Pessoa = {
+  idade: number,
+}
+
+>>> ERRO
+
+//////////////////////////////////////////////// &&&
+FUSÃO DE TYPE COM INTERFACE (HERANÇA)
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+interface Empregado extends Pessoa {
+  cargo: string
+}
+
+-------
+
+interface Personagem {
+  nome: string,
+  level: number
+}
+
+type Mago = Personagem & {
+  magias: string[],
+  mana: number
+}
+
+///////////////////////////////////////////////// &&&
+PARTIAL UTILITY TYPE:   PARTIAL<T>
+
+Transforma todas as propriedades em opcionais. Muito útil para formulários.
+OBS: Vale para type e interface.
+
+type Empregado = {
+  cargo: string;
+  salario: number;
+}
+
+type Pessoa  = {
+  nome: string;
+  idade: number;
+}
+
+function Mostrar(funcionario: Pessoa, info: Partial<Empregado>): string {
+  return `${funcionario.nome} é ${info.cargo} e tem ${funcionario.idade} anos`
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "João",
+    idade: 30,
+  } 
+
+  const info = {
+    cargo: "Desenvolvedor",
+  }
+
+  return (
+    <div>
+      <p>{Mostrar(funcionario, info)}</p>  
+    </div>
+  );
+}
+
+-O utility type Partial transformou as propriedades em type Empregado em opcionais: 
+
+type Empregado = {
+  cargo?: string;
+  salario?: number;
+}
+
+---------------- ###
+ATENÇÃO:
+
+Partial não torna propriedades aninhadas em opcionais:
+
+Partial<Pessoa>
+
+type Pessoa = {
+  id: string;         //Passou a ser opcional
+  nome: string;       //Passou a ser opcional
+  pais: {
+    mae: string;      //Não passou a ser opcional
+    pai: string;      //Não passou a ser opcional
+  } 
+}
+
+----
+Exemplo:
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  info: {
+    cargo: string;
+    salario: number;
+  }
+}
+
+function Mostrar(funcionario: Partial<Pessoa>): string {
+  return `${funcionario.nome} é ${funcionario.info.cargo} e tem ${funcionario.idade} anos`
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "João",
+    idade: 30,
+    info: {
+      cargo: "Desenvolvedor",              //Não está opcional
+    }
+  } 
+
+  return (
+    <div>
+      <p>{Mostrar(funcionario)}</p>            //Está faltando passar o salario pois não está opcional
+    </div>
+  );
+}
+
+-Não conseguirá acessar os dados dentro de info (cargo e desenvolvedor) se colocar Partial em propriedades aninhadas
+
+
+--------------- ###
+
+type User = {
+  id: string;
+  nome: string;
+  email: string;
+}
+
+function updateSemPartial(       //Sem Partial
+  userId: string,
+  userInfo: {
+    id?: string;
+    nome?: string;
+    email?: string;
+  }){
+  //instrução dentro da função
+}
+
+function updateComPartial(userId: string, userInfo: Partial<User>) {
+  //instrução dentro da função
+}
+
+///////////////////////////////////////////////////////////////////// &&& 
+REQUIRED UTILITY TYPE       REQUIRED<T>
+
+É um utility type que faz o oposto de Partial. Ele torna as propriedades de um type obrigatórias de serem passadas.
+OBS: Vale para type e interface.
+
+type Empregado = {
+  cargo?: string;                //opcional
+  salario?: number;              //opcional
+}
+
+type Pessoa  = {
+  nome: string;
+  idade: number;
+}
+
+function Mostrar(funcionario: Pessoa, info: Required<Empregado>): string {         //É obrigatório passar cargo e salario
+  return `${funcionario.nome} é ${info.cargo} e tem ${funcionario.idade} anos`
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "João",
+    idade: 30,
+  } 
+
+  const info = {
+    cargo: "Desenvolvedor",               //Não é mais opcional 
+    salario: 2000,                        //Não é mais opcional
+  }
+
+  return (
+    <div>
+      <p>{Mostrar(funcionario, info)}</p>  
+    </div>
+  );
+}
+
+-O utility type Required transformou as propriedades em type Empregado que antes eram opcionais em obrigatórias de serem passadas como parametros. 
+
+----------- %%%
+
+Required<Pessoa> 
+
+function Mostrar(funcionario: Required<Pessoa>): string {         
+  return `${funcionario.nome} tem ${funcionario.idade} anos`
+}
+
+é o equivalente a:
+
+function Mostrar(funcionario: Pessoa): string {         
+  return `${funcionario.nome!} tem ${funcionario.idade!} anos`
+}
+
+! passa por cima do typescript, ditando que será obrigatório passar os valores. Portanto, é melhor usar Required<T>
+
+///////////////////////////////////////////////////////////////////// &&& 
+READONLY UTILITY TYPE     Readonly<T>
+
+Transforma todas as propriedades de uma interface ou type em readonly.
+OBS: Vale para type e interface.
+
+interface Empregado {
+  cargo: string;
+  salario: number;
+}
+
+interface Pessoa {
+  nome: string;
+  idade: number;
+}
+
+function Mostrar(funcionario: Pessoa, info: Readonly<Empregado>): string {
+  return `${funcionario.nome} é ${info.cargo} e tem ${funcionario.idade} anos`
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "João",
+    idade: 30,
+  } 
+
+  let info = {
+    cargo: "Desenvolvedor",
+    salario: 2000,
+  }
+
+  info = {                       //ERRO!!! Os campos da interface Empregado são readonly e não podem ser alterados
+    cargo: "Gerente",
+    salario: 3000,
+  }
+
+  return (
+    <div>
+      <p>{Mostrar(funcionario, info)}</p>  
+    </div>
+  );
+}
+
+-Isso é o mesmo que:
+
+interface Empregado {
+  readonly cargo: string;
+  readonly salario: number;
+}
+
+//////////////////////////////////////////////////// &&& 
+PICK UTILITY TYPE     Pick<Type, Key>
+
+Cria um novo tipo selecionando um subset de propriedades de um tipo já existente.
+
+interface Produto {
+  id: number;
+  nome: string;
+  preco: number;
+  marca: string;
+  descricao: string;
+  categoria: string;
+}
+
+type ResumoProduto = Pick<Produto, "nome" | "preco" | "marca">
+
+function Mostrar(lista: ResumoProduto[]) {
+  return lista[0].nome
+}
+
+export default function App() {
+
+  const lista: ResumoProduto[] = [
+    {nome: "TV", preco: 2000, marca: "Sharp"},
+    {nome: "Laptop", preco: 3500, marca: "Dell"},
+  ]
+
+  return (
+    <div>
+      {Mostrar(lista)}
+    </div>
+  );
+}
+
+>>> TV
+
+------------------------------ ###
+
+interface Pessoa {
+  nome: string;
+  idade: number;
+  cargo: string;
+  tel: number;
+  email: string;
+}
+
+type ResumoPessoa = Pick<Pessoa, "nome" | "idade" | "cargo">
+
+export default function App() {
+
+  const funcionarios: ResumoPessoa[] = [
+    {nome: "Carlos", idade: 33, cargo: "Gerente"},
+    {nome: "Maria", idade: 25, cargo: "Desenvolvedora"},
+    {nome: "Pedro", idade: 35, cargo: "Faxineiro"},
+  ]
+
+  return (
+    <div>
+      {funcionarios.map ((funcionario) => (
+        <div key={funcionario.nome}>
+          <p>Nome: {funcionario.nome}</p>
+          <p>Idade: {funcionario.idade}</p>
+          <p>Cargo: {funcionario.cargo}</p>
+          <hr />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+//////////////////////////////////////////////////// &&& 
+OMIT UTILITY TYPE     Omit<Type, Key>
+
+É o oposto de Pick.
+Omite propriedades de um tipo já existente. Útil para omitir certos dados de um usuário no banco de dados, como senha, passwordhash, timestamp, createdAt, updateAt, etc.
+
+interface Produto {
+  id: number;
+  nome: string;
+  preco: number;
+  marca: string;
+  descricao: string;
+  categoria: string;
+}
+
+type ResumoProduto = Omit<Produto, "id" | "descricao" | "categoria">
+
+function Mostrar(): void {
+
+  const lista: ResumoProduto = {
+    nome: "TV", 
+    preco: 2000, 
+    marca: "Sharp",
+  }
+
+  console.log(lista)
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <button onClick={Mostrar}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> Object {nome: "TV", preco: 2000, marca: "Sharp"}
+
+------------------
+
+interface Pessoa {
+  nome: string;
+  idade: number;
+  senha: string;
+}
+
+type PessoaSemSenha = Omit<Pessoa, "senha">;
+
+const usuario: PessoaSemSenha = {
+  nome: "Pedro",
+  idade: 30,
+};
+
+export default function App() {
+  return (
+    <p>{usuario.nome} tem {usuario.idade} anos.</p>
+  );
+}
+
+>>> Pedro tem 30 anos.
+
+///////////////////////////////////////////////////////////////////// &&& 
 LIDANDO COM TIPOS DE VARIAVEIS INCERTAS EM FUNÇÕES
 
 Modo javascript:
@@ -575,9 +1508,58 @@ const printID = (id: TiposDeID) => {
 printID(123);       //OU printID("123");
 >>> ID: 123
 
-///////////////////////////////////////////////// &&&
+///////////////////////////////////////////////// &&& 
 INTERSECTIONS 
-Juntar os campos de mais de uma interface
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+type Empregado = {
+  cargo: string,
+  salario: number,
+}
+
+type Trabalhador = Pessoa & Empregado
+
+function Mostrar(funcionario: Trabalhador): string | number {
+  return funcionario.idade
+}
+
+export default function App() {
+
+  const funcionario: Trabalhador = {
+    nome: "Maria",
+    idade: 33,
+    cargo: "Gerente",
+    salario: 2000
+  }
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+-------------------- 
+Outra forma:
+
+type 
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+type Empregado = Pessoa & {
+  cargo: string,
+  salario: number,
+}
+
+--------------------------------- ###
+Para juntar os campos de mais de uma interface:
 
 interface Dados1 {
   nome: string;
@@ -589,16 +1571,252 @@ interface Dados2 {
 
 type TodosDados = Dados1 & Dados2;
 
-const InfoPessoa = (pessoa: TodosDados):void => {
+function Mostrar(pessoa: TodosDados): void {
   console.log(`${pessoa.nome} tem ${pessoa.idade} anos`)
 }
 
-InfoPessoa({
-  nome: "Carlos", 
-  idade: 32
-})
+export default function App() {
 
-///////////////////////////////////////////////&&&
+  const pessoa: TodosDados = {
+    nome: "Carlos", 
+    idade: 32
+  }
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(pessoa)}>CLIQUE</button>
+    </div>
+  );
+}
+
+------------------------------------------------ ###
+INTERSECTION DE TIPOS INCOMPATÍVEIS
+(Interseção de campos com tipos repetidos)
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+type Empregado = {
+  nome: string,
+  cargo: string,
+  setor: string,
+}
+
+type Funcionario = Pessoa & Empregado
+
+Irá fundir as propriedades dos dois tipos e ignorar os repetidos
+
+Type Funcionario = {
+  nome: string,
+  idade: number,
+  cargo: string,
+  setor: string,  
+}
+
+------------------- ###
+Mas e o que acontece se fundirmos 2 tipos com nomes iguais e tipos diferentes?
+
+type Pessoa = {
+  nome: "Carlos" | "Daniel",
+  idade: number,
+}
+
+type Empregado = {
+  nome: "Maria" | "Ana",
+  cargo: string,
+  setor: string,
+}
+
+type Funcionario = Pessoa & Empregado
+
+Ao fundir as 2 propriedades nome com tipos diferentes, eles se tornam um tipo Never (não possuem uma condição de checagem if)
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+type Empregado = {
+  nome: number
+  cargo: string,
+  salario: number,
+}
+
+type Trabalhador = Pessoa & Empregado
+
+const funcionario: Trabalhador = {
+  nome: "Maria",                          //Erro: Type 'string' is not assignable to type 'never'.
+  idade: 33,
+  cargo: "Gerente",
+  salario: 2000
+}
+
+--------------
+Uma forma de resolver isso, seria colocar a interseção como um objeto:
+
+type Pessoa = {
+  nome: string,
+}
+
+type Empregado = {
+  nome: number,
+}
+
+type Trabalhador = {
+  tipoPessoa: Pessoa, 
+  tipoEmpregado: Empregado
+}
+
+function Mostrar(funcionario: Trabalhador) {
+  return funcionario.tipoPessoa.nome
+}
+
+export default function App() {
+
+  const funcionario: Trabalhador = {
+    tipoPessoa: {nome: "Maria"},
+    tipoEmpregado: {nome: 398}
+  }
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+///////////////////////////////////////////////////////////////// &&&
+NEVER TYPE
+Representa valores que não possuem uma condição if própria na função.
+Usado para quando esquecer de colocar uma condição if.
+
+function handleStatusCode (code: 200 | 404 | 500) {
+  if (code === 200) {
+    console.log("OK")
+    return;
+  }
+  if(code === 404) {
+    console.log("Not Found")
+    return;
+  }
+  const err: never = code;      //Caso não seja 200 ou 404  
+  return err;
+}
+
+export default function App() {
+
+  return (
+    <div>
+      {handleStatusCode(500)}
+    </div>
+  );
+}
+
+>>> 500
+
+No exemplo acima, a variável err dará erro no typescript, indicando que está faltando alguma condição e mostrará qual valor foi passado como parâmetro da função.
+Caso complete as condições if, o erro sumirá:
+
+function handleStatusCode (code: 200 | 404 | 500) {
+  if (code === 200) {
+    console.log("OK")
+    return;
+  }
+  if(code === 404) {
+    console.log("Not Found")
+    return;
+  }
+  if(code === 500) {
+    console.log("Internal Server Error")
+    return;
+  }
+  const err: never = code;                   //Não mostrará erro no typescript
+  return err;
+}
+
+---------------- %%%
+
+type Turno = "manhã" | "tarde" | "noite"
+
+const msg1 = "Bom dia"
+const msg2 = "Boa tarde"
+const msg3 = "Boa noite"
+
+function handleMsg (msg: Turno) {
+  if (msg === "manhã") {
+    console.log(msg1)
+  }
+  if (msg === "tarde") {
+    console.log(msg2)
+  }
+  const err: never = msg;                                   //Variável err indicará erro no typescript
+  console.log("O valor passado como parametro foi: " + err);
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <button onClick={() => handleMsg("noite")}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> O valor passado como parametro foi: noite
+
+-------------------------------- ###
+Outra forma:
+(quebrará a página, mas mostrará a mensagem de erro no console)
+
+function handleStatusCode (code: 200 | 404 | 500) {
+  if (code === 200) {
+    return "OK";
+  }
+  if(code === 404) {
+    return "Not Found";
+  }
+  throw new Error("Unknown status code " + code satisfies never)
+}
+
+export default function App() {
+
+  return (
+    <div>
+      {handleStatusCode(500)}
+    </div>
+  );
+}
+
+>>> ERRO!!!
+
+//////////////////////////////////////////////////////////////// &&&
+INTERSECTION vs UNION
+
+Union: (OU)
+-Usa o símbolo |
+-Abrange mais o resultado de tipos (mais valores possíveis)
+
+Intersection: (E)
+-Usa o símbolo & 
+-Estreita mais o resultado de tipos (menos valores possíveis)
+
+type Humano = {
+  nome: string,
+  idade: number
+}
+
+type Elfo = {
+  nome: string,
+  orelhas: "pontudas"
+}
+
+type HumanoElfo = Humano & Elfo              //Terá nome, idade e orelhas pontudas
+
+type humanoOUelfo = Humano | Elfo            //Tem que ter nome
+
+////////////////////////////////////////////////////////////////&&& 
 PARAMETROS OPCIONAIS (?) EM FUNÇÕES
 
 Ao colocar ? no parametro, ele automaticamente passa a aceitar o tipo undefined também.
@@ -1564,17 +2782,115 @@ export default function App() {
 
 >>> 18
 
--------------------------------- ### &&&
-OBJETOS
-RECORD
+---------------------------------------------- ### &&&
+RECORD UTILITY TYPE        Record<Key, Type>
+
+Para poder adicionar quantas propriedades (key, valor) quiser em um type.
 
 type Pessoa = Record<string, number>
 
 É o mesmo que:
 
 type Pessoa = {
-  [chave: string]: number;                          
+  [chave: string]: number;                    //Dynamic key        
 }
+
+------------ %%%
+
+type Pessoa = Record<string, number>
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    "Carlos": 33,
+    "Maria": 24,
+    "Pedro": 19
+  }
+
+  funcionario["José"] = 41       //Adicionando um novo funcionario
+
+  return (
+    <div>
+      {funcionario["Carlos"]}
+    </div>
+  );
+}
+
+>>> 33
+
+-No exemplo acima, só aceitará o padrão <string, number> portanto não seria possível:
+funcionario["José"] = "Casado"      // <string, string>
+
+----------------- %%%
+
+type Pessoa = Record<string, string>
+
+function Mostrar(funcionario: Pessoa) {
+  return funcionario.nome
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    "nome": "Carlos",
+    "idade": "24 anos",
+    "status": "Casado"
+  } 
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+>>> Carlos
+
+------------------- %%%
+
+type Nivel = 1 | 50 | 100 
+type Status = Record<Nivel, string>
+
+const alerta: Status = {
+  1: "baixo",
+  50: "médio",
+  100: "alto"
+}
+
+------------------- %%% &&&
+
+type HttpStatusCode = 200 | 201 | 400 | 401 | 403 | 404 | 500;
+
+const statusMessage: Record<HttpStatusCode, string> = {
+  200: "OK",
+  201: "Created",
+  400: "Bad Request",
+  401: "Unauthorized",
+  403: "Forbidden",
+  404: "Not Found",
+  500: "Internal Server Error"
+};
+
+function getStatusMessage(code: HttpStatusCode): string {
+  return statusMessages[code];
+};
+
+console.log(getStatusMessage(404));
+
+>>> "Not Found"
+
+------------------ %%%
+
+type Colors = "red" | "green" | "blue";
+
+type RGB = [red: number, green: number, blue: number];
+
+const palette: Record<Colors, string | RGB> = {
+    red: [255, 0, 0],
+    green: "#00ff00",
+    bleu: [0, 0, 255]
+};
+
 
 ------------------------------------- ### &&&
 OBJETOS
@@ -1783,14 +3099,1004 @@ export default function App() {
 
 ------------------------------------------------------------ ###
 SATISFIES
-
-1:32:29
-
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
 
 
+type Pessoa = {
+  nome: string;
+  idade: number;
+};
 
-//////////////////////////////////////////////////////////////////////////&&& ***
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.nome)        
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "Maria",
+    idade: 33
+  } satisfies Pessoa
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+-----------------
+
+type Pessoa = {
+  [key: string]: string | number | boolean
+};
+
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.nome)        
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "Maria",
+    idade: 33,
+    status: true
+    10: "dez"
+  } satisfies Pessoa
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+-----------------
+
+type Pessoa = "nome" | "idade" | "status"; 
+
+function Mostrar(nome: string, idade: string): void {
+  console.log(`${nome} tem ${idade}`)        
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "Maria",
+    idade: "33 anos",
+    status: "Casada"
+  } satisfies Record<Pessoa, string>
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario.nome, funcionario.idade)}>CLIQUE</button>
+    </div>
+  );
+}
+
+
+-----------------
+
+type Colors = "red" | "green" | "blue";
+
+type RGB = [red: number, green: number, blue: number];
+
+const palette = {
+    red: [255, 0, 0],
+    green: "#00ff00",
+    bleu: [0, 0, 255]
+} satisfies Record<Colors, string | RGB>;
+
+
+---------------- %%%
+Usando em conjunto com as const:
+
+type Pessoa = {
+  nome: string,
+}
+
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.nome)        
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "Maria",
+  } as const satisfies Pessoa   
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+Se tentar mudar o valor de nome, dará erro pois é apenas readonly. Ex:
+funcionario.nome = "João"
+
+---------------
+
+O valor só pode ser o estabelecido (no caso, string). Ex:
+
+type Pessoa = {
+  nome: string,
+}
+
+const funcionario = {
+  nome: 32,                       // ERRO!
+} as const satisfies Pessoa  
+
+---------------
+
+type Pessoa = {
+  nome: string,
+  idade: number,
+}
+
+const funcionario = {
+  nome: "Maria",                       // ERRO, pois estpa faltando o campo idade
+} as const satisfies Pessoa  
+
+------------------ %%%
+Muito útil para quando quiser incluir novos campos em um objeto, usando em conjunto com dynamic keys:
+
+type Pessoa = {
+  nome: string,
+  [key: string]: string | number
+}
+
+function Mostrar(funcionario: Pessoa): void {
+  console.log(funcionario.cargo)        
+}
+
+export default function App() {
+
+  const funcionario = {
+    nome: "Maria",
+    idade: 29,
+    salario: 10000,
+    cargo: "Desenvolvedora"
+  } as const satisfies Pessoa   
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(funcionario)}>CLIQUE</button>
+    </div>
+  );
+}
+
+--------------------------------------------------- ### &&&
+OBJETOS
+FUNCTION OVERLOAD
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+type Pessoa = {
+  nome: string;
+  sobrenome: string;
+}
+
+function Mostrar(funcionario: Pessoa, idade?: number, status?: boolean): string {
+  if (!status){
+    return `${funcionario.nome} - ${idade} - ${status}`
+  }   
+  return funcionario.nome
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = {
+    nome: "Maria",
+    sobrenome: "Silva"
+  } 
+
+  return (
+    <div>
+      {Mostrar(funcionario, 33, false)}
+    </div>
+  );
+}
+
+>>> Maria - 33 - false
+
+No exemplo acima, só serão aceitos os 2 casos de parametros passados:
+-Apenas o Nome+Sobrenome
+-Nome+Sobrenome, idade, status
+
+Caso queira passar apenas Nome+Sobrenome e idade OU Nome+Sobrenome e status, dará erro!
+{Mostrar(funcionario, 33)}
+OU
+{Mostrar(funcionario, false)}
+
+//////////////////////////////////////////////////////////////////////////&&&
+TUPLES / TUPLAS
+
+export default function App() {
+
+  const pessoa: [string, number] = ["Maria", 33]
+
+  return (
+    <div>
+      <button onClick={() => console.log(pessoa)}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> ["Maria", 33]
+
+---------------------
+
+export default function App() {
+
+  let pessoa: [string, number] = ["Maria", 33]
+
+  pessoa = ["Carlos", 28] 
+
+  return (
+    <div>
+      <button onClick={() => console.log(pessoa)}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> ["Carlos", 28]
+
+---------------------
+
+export default function App() {
+
+  const pessoa: [string, number] = ["Maria", 33]
+
+  return (
+    <div>
+      {`${pessoa[0]} tem ${pessoa[1]} anos.`}
+    </div>
+  );
+}
+
+>>> Maria tem 33 anos.
+
+------------------- 
+
+function Mostrar(pessoa: [string, number]) {
+  console.log(pessoa[0])
+}
+
+export default function App() {
+
+  const pessoa: [string, number] = ["Maria", 33]
+
+  return (
+    <div>
+      <button onClick={() => Mostrar(pessoa)}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> Maria
+
+----------------------------------------- ###
+READONLY TUPLES
+
+export default function App() {
+
+  const pessoa: [string, number] = ["Maria", 33]
+
+  pessoa[0] = "Carlos"                                    //OU pessoa.push("Carlos") 
+
+  return (
+    <div>
+      <button onClick={() => console.log(pessoa)}>CLIQUE</button>
+    </div>
+  );
+}
+
+>>> ["Carlos", 33]
+
+Caso quísessemos não poder alterar o valor de uma tupla const, poderíamos usar o readonly:
+
+export default function App() {
+
+  const pessoa: readonly [string, number] = ["Maria", 33]
+
+  pessoa.push("Carlos")                            //Erro!!! tupla não pode ser modificada
+
+  return (
+    <div>
+      <button onClick={() => console.log(pessoa)}>CLIQUE</button>
+    </div>
+  );
+}
+
+-----------
+
+type Pessoa = readonly [string, number, string, boolean]
+
+function Mostrar(funcionario: Pessoa) {
+  if (funcionario[3] === true) {
+    return [funcionario[0], funcionario[1], funcionario[2]]
+  }
+}
+
+export default function App() {
+
+  const pessoa = ["Maria", 33, "Desenvolvedora", true] as const
+
+  return (
+    <div>
+      {Mostrar(pessoa)}
+    </div>
+  );
+}
+
+>>> Maria33Desenvolvedora
+
+-------------------------------------------------- ###
+TUPLAS vs OBJETOS
+
+Tuplas:
+function Pessoa(): [string, number] {
+  return ["Maria", 24]
+}
+
+Objetos:
+function Pessoa(): {nome: string, idade: number} {
+  return {nome: "Maria", idade: 24}
+}
+
+Tuplas são melhor usadas em casos em que a ordem dos elementos importa. 
+Tuplas são semanticamente ordenadas, enquanto objetos não.
+
+Com objetos você pode passar apenas os valores que quiser como parametros de uma função. Já tuplas, não
+
+-------------
+
+function fTupla(pessoa: [string, number, string])  {
+  return pessoa[2]
+}
+
+function fObjeto(pessoa: {nome: string, idade: number, estado: string}): string  {
+  return pessoa.estado
+}
+
+export default function App() {
+  return (
+    <div>
+      {fTupla([ "Maria" , 33 , "Casada"])}
+      <br></br>
+      {fObjeto({nome: "Maria", idade: 33, estado: "Casada"})}
+    </div>
+  );
+}
+
+>>> Casada
+>>> Casada
+
+----------------------------------------------- ###
+Desestruturando tuplas
+
+export default function App() {
+
+  const nomeCompleto: string = "Maria Silva"
+  const partes: string[] = nomeCompleto.split(" ")
+  
+  return (
+    <div>
+      <p>{partes[0]}</p> 
+      <p>{partes[1]}</p>
+    </div>
+  );
+}
+
+>>> Maria
+>>> Silva
+
+---------
+
+function Mostrar(partes: string[]): [string, string] {
+  return [partes[0], partes[1]]
+}
+
+export default function App() {
+
+  const nomeCompleto: string = "Maria Silva"
+  const partes: string[] = nomeCompleto.split(" ")
+  
+  return (
+    <div>
+      {Mostrar(partes)}
+    </div>
+  );
+}
+
+>>> MariaSilva
+
+-----------
+
+function Mostrar(nomeCompleto: string): string {
+  const partes: string[] = nomeCompleto.split(" ")
+  return `${partes[0]} ${partes[1]}`
+}
+
+export default function App() {
+
+  const nomeCompleto: string = "Maria Silva"
+  
+  return (
+    <div>
+      {Mostrar(nomeCompleto)}
+    </div>
+  );
+}
+
+>>> Maria Silva
+
+------------
+
+function Mostrar(nomeCompleto: string): string {
+  const partes: string[] = nomeCompleto.split(" ")
+  const [nome, sobrenome]: string[] = partes
+  return `${nome} ${sobrenome}`
+}
+
+export default function App() {
+
+  const nomeCompleto: string = "Maria Silva"
+  
+  return (
+    <div>
+      {Mostrar(nomeCompleto)}
+    </div>
+  );
+}
+
+>>> Maria Silva
+
+------------------------------------------ ###
+DESESTRUTURAÇÃO ANINHADA DE TUPLAS
+(objetos dentro de tuplas)
+
+type Pessoa = [string, {nome: string, idade: number}]
+
+function Mostrar(funcionario: Pessoa): string {
+  const [cargo, {nome, idade}] = funcionario
+  return `${nome} tem ${idade} anos e é ${cargo}`
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = [
+    "Professora",
+    {nome: "Maria", idade: 25}
+  ]
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+------------------------------------------- ###
+TUPLAS NOMEADAS
+
+
+Para fins de documentação, ao invés de escrever:
+type pessoa = [string, number, boolean]
+
+Escreveria para deixar mais claro:
+type pessoa = [nome: string, idade: number, status: boolean]
+
+------------------------------------------- ###
+Elementos opcionais em tuplas (?):
+
+type Pessoa = [
+  nome: string, 
+  idade: number, 
+  status?: boolean      //status é opcional
+]
+
+function Mostrar(funcionario: Pessoa) {
+  return funcionario[0]
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = ["Maria", 33]
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+>>> Maria
+
+OBS: Elementos opcionais devem vir por último!
+type Pessoa = [
+  nome?: string,       //ERRADO!!!
+  idade: number      
+]
+
+----------------------- %%%
+Também é possível deixar opcional um parametro sem nome:
+
+type Pessoa = [
+  nome: string, 
+  idade: number, 
+  string?      
+]
+
+function Mostrar(funcionario: Pessoa) {
+  return funcionario[2]
+}
+
+export default function App() {
+
+  const funcionario: Pessoa = ["Maria", 33, "Casada"]
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+>>> Casada
+
+------------------------------------------------- ###
+Elementos Rest (spread) em tuplas:
+
+type Notas = [string, ...number[]]               //O elemento string é obrigatório e o number é opcional
+
+const alunos: Notas = ["Pedro", 78, 91, 85]
+const alunos: Notas = ["Maria", 82, 79]
+const alunos: Notas = ["Ana", 92]
+const alunos: Notas = ["Carlos"]
+
+//////////////////////////////////////////////////////////////////////////&&& 
+CLASSES
+
+export default function App() {
+
+  class Pessoa {
+    nome: string;
+    idade: number;
+
+    constructor(nome: string, idade: number) {
+      this.nome = nome;
+      this.idade = idade;
+    }
+
+    getNome() {
+      return this.nome;
+    }
+
+    getIdade() {
+      return this.idade;
+    }
+
+    getCidade(cidade: string): string {
+      return `${this.nome} mora em ${cidade}`
+    } 
+  }
+
+  const pessoa = new Pessoa("Carlos", 30);
+  const cidade: string = "São Paulo";
+
+  return (
+    <div>
+      {pessoa.getCidade(cidade)}
+    </div>
+  );
+}
+
+>>> Carlos mora em São Paulo
+
+------------------------------------ ###
+PRIVATE CLASS (#)
+
+export default function App() {
+
+  class Pessoa {
+    #nome: string;                 //Propriedade privada na classe Pessoa
+
+    constructor(nome: string) {
+      this.#nome = nome;
+    }
+
+    getNome(): string {
+      return this.#nome;            //Chamada dentro da classe
+    }
+  }
+
+  let pessoa = new Pessoa("Carlos");
+  pessoa = new Pessoa("João")          //Alterou o nome
+
+  return (
+    <div>
+      {pessoa.getNome()}
+    </div>
+  );
+}
+
+>>> João
+
+-Consegue acessar o valor quando está dentro da classe
+
+----------------
+
+export default function App() {
+
+  class Pessoa {
+    #nome: string;              //Propriedade privada na classe Pessoa
+
+    constructor(nome: string) {
+      this.#nome = nome;
+    }
+
+    getNome(): string {
+      return this.#nome;
+    }
+  }
+
+  let pessoa = new Pessoa("Carlos");
+
+  return (
+    <div>
+      <button onClick={() => console.log(pessoa.#nome)}>CLIQUE</button>         //Chamada fora da classe
+    </div>
+  );
+}
+
+>>> ERRO!!! 
+Property '#nome' is not accessible outside class 'Pessoa' because it has a private identifier.
+
+--------------------
+OUTRA FORMA DE DECLARAR PRIVATE CLASS:
+
+export default function App() {
+
+  class Pessoa {
+    private nome: string;              //Propriedade privada na classe Pessoa
+
+    constructor(nome: string) {
+      this.nome = nome;
+    }
+
+    getNome(): string {
+      return this.nome;
+    }
+  }
+
+  let pessoa = new Pessoa("Carlos");
+
+  return (
+    <div>
+      <button onClick={() => console.log(pessoa.nome)}>CLIQUE</button>        
+    </div>
+  );
+}
+
+OBS: Este modo é exclusivo do Typescript, portanto o Javascript não indicará o erro, apenas o Typescript.
+O modo com # é o mais indicado pois é a forma natural do Javascript fazer isso.
+Só é recomendado fazer o modo private acima se estiver mexendo com código antigo de Javascript que não suporta #.
+
+---------------------------------------------- ###
+HERANÇA COM CLASSES
+
+export default function App() {
+
+  class Pessoa {
+    nome: string;              
+
+    constructor(nome: string) {
+      this.nome = nome;
+    }
+  }
+
+  class Aluno extends Pessoa {
+    idade: number;              
+
+    constructor(nome: string, idade: number) {
+      super(nome);
+      this.idade = idade;
+    }
+
+    getNome(): string {
+      return this.nome;
+    }
+  }
+
+  let pessoa = new Aluno("Carlos", 15);
+
+  return (
+    <div>
+      <p>{pessoa.getNome()}</p> 
+      <p>{pessoa.nome}</p>
+      <button onClick={() => console.log(pessoa.idade)}>CLIQUE</button>     
+    </div>
+  );
+}
+
+>>> Carlos
+
+---------------------------- %%%
+HERANÇA COM PRIVATE CLASS
+
+export default function App() {
+
+  class Pessoa {
+    #nome: string;                   //Propriedade privada de classe 
+
+    constructor(nome: string) {
+      this.#nome = nome;
+    }
+  }
+
+  class Aluno extends Pessoa {
+    idade: number;              
+
+    constructor(nome: string, idade: number) {
+      super(nome);
+      this.idade = idade;
+    }
+
+    getNome(): string {
+      return this.#nome;
+    }
+  }
+
+  let pessoa = new Aluno("Carlos", 15);
+
+  return (
+    <div>
+      {pessoa.getNome()}       
+    </div>
+  );
+}
+
+>>> ERRO!!! Pois classes que herdam não podem usar propriedades privadas
+
+
+--------------------------- %%%
+HERANÇA COM PROTECTED CLASS
+
+Diferentemente de classes privadas, classes que herdam de uma classe pai podem usar uma propriedade com protected.
+
+export default function App() {
+
+  class Pessoa {
+    protected nome: string;              
+
+    constructor(nome: string) {
+      this.nome = nome;
+    }
+  }
+
+  class Aluno extends Pessoa {
+    idade: number;              
+
+    constructor(nome: string, idade: number) {
+      super(nome);
+      this.idade = idade;
+    }
+
+    getNome(): string {
+      return this.nome;
+    }
+  }
+
+  let pessoa = new Aluno("Carlos", 15);
+
+  return (
+    <div>
+      {pessoa.getNome()}      
+    </div>
+  );
+}
+
+-------------------------------------------- ###
+CLASSES ABSTRATAS
+(Não podem ser instanciadas diretamente. Classes abstratas são apenas templates para subclasses herdarem suas propriedades)
+
+export default function App() {
+
+  abstract class Formato {
+    tamanho: "pequeno" | "medio" | "grande";
+
+    constructor(tamanho: "pequeno" | "medio" | "grande") {
+      this.tamanho = tamanho
+    }
+
+    abstract CalcularArea(): number {
+      return Math.PI * this.raio * this.raio
+    }
+
+    MostrarArea(): void {
+      console.log(this.CalcularArea())
+    }
+  }
+
+  const formato = new Formato("pequeno")     //ERRO!!! Não pode ser instanciada diretamente
+
+  return (
+    <div>
+      <p>{formato.MostrarArea()}</p>  
+    </div>
+  );
+}
+
+>>> ERRO!!!
+
+-Para instanciar uma classe abstrata, é necessário fazer:
+
+export default function App() {
+
+  abstract class Formato {                                       //Classe Abstrata
+    tamanho: "pequeno" | "medio" | "grande";
+
+    constructor(tamanho: "pequeno" | "medio" | "grande") {
+      this.tamanho = tamanho
+    }
+  }
+
+  class Circulo extends Formato {                                //Classe Concreta
+    raio: number;
+
+    constructor(tamanho: "pequeno" | "medio" | "grande") {
+      super(tamanho);
+      if (this.tamanho === "pequeno") {
+        this.raio = 5
+      } 
+      else if (this.tamanho === "medio") {
+        this.raio = 10
+      } 
+      else {
+        this.raio = 15
+      } 
+    }
+
+    CalcularArea(): number {
+      return Math.PI * this.raio * this.raio
+    }
+  }
+
+  const circulo = new Circulo("grande")
+
+  return (
+    <div>
+      <p>{circulo.CalcularArea()}</p>  
+    </div>
+  );
+}
+
+-------------------------------------------------------- ###
+CLASSES IMPLEMENTANDO INTERFACES
+(usar interfaces em classes)
+
+export default function App() {
+
+  interface Empregado {
+    cargo: string;
+  }
+
+  interface Trabalho {
+    trabalhar(horas: number): void;
+  }
+
+  class Pessoa implements Empregado, Trabalho {
+    nome: string;
+    idade: number;
+    cargo: string;
+
+    constructor (nome: string, idade: number, cargo: string) {
+      this.nome = nome;
+      this.idade = idade;
+      this.cargo = cargo;
+    }
+
+    trabalhar(horas: number) {
+      return `${this.nome} trabalha ${horas} horas por dia como ${this.cargo}`
+    }
+  }
+
+  const pessoa = new Pessoa('João', 25, 'desenvolvedor');
+
+  return (
+    <div>
+      <p>{pessoa.trabalhar(8)}</p>  
+    </div>
+  );
+}
+
+>>> João trabalha 8 horas por dia como desenvolvedor
+
+-------------------------------------------------------- ###
+CLASSES IMPLEMENTANDO TYPES
+(usar type em classes)
+
+export default function App() {
+
+  type Empregado = {
+    cargo: string;
+  }
+
+  type Trabalho = {
+    trabalhar(horas: number): void;
+  }
+
+  class Pessoa implements Empregado, Trabalho {
+    nome: string;
+    idade: number;
+    cargo: string;
+
+    constructor (nome: string, idade: number, cargo: string) {
+      this.nome = nome;
+      this.idade = idade;
+      this.cargo = cargo;
+    }
+
+    trabalhar(horas: number) {
+      return `${this.nome} trabalha ${horas} horas por dia como ${this.cargo}`
+    }
+  }
+
+  const pessoa = new Pessoa('João', 25, 'desenvolvedor');
+
+  return (
+    <div>
+      <p>{pessoa.trabalhar(8)}</p>  
+    </div>
+  );
+}
+
+>>> João trabalha 8 horas por dia como desenvolvedor
+
+----------------------------------------------- ###
+CLASSES vs INTERFACES vs TYPES
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+class Pessoa {
+  nome: string;
+  idade: number;
+}
+
+interface Pessoa {
+  nome: string;
+  idade: number;
+}
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+}
+
+
+Classes são uma feature do Javascript
+Interfaces e Types são apenas do Typescript
+
+//////////////////////////////////////////////////////////////////////////&&& 
 ENUM
+(não é muito usado)
+
+enum Direction {
+  Norte,   //0
+  Sul,     //1
+  Leste,   //2
+  Oeste    //3
+}
+
+let caminho: Direction = Direction.Norte
+console.log(caminho)
+
+>>> 0
+
+Quando não é passado nenhum valor para uma propriedade em enum, cada uma das propriedades terá como valor o seu indice
+
+------------
+Exemplo com string como valor:
 
 enum MENSAGENS {
   msg1 = "TextoMsg1",
@@ -1836,6 +4142,32 @@ const printErrorMsg = (error: LoginError) => {
 printErrorMsg(LoginError.NoUser)
 
 >>> No user was found with that username
+
+---------------------------------------- ###
+ENUMS QUE NÃO PODEM SER MODIFICADOS
+
+enum MENSAGENS {
+  msg1,
+  msg2,
+  msg3,
+}
+
+console.log(MENSAGENS[MENSAGENS.msg1])
+
+>>> msg1
+
+-Porém, se usar const em um enum, não é possível fazer o mesmo:
+
+const enum MENSAGENS {
+  msg1,
+  msg2,
+  msg3,
+}
+
+console.log(MENSAGENS[MENSAGENS.msg1])
+
+>>> ERRO! A const enum member can only be accessed using a string literal. 
+
 
 -------------------------------------- ###
 ENUM COM REACT
@@ -1926,72 +4258,275 @@ export default function App() {
   );
 };
 
+----------------------------------------------- ###
+ENUM COMPILADO
 
-///////////////////////////////////////////// &&&
-INTERFACE GENÉRICA (CONTAINER)
-
-Uma interface pode ser passada para uma classe:
-
-interface UserInterface {
-  ...
+enum Classe {
+  mago,
+  guerreiro,
+  arqueiro
 }
 
-class Pessoa <UserInterface> {
-  ...
-} 
+-Ao usar enum sem valores, ele compila para javascript o equivalente a:
 
--------- ###
+var Classe;
 
-Criando uma interface genérica que aceite vários tipos de dados:
+(function (Classe) {
+  Classe[(Classe["mago"] = 0)] = "mago";
+  Classe[(Classe["guerreiro"] = 0)] = "guerreiro";
+  Classe[(Classe["arqueiro"] = 0)] = "arqueiro";
+})(Classe || (Classe = {}));
 
-class Container <T> {
-  private contents: T[]
+¨¨¨¨
+-Usando strings como valores, o código fica mais claro:
 
-  constructor() {
-    this.contents = []
+enum Classe {
+  mago = "Merlin",
+  guerreiro = "Arthur",
+  arqueiro = "Robin Hood"
+}
+
+var Classe;
+
+(function (Classe) {
+  Classe["mago"] = "Merlin";
+  Classe["guerreiro"] = "Arthur";
+  Classe["arqueiro"] = "Robin Hood";
+})(Classe || (Classe = {}));
+
+OBS: Enums geram código Javascript ao ser compilado, diferentemente de Unions que somem o código.
+
+///////////////////////////////////////////////////////////////// &&&
+TYPE NARROWING
+(deixar um tipo ainda mais específico)
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+type Casado = {
+  nome: string,
+  idade: number,
+  status: "Casado"
+}
+
+type Solteiro = {
+  nome: string,
+  idade: number,
+  status: "Solteiro"
+}
+
+type Ambos = Casado | Solteiro
+
+function Pessoa(p1: Ambos, p2: Ambos): void {
+  if(p1.status === "Casado" && p2.status === "Casado"){
+    StatusCasado(p1, p2)
+  } else if (p1.status === "Solteiro" && p2.status === "Solteiro"){
+    StatusSolteiro(p1, p2)
+  } else {
+    throw new Error("Mensagem de erro")
+  }
+}
+
+function StatusCasado(p1: Casado, p2: Casado): void{
+  console.log(`${p1.nome} e ${p2.nome} são casados`)
+}
+
+function StatusSolteiro(p1: Solteiro, p2: Solteiro): void{
+  console.log(`${p1.nome} e ${p2.nome} são solteiros`)
+}
+
+export default function App() {
+
+  const pessoa1: Casado = {
+    nome: "Carlos",
+    idade: 33,
+    status: "Casado"
   }
 
-  addItem(item: T):void {
-    this.contents.push(item)
+  const pessoa2: Casado = {
+    nome: "Maria",
+    idade: 31,
+    status: "Casado"
+  }
+  
+  return (
+    <>
+      <button onClick={() => Pessoa(pessoa1, pessoa2)}>CLIQUE</button>
+    </>
+  );
+}
+
+>>> Carlos e Maria são casados
+
+---------------------------------- ### &&&
+Unknown Type
+
+let x: unkown = "TEXTO"
+let y: any = "TEXTO"
+
+x.toLowerCase()      //ERRO
+y.toLowerCase()      //Colocará o texto em letra minúscula
+
+Para resolver isso:
+
+if (typeof x === "string") {
+  x.toLowerCase()
+}
+
+Tipo unkown força a especificar que tipo de variavel é, por isso é melhor de ser usado do que tipo any.
+
+Unknown é útil para ser usado quando não sabemos que tipo de dados será recebido.
+
+type Mensagem = {
+  tipo: string;
+  conteudo: string;
+}
+
+function handleInput(msg: unknown): Mensagem {
+  if (typeof msg === "string") {
+    return {
+      tipo: "string de texto",
+      conteudo: msg
+    }
+  }
+  if (typeof msg === "number") {
+    return {
+      tipo: "numero",
+      conteudo: msg
+    }
+  }
+  if (Array.isArray(msg)) {
+    return {
+      tipo: "array",
+      conteudo: msg.join("\n")
+    }
+  }
+  return {
+    tipo: "Desconhecido",
+    conteudo: "Recebeu conteúdo desconhecido"
+  }
+}
+
+------------
+
+import React, { useState } from 'react';
+
+type Mensagem = {
+  tipo: string;
+  conteudo: string;
+}
+
+export default function App() {
+
+  const [msg, setMsg] = useState<Mensagem>({tipo: "", conteudo: ""});
+  const [newMsg, setNewMsg] = useState('');
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMsg(event.target.value);
+  };
+
+  function handleInput(msg: unknown): void {
+    if (typeof msg === "string") {
+      setMsg({
+        tipo: "string de texto",
+        conteudo: msg
+      });
+      setNewMsg("");
+      return;
+    }
+    if (Array.isArray(msg)) {
+      setMsg({
+        tipo: "array",
+        conteudo: msg.join("\n")
+      });
+      setNewMsg("");
+      return;
+    }
+    setMsg({
+      tipo: "Desconhecido",
+      conteudo: "Recebeu conteúdo desconhecido"
+    });
+    setNewMsg("");
   }
 
-  getItem(indice: number):T | undefined {
-    return this.contents[indice]
+  const array: string[] = ["a", "b", "c"];
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={newMsg}
+        onChange={handleInputChange}
+        placeholder="Digite uma mensagem"
+      />
+
+      <button onClick={() => handleInput(newMsg)}>Teste String</button>
+      <button onClick={() => handleInput(array)}>Teste Array</button>
+
+      {msg && (
+        <div>
+          <p>Tipo: {msg.tipo}</p>
+          <p>Conteúdo: {msg.conteudo}</p>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
+---------------------------------------- ###
+NARROWING TYPES USANDO IN
+
+import { chownSync } from "fs"
+
+type Texto1 = {
+  txt1: string
+}
+
+type Texto2 = {
+  txt2: string
+}
+
+type Texto = Texto1 | Texto2
+
+export default function App() {
+
+  function Mostrar(msg: Texto){
+    if ("txt1" in msg){
+      return "Conteúdo de type Texto1: " + msg.txt1
+    } else if ("txt2" in msg) {
+      return "Conteúdo de type Texto2: " + msg.txt2
+    } else {
+      return "Conteúdo desconhecido"
+    }
   }
+
+  const msg: Texto = { txt1: "TEXTO DE EXEMPLO 1" }
+
+  return (
+    <div>
+      {Mostrar(msg)}
+    </div>
+  );
 }
 
-const pessoas = new Container <string> () 
-pessoas.addItem("Maria")
-const p1 = pessoas.getItem(0)
-console.log(p1)                    // >>> Maria
+///////////////////////////////////////////////////////////////// &&&
+GUARD CLAUSE
 
-const numeros = new Container <number> ()
-numeros.addItem(1)
-const num1 = numeros.getItem(0)
-console.log(num1)                  // >>> 1
-
-/////////////////////////////////////////////// &&&
-CAMPOS IMUTÁVEIS EM UMA INTERFACE
-
-Para proibir que valores de certos campos de uma interface possam ser alterados:
-
-interface PessoaInterface {
-  readonly id: number;            //Não pode ser alterado
-  readonly nome: string;          //Não pode ser alterado
-  readonly dataInicio: Date;       //Não pode ser alterado
-  idade: number;                    //Pode ser alterado
+function proccessName(name: string | null | undefined) {
+  if (name === null || name === undefined){                  //OU if (name == null){...}
+    return ""
+  }
+  return name.toUpperCase()
 }
 
-const funcionario: PessoaInterface = {
-  id: 12345,
-  nome: "Maria",
-  dataInicio: new Date(),
-  idade: 20,
+-------
+
+function proccessName(name: string | null | undefined) {
+  if (name === null || name === undefined){
+    throw new Error("Name is required")
+  }
+  return name.toUpperCase()
 }
 
-funcionario.idade = 33
-
-console.log(funcionario)
 
 //////////////////////////////////////////////////////////////// &&&
 TYPESCRIPT COM REACT
@@ -3679,24 +6214,7 @@ export function Teste({nome}: React.FC<Props>) {
   ...
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
 TAILWIND
 
 Instalação:
@@ -3723,5 +6241,60 @@ Importação:
 Remova o css de App.css e index.css se necessário.
 
 //////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
+TODO LIST NO TYPESCRIPT
+
+Exemplo simples no Replit:
+
+import React, { useState } from 'react';
+
+export default function App() {
+  
+  const [todos, setTodos] = useState<string[]>([]);
+  const [newTodo, setNewTodo] = useState('');
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTodo(event.target.value);
+  };
+
+  const addTodo = () => {
+    if (newTodo.trim() !== '') {
+      setTodos([...todos, newTodo]);
+      setNewTodo('');
+    }
+  };
+
+  const removeTodo = (index: number) => {
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={newTodo}
+        onChange={handleInputChange}
+        placeholder="Add new todo"
+      />
+      
+      <button onClick={addTodo}>Add</button>
+      
+      <ul>
+        {todos.map((todo, index) => (
+          <li key={index}>
+            {todo}
+            <button onClick={() => removeTodo(index)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+------------------------------------------------ ###
+
+
+
+
 
