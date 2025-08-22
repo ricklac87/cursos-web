@@ -3,13 +3,29 @@
 TYPESCRIPT SOZINHO (SEM REACT OU NEXTJS)
 VIDEO: https://www.youtube.com/embed/K01hLNDdqg4
 
-instalação do Typescript
+instalação do Typescript:
 npm install -g typescript
+
+instalação do Typescript em versão de desenvolvimento:
+npm i -D typescript
+(essa forma instala o typescript diretamente no seu projeto, possuindo o benefício de não ter versões conflitantes do Typescript)
+
+Para saber a versão do typescript instalada:
+tsc -v
 
 Na pasta do projeto, digite:
 tsc --init
 
 Será gerado o arquivo tsconfig.json
+
+Dentro desse arquivo terá:
+
+{
+  "compilerOptions": {
+    "lib": ["esnext"],                //especifica a biblioteca de arquivos a serem incluídas na compilação
+    "target": "esnext"                // especifica a versão do ECMAscript para o Javascript
+  }
+}
 
 //////////////////////////////////////////////// &&& ###
 Rodando o arquivo:
@@ -35,6 +51,53 @@ node teste.js
 
 Então, sempre antes de rodar o arquivo, digite tsc para atualizar o arquivo .js 
 Depois rode o arquivo com: node nome_do_arquivo.js
+
+--------------------- ###
+Declaration files:
+
+O tipo de arquivo do typescript possui a extensão .ts
+É possível criar um arquivo global com a extensão d.ts (Exemplo: globals.d.ts)
+
+--------------------- ###
+
+Caso o Typescript pare de analisar e indicar os erros, é possível reiniciá-lo fazendo:
+Ctrl+Shift+P  =>  Typescript: Restart TS Server 
+
+/////////////////////////////////////////////////////////// &&& 
+@ts-ignore / @ts-nocheck / @ts-expect-error
+
+Se quiser que o Typescript pare de checar e ignore o código que vem abaixo, pode-se usar o //@ts-ignore :
+
+//@ts-ignore
+const x: number = "Texto em string que não é um number"     //Erro ignorado
+
+OBS: Apenas a linha de baixo é ignorada, as outras não:
+
+//@ts-ignore
+const x: number = "32"     //Erro ignorado
+const x: number = "32"     //Erro!!!
+
+-------------- ###
+
+Se quiser ignorar todo o código do arquivo, pode-se usar o //@ts-nocheck :
+
+//@ts-nocheck
+const A: number = "3"                //Erro ignorado
+const B: number = "Texto"            //Erro ignorado
+const C: string = 36                 //Erro ignorado
+
+function Mostrar(): void {           //Erro ignorado
+  return "Texto que deveria ter como saída string e não void"
+}
+
+-------------- ###
+
+Caso queira que o Typescript já saiba de antemão que virá um erro na linha de baixo e não indique o erro:
+
+//@ts-expect-error
+const x: number = "Texto"     //Erro esperado e ignorado
+
+const x: number = "Texto"     //Erro!!!
 
 ////////////////////////////////////////////////////////// &&& ###
 VARIAVEIS
@@ -871,20 +934,371 @@ interface Funcionario extends Pessoa {
   idade: number                                  //ERRO!!! Passará a ser do tipo Never
 }
 
-///////////////////////////////////////////// &&& ***
-INTERFACE GENÉRICA (CONTAINER)
+--------------------------------------------------------- ###
+INTERFACE COM CLASSES
 
-Uma interface pode ser passada para uma classe:
-
-interface UserInterface {
-  ...
+interface Animal {
+  name: string;
+  makeSound(): string;
 }
 
-class Pessoa <UserInterface> {
-  ...
-} 
+export default function App() {
 
--------- ###
+  class Dog implements Animal {
+    name: string;
+
+    constructor(name: string) {
+      this.name = name;
+    }
+
+    makeSound(): string {
+      return `${this.name} está latindo!`;
+    }
+  }
+
+  const cachorro = new Dog("Rex");
+
+  return (
+    <div>
+      {cachorro.makeSound()}
+    </div>
+  );
+}
+
+-------------------- %%%
+
+interface Pessoa {
+  nome: string;
+  idade: number;
+}
+
+export default function App() {
+
+  class Funcionario implements Pessoa {
+
+    nome: string;
+    idade: number;
+
+    constructor(nome: string, idade: number) {
+      this.nome = nome;
+      this.idade = idade;
+    }
+
+    getNome() {
+      return this.nome;
+    }
+  }
+
+  const funcionario = new Funcionario("Carlos", 30);
+
+  return (
+    <div>
+      {funcionario.getNome()}
+    </div>
+  );
+}
+
+
+////////////////////////////////////////////////////////////////////////////////// &&& 
+GENERICS (CONTAINER)     <T>
+Tipo genérico que aceita qualquer tipo de dado.
+
+Se os valores passados forem de um tipo, então o container assumirá este tipo:
+
+getIdade<T>         //É o mesmo que getIdade<number>
+getIdade(22)        //Passou número como valor
+
+getNome<T>          //É o mesmo que getIdade<string>
+getNome("Maria")    //Passou string como valor
+
+------
+
+Exemplos:
+type lista = Array<Item>
+type numero = Array<NUMERO>
+type nome = getNome<n>
+type texto = getText<txt>
+
+Pode-se chamar de qualquer coisa, mas o convencional é chamar de <T>.
+
+
+-------------------------------- %%%
+String e Number:
+
+function Mostrar<T>(item: T): T {
+  return item;
+}
+
+export default function App() {
+
+  return (
+    <div>
+      <p>{Mostrar("Carlos")}</p>
+      <p>{Mostrar(22)}</p>
+    </div>
+  );
+}
+
+>>> Carlos
+>>> 22
+
+----------------------------------- %%%
+Boolean:
+
+function Mostrar<T>(item: T): string {
+  if (item === true) {
+    return "É um booleano";
+  } else {
+    return "Não é um booleano";
+  }
+}
+
+export default function App() {
+
+  return (
+    <div>
+      {Mostrar(true)}
+    </div>
+  );
+}
+
+>>> É um booleano
+
+--------------------------------- %%%
+Array:
+
+function getFirstElement<Item>(arr: Item[]): Item | undefined {
+  return arr[0]
+}
+
+export default function App() {
+  return (
+    <div>
+      {getFirstElement([1, 2, 3, 4])}
+    </div>
+  );
+}
+
+>>> 1
+
+----------------------------------- %%%
+Objetos:
+
+type Pessoa<T> = {
+  id: T;                  //id pode ser de qualquer tipo
+  nome: string;
+}
+
+export default function App() {
+  
+  const funcionario1: Pessoa<string> = {
+    id: "ABC",                                //tipo string
+    nome: "Carlos"
+  };
+
+  const funcionario2: Pessoa<number> = {
+    id: 123,                                  //tipo number
+    nome: "João"
+  };
+
+  return (
+    <>
+      <p>{funcionario1.id}</p> 
+      <p>{funcionario2.id}</p>
+    </>  
+  );
+}
+
+>>> ABC
+>>> 123
+
+---------------------
+Com interfaces:
+
+interface ResponseData<T> {
+  data: T | null;
+  error: string | null;
+  isLoading: boolean;
+}
+
+export default function App() {
+  
+  const response: ResponseData<string> = {
+    data: "Dados recebidos",
+    error: null,
+    isLoading: false,
+  };
+
+  return (
+    <>
+      {response.data} 
+    </>  
+  );
+}
+
+>>> Dados recebidos
+
+----------------------
+
+interface Pessoa<Generico> {
+  nome: string;
+  idade: Generico;
+}
+
+function Mostrar<Tipo>(funcionario: Pessoa<Tipo>): Tipo {
+  return funcionario.idade;
+}
+
+export default function App() {
+
+  const funcionario1: Pessoa<string> = {
+    nome: 'João',
+    idade: '25 anos',
+  }
+
+  const funcionario2: Pessoa<number> = {
+    nome: 'Carlos',
+    idade: 32,
+  }
+
+  return (
+    <div>
+      <p>{Mostrar(funcionario1)}</p>
+      <p>{Mostrar(funcionario2)}</p>
+    </div>
+  );
+}
+
+>>> 25 anos
+>>> 32
+
+-------
+OUTRA FORMA:
+
+function Mostrar<T>(funcionario: { nome: string, idade: T } ): T {
+  return funcionario.idade;
+}
+
+export default function App() {
+
+  const funcionario1 = {
+    nome: 'João',
+    idade: '25 anos',
+  }
+
+  const funcionario2 = {
+    nome: 'Carlos',
+    idade: 32,
+  }
+
+  return (
+    <div>
+      <p>{Mostrar(funcionario1)}</p>
+      <p>{Mostrar(funcionario2)}</p>
+    </div>
+  );
+}
+
+-----------------------
+
+function Mostrar<Item extends { nome: string }>(pessoa: Item): string {
+  return pessoa.nome
+}
+
+export default function App() {
+
+  const pessoa = {
+    nome: 'João',
+    idade: 25,
+  }
+
+  return (
+    <div>
+      {Mostrar(pessoa)}
+    </div>
+  );
+}
+
+Não funciona tão bem dessa forma, pois isso é o mesmo que:
+
+type Pessoa = {
+  nome: string;
+  idade: 25;
+}
+
+function Mostrar(pessoa: Pessoa): string {
+  return pessoa.nome
+}
+
+export default function App() {
+
+  const pessoa: Pessoa = {
+    nome: 'João',
+    idade: 25,
+  }
+
+  return (
+    <div>
+      {Mostrar(pessoa)}
+    </div>
+  );
+}
+
+---------------------------------------------- ### 
+GENERICS COM CLASSES    
+
+export default function App() {
+
+  class Pessoa<T> {
+    idade: T;
+
+    constructor(idade: T) {
+      this.idade = idade;
+    }
+
+    getIdade(): T {
+      return this.idade;
+    }
+  }
+
+  const pessoa = new Pessoa('30');
+
+  return (
+    <div>
+      {pessoa.getIdade()}
+    </div>
+  );
+}
+
+------------------------ %%%
+
+export default function App() {
+
+  class Pessoa <T> {
+    nome: string;
+    idade: T;
+
+    constructor(nome: string, idade: T) {
+      this.nome = nome;
+      this.idade = idade;
+    }
+
+    getIdade(): T {
+      return this.idade;
+    }
+  }
+
+  const pessoa = new Pessoa("João", '30 anos');
+
+  return (
+    <div>
+      {pessoa.getIdade()}
+    </div>
+  );
+}
+
+
+------------------------ %%%
 
 Criando uma interface genérica que aceite vários tipos de dados:
 
@@ -914,7 +1328,439 @@ numeros.addItem(1)
 const num1 = numeros.getItem(0)
 console.log(num1)                  // >>> 1
 
-/////////////////////////////////////////////// &&&
+------------------------ %%%
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+interface Repository<T> {
+  getAll(): T[];
+  getById(id: string): T | undefined;
+  save(item: T): void;
+}
+
+class InMemoryRepository<T extends {id: string}> implements Repository<T> {
+  private items: T[] = [];
+
+  getAll(): T[] {
+    return [...this.items];
+  }
+
+  getById(id: string): T | undefined {
+    return this.items.find((item) => item.id === id)
+  }
+
+  save(item: T): void {
+    const index = this.items.findIndex((i) => i.id === item.id);
+    if (index >= 0) {
+      this.items[index] = item;
+    } else {
+      this.items.push(item)
+    }
+  }
+}
+
+interface Pessoa {
+  id: string;
+  name: string;
+}
+
+const Repo = new InMemoryRepository<Pessoa>();
+
+Repo.save({id: "1", name: "Maria"})
+Repo.save({id: "2", name: "Carlos"})
+
+console.log(Repo.getAll())
+
+---------------------------- %%%
+
+interface IRepository<T> {
+  getById(id: number): T | undefined;
+  getAll(): T[];
+  add(item: T): void;
+  update(id: number, item: T): void;
+  delete(id: number): void;
+}
+
+class GenericRepository<T extends { id: number }> implements IRepository<T> {
+  private items: T[] = [];
+
+  getById(id: number): T | undefined {
+    return this.items.find(item => item.id === id);
+  }
+
+  getAll(): T[] {
+    return [...this.items];
+  }
+
+  add(item: T): void {
+    this.items.push(item);
+  }
+
+  update(id: number, item: T): void {
+    const index = this.items.findIndex(item => item.id === id);
+    if (index > -1) {
+      this.items[index] = item;
+    }
+  }
+
+  delete(id: number): void {
+    this.items = this.items.filter(item => item.id !== id);
+  }
+}
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+
+const productRepository = new GenericRepository<Product>();
+
+productRepository.add({ id: 1, name: "Laptop", price: 1200 });
+productRepository.add({ id: 2, name: "Keyboard", price: 75 });
+
+console.log(productRepository.getAll());
+
+const laptop = productRepository.getById(1);
+console.log(laptop);
+
+----------------------------------------------------- ###
+MULTIPLOS PARAMETROS USANDO INTERFACE GENERICA
+
+Pode-se usar várias interfaces genéricas como parâmetros de funções.
+O convencional é usar as letras T, U, V, etc...  
+
+function getData<T, U, V, W>(dados: <T, U, V, W> ) {
+  return dados.txt1
+}
+
+------------------ %%%
+
+function Mostrar<X, Y>(pessoa: X, idade: Y): string {
+  return `${pessoa} tem ${idade} anos`;
+}
+
+export default function App() {
+
+  const pessoa = "João"
+  const idade = 33           
+
+  return (
+    <div>
+      <p>{Mostrar(pessoa, idade)}</p>
+    </div>
+  );
+}
+
+>>> João tem 33 anos
+
+-------------------- %%%
+
+function Mostrar<X, Y>(yearStr: X, yearNum: Y): [X, Y] {
+  return [yearStr, yearNum]
+}
+
+export default function App() {
+
+  const yearStr = "Ano"
+  const yearNum = 2025
+
+  return (
+    <div>
+      {Mostrar(yearStr, yearNum)}
+    </div>
+  );
+}
+
+>>> Ano2025            
+
+--------------------- %%%
+
+function Mostrar<X, Y>(a: X, b: Y): [X, Y] {
+  return [a, b]
+}
+
+export default function App() {
+
+  return (
+    <div>
+      {Mostrar([1, 2, 3], ["A", "B", "C"])}        //OU Mostrar<number, string>([1, 2, 3], ["A", "B", "C"])
+    </div>
+  );
+}
+
+OU
+
+function Mostrar<X, Y>(a: X, b: Y): [X, Y] {
+  return [a, b]
+}
+
+export default function App() {
+
+  const array1 = [1, 2, 3]
+  const array2 = ["A", "B", "C"]
+
+  return (
+    <div>
+      {Mostrar(array1, array2)}
+    </div>
+  );
+}
+
+>>> 123ABC
+
+--------------------- %%%
+
+
+function pair<A, B>(a: A[][], b: B[][]) {
+  return a[0][0];
+}
+
+export default function App() {
+
+  const A = [
+    ['ab', 'ac'], ['ad', 'ae']
+  ]
+
+  const B = [
+    ['ba', 'bc'], ['bd', 'be']
+  ]
+
+  return (
+    <div>
+      <p>{pair(A, B)}</p>
+    </div>
+  );
+}
+
+>>> ab
+
+-------------------- %%%
+
+
+function pair<A, B>(a: A[], b: B[]): [A, B][] {
+  const array: [A, B][] = []
+  for (let i = 0; i < a.length || i < b.length; i++) {
+    array.push([a[i], b[i]])
+  }
+  return array;
+}
+
+export default function App() {
+
+  const A = [
+    ['ab', 'ac'], ['ad', 'ae']
+  ]
+
+  const B = [
+    ['ba', 'bc'], ['bd', 'be']
+  ]
+
+  return (
+    <div>
+      <p>{JSON.stringify(pair(A, B))}</p>
+    </div>
+  );
+}
+
+>>> [[["ab","ac"],["ba","bc"]],[["ad","ae"],["bd","be"]]]
+
+------------------------------------------------------- ###
+GENERIC CONTRAINTS
+Para especificar um pouco o tipo que uma interface genérica seria.
+
+type Pessoa = {
+  idade: string;
+}
+
+function Mostrar<T extends Pessoa>(funcionario: T) {
+  return funcionario.idade
+}
+
+export default function App() {
+
+  const funcionario = {
+    idade: "25",                    //Se colocar tipo number no valor, dará erro no typescript
+  }
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+>>> 25
+
+¨¨¨¨
+Isso é o equivalente a dizer que:
+
+function Mostrar<T extends {idade: string}>(funcionario: T) {
+  return funcionario.idade
+}
+
+export default function App() {
+
+  const funcionario = {
+    idade: "25",
+  }
+
+  return (
+    <div>
+      {Mostrar(funcionario)}
+    </div>
+  );
+}
+
+------------------- %%%
+
+type Texto = {
+  numero: string;
+  letra: string;
+}
+
+function Mostrar<T extends Texto>(arr: T[]) {
+  return arr.map((item) => item.numero)
+}
+
+export default function App() {
+
+  const txt = [{
+    numero: "30",
+    letra: "Z"
+  }]
+
+  return (
+    <div>
+      {Mostrar(txt)}
+    </div>
+  );
+}
+
+>>> 30
+
+OU
+
+function Mostrar<T extends {numero: string}>(arr: T[]) {
+  return arr.map((item) => item.numero)
+}
+
+export default function App() {
+
+  const txt = [{
+    numero: "30",
+    letra: "Z"
+  }]
+
+  return (
+    <div>
+      {Mostrar(txt)}
+    </div>
+  );
+}
+
+-------------------- %%%
+
+type Texto = {
+  numeros: string[];
+  letras: string[];
+}
+
+function Mostrar<T extends Texto>(arr: T[]) {
+  return  arr.map((item) => item.numeros)
+}
+
+export default function App() {
+
+  const txt = [{
+    numeros: ["1", "2", "3", "4"],
+    letras: ["A", "B", "C", "D"]
+  }]
+
+  return (
+    <div>
+      {Mostrar(txt)}
+    </div>
+  );
+}
+
+>>> 1234
+
+OU
+
+function Mostrar<T extends {numeros: string[]}>(arr: T[]) {
+  return  arr.map((item) => item.numeros)
+}
+
+export default function App() {
+
+  const txt = [{
+    numeros: ["1", "2", "3", "4"],
+    letras: ["A", "B", "C", "D"]
+  }]
+
+  return (
+    <div>
+      {Mostrar(txt)}
+    </div>
+  );
+}
+
+----------------------------------------------------------- ###
+TYPE PARAMETERS FOR TYPES
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+Parametros de tipos genericos não são limitados apenas à funções ou métodos. Pode-se criar tipos genéricos também:
+
+interface Store<T> {
+  get(id: string): T;
+  save(id: string, item: T): void;
+  list(): T[];
+}
+
+function handleItems<T>(store: Store<T>, id: string, newItem: T): T[]{
+  store.save(id, newItem)
+  return store.list()
+}
+
+type Product = {
+  name: string;
+  price: number;
+}
+
+const productStore= {
+  products: {} as Record<string, Product>,
+  get(id: string): Product {
+    return this.products[id]
+  }
+  save(id: string, item: Product): void {
+    this.products[id] = item
+  }
+  list(): Product[] {
+    return Object.values(this.products)
+  }
+}
+
+const newStore = handleItems(productStore, "Dell", {
+  name: "Laptop",
+  price: 999,
+})
+
+console.log(newStore)
+
+const finalStore = handleItems(productStore, "Sharp", {
+  name: "TV",
+  price: 1100,
+})
+
+console.log(finalStore)
+
+
+OBS: Também funciona com type alias:
+type Store<T> = { ... }
+
+
+
+///////////////////////////////////////////////////////////////////// &&&
 CAMPOS IMUTÁVEIS EM UMA INTERFACE
 
 Para proibir que valores de certos campos de uma interface possam ser alterados:
@@ -3655,7 +4501,7 @@ const alunos: Notas = ["Maria", 82, 79]
 const alunos: Notas = ["Ana", 92]
 const alunos: Notas = ["Carlos"]
 
-//////////////////////////////////////////////////////////////////////////&&& 
+//////////////////////////////////////////////////////////////////////////&&&  
 CLASSES
 
 export default function App() {
@@ -4527,15 +5373,310 @@ function proccessName(name: string | null | undefined) {
   return name.toUpperCase()
 }
 
+//////////////////////////////////////////////////////////////// &&&
+CONDITIONAL TYPE
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+Sintaxe:
+type NewType = SomeType extends OtherType ? TrueType : FalseType
+
+Leia-se: Se SomeType extends (satisfies) OtherType, então NewType será TrueType. Se não for, será FalseType.
+
+-------------- %%%
+Geralmente usado com generics <T>:
+
+type IsString<T> = T extends string ? true : false;
+
+type Resultado1 = IsString<"Texto">    //true
+type Resultado1 = IsString<42>         //false
+type Resultado1 = IsString<string>     //true
+
+--------------- %%%
+
+type ClickEvent = {type: "click"; x: number; y: number}
+type KeyEvent = {type: "key"; key: string}
+type MouseMoveEvent = {type: "mousemove"; x: number; y: number}
+type FormEvent = {type: "submit"; formId: string}
+
+type Event = ClickEvent | KeyEvent | MouseMoveEvent | FormEvent
+
+type Extract<T, U> = T entends U ? T : never;
+
+type MouseRelatedEvents = Extract<Event, {x: number; y: number}>
+
+-Agora MouseRelatedEvents é o mesmo que:
+type MouseRelatedEvents = ClickEvent | MouseMoveEvent
+
+---------------- %%%
+
+type Sentimento<T> = T extends {nervoso: true} 
+? "chateado" | "furioso" 
+: "contente" | "feliz"
+
+------------------------------------------- ###
+INFER
+
+type GetReturnType<T> = T extends (...arg: any[]) => infer R ? R : never
+
+function greet() {return "Olá!"}
+function soma(x: number, y: number) { return x + y }
+
+type GreetReturnType = GetReturnType<typeof greet>    //string
+type AddReturnType = GetReturnType<typeof soma>   //number
+
+---------------- %%%
+
+type Test<T> = T extends `${string}:${string}` ? true : false
+
+type A = Test<"abc">          //false
+type B = Test<"abc:def">      //true
+
+Usando infer:
+
+type Test<T> = T extends `${infer Key}:${string}` ? Key : false
+
+type A = Test<"nome:Carlos">      //type A = "nome"
+
+OU
+
+type Test<T> = T extends `${infer Key}:${infer Value}` ? [Key, Value] : false
+
+type A = Test<"nome:Carlos">      //type A = ["nome", "Carlos"]
+
+----------------- %%%
+
+type InputTypeOf<T> = T extends (arg1: infer Parametro, ...args: any[]) => any ? Parametro : unknown
+
+////////////////////////////////////////////////////// &&&
+MAPPED TYPES
+
+Lembrando que dynamic keys é:
+
+type User = {
+  [key: string]: number;
+}
+
+Mapped Types servem para criar novos tipos usando dynamic keys em propriedades baseado em tipos ou interfaces existentes.
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  status: "Casado" | "Solteiro" | "Divorciado"
+}
+
+Para criar um novo tipo que possui as mesmas propriedades acima, mas todas elas são opcionais, usamos o mapped type:
+
+type PessoaOpcional = {
+  [K in keyof Pessoa]?: Pessoa[K]
+}
+
+-----
+O mesmo exemplo usando interface:
+
+interface Pessoa {
+  nome: string;
+  idade: number;
+  status: "Casado" | "Solteiro" | "Divorciado"
+}
+
+type PessoaOpcional = {
+  [K in keyof Pessoa]?: Pessoa[K]
+}
+
+--------- %%%
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  status: "Casado" | "Solteiro" | "Divorciado"
+}
+
+type PessoaOpcional = {
+  [Dados in keyof Pessoa]?: Pessoa[Dados]
+}
+
+function Mostrar(pessoa: PessoaOpcional) {
+  return pessoa.status
+}
+
+export default function App() {
+
+  const pessoa: PessoaOpcional = {
+    nome: "João",
+    status: "Viúvo"          //Erro no Typescript
+  }
+
+  return (
+    <div>
+      {Mostrar(pessoa)}
+    </div>
+  );
+}
+
+------------------------------- ###
+MUDANDO OS TIPOS OPCIONAIS
+
+Pode-se usar o mapped types para mudar os tipos de propriedades:
+
+type Pessoa = {
+  idade: number;
+  id: number;
+  tel: number;
+}
+
+type PessoaStrings = {
+  [Key in keyof Pessoa]?: string    //Só aceita strings agora
+}
+
+function Mostrar(pessoa: PessoaStrings) {
+  return pessoa.idade
+}
+
+export default function App() {
+
+  const pessoa: PessoaStrings = {
+    idade: "20 anos",                //Tipo string
+  }
+
+  return (
+    <div>
+      {Mostrar(pessoa)}
+    </div>
+  );
+}
+
+--------
+Usando interface:
+
+interface Pessoa {
+  idade: number;
+  id: number;
+  tel: number;
+}
+
+type PessoaStrings = {
+  [Key in keyof Pessoa]?: string
+}
+
+----------------------------------- ###
+MAPPED TYPES COM CONDICIONAIS
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  status: "Casado" | "Solteiro" | "Divorciado"
+}
+
+type FiltroPessoa = {
+  [K in keyof Pessoa]: Pessoa[K] extends string ? Pessoa[K] : never;
+}
+
+Filtrou todos as propriedades que tem tipo string e removeu idade que não é string.
+A propriedade idade passou a ser do tipo never.
+Isso equivale a:
+
+type Pessoa = {
+  nome: string;
+  status: "Casado" | "Solteiro" | "Divorciado"
+  // idade: never  (Removida)
+}
+
+-----------
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  status: "Casado" | "Solteiro" | "Divorciado"
+}
+
+type FiltroPessoa = {
+  [K in keyof Pessoa]: Pessoa[K] extends string ? Pessoa[K] : never;
+}
+
+function Mostrar(pessoa: FiltroPessoa) {
+  return pessoa.status
+}
+
+export default function App() {
+
+  const pessoa: FiltroPessoa = {
+    nome: "João",
+    idade: 0 as never,
+    status: "Casado"
+  }
+
+  return (
+    <div>
+      {Mostrar(pessoa)}
+    </div>
+  );
+}
+
+---------------------------------- ###
+EXTRAINDO KEYS DE MAPPED TYPES
+VIDEO: https://www.youtube.com/embed/K01hLNDdqg4?autoplay=1
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  status: "Casado" | "Solteiro" | "Divorciado"
+}
+
+type StringKeys<T> = {
+  [K in keyof T]: T[K] extends string ? K : never
+}
+
+type Result = {
+  name: "name";
+  age: never;
+  branch: "branch"
+}
+
+type StringKeyUnion<T> = StringKeys<T>[keyof T]
+
+type Keys = StringKeyUnion<Pessoa>     // "name" | "branch"
+
+---------------------- %%%
+Entendendo keyof:
+
+type A = ["a", "b", "c"];
+type Union = A[number]                
+
+//A[number] => type A = ["a", "b", "c"]         
+//Union tem o valor de: type Union = "a" | "b" | "c"
+
+----
+
+type Pessoa = {nome: string, idade: number}
+type Data = Pessoa[keyof Pessoa]   
+
+//Pessoa[keyof Pessoa] => type Pessoa = {nome: string, idade: number}
+//Data tem o valor de: type Data = string | number
+
+////////////////////////////////////////////////////// &&&
+PARAMETERS<typeof ... > ***
+
+Para pegar os tipos dos parametros de uma função.
+
+function getPessoa(nome: string, idade: number) {console.log(nome)}
+
+type A = Parameters<typeof getPessoa>      //type A = [nome:string,idade:number]
+
+-Se quiser pegar apenas o primeiro parâmetro:
+type A = Parameters<typeof getPessoa>[0]     //type A = string 
+
+-------------- %%%
+
+type Teste<T> = Parameters<T>[0]
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM REACT
+TYPESCRIPT COM VITE COM REACT
 Iniciando
 
-Instalação do react na pasta do projeto:
+Instalação do Vite usando react na pasta do projeto:
 npm create vite@latest     //Te pedirá o nome do projeto e pacote
 ou
-npm create vite@latest .   //Não te pedirá o nome do projeto e pacote
+npm create vite@latest .   //Não te pedirá o nome do projeto e pacote (Instala na própria pasta)
 
 Selecione React
 Selecione Typescript
@@ -4555,6 +5696,16 @@ vite.config.ts
 
 Para instalar as dependencias (node_modules), digite no terminal:
 npm install    
+
+---------
+Outras formas:
+
+Instalação do Vite como modo desenvolvimento:
+npm i -D vite
+
+Atalho para instalação do Vite usando um template Typescript com framework Vanilla (Sem React e usando tsc):
+
+npm create vite@latest . -- --template vanilla-ts
 
 ------------------ ###
 Excluindo coisas desnecessárias:
