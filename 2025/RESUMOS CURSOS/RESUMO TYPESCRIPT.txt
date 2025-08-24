@@ -1761,7 +1761,7 @@ type Store<T> = { ... }
 
 
 ///////////////////////////////////////////////////////////////////// &&&
-CAMPOS IMUTÁVEIS EM UMA INTERFACE
+CAMPOS IMUTÁVEIS EM UMA INTERFACE    (readonly)
 
 Para proibir que valores de certos campos de uma interface possam ser alterados:
 
@@ -1785,6 +1785,29 @@ console.log(funcionario)
 
 ////////////////////////////////////////////////////////////// &&&
 INTERFACE vs TYPE
+
+Sintaxe:
+
+type Pessoa = {
+  nome: string;
+  idade: number;
+  status: boolean;
+}
+
+interface Pessoa {
+  nome: string;
+  idade: number;
+  status: boolean;
+}
+
+Alguns devs escrevem type e interface colocando um T ou I na frente do nome:
+
+type TPessoa = { ... }
+ou
+interface IPessoa { ... }
+
+----------------------------------------- ###
+Diferenças:
 
 INTERFACE:
 
@@ -1842,7 +1865,7 @@ Expressões Condicionais: type pode expressar tipos condicionais e mapeados, ofe
 type ReadOnly<T> = { readonly [P in keyof T]: T[P] };
 
 ---------------------- %%%
-DIFERENÇAS:
+RESUMO DE DIFERENÇAS:
 
 Extensibilidade: interface é extensível, mas type não é. Isso significa que você pode adicionar novas propriedades a uma interface existente, mas não pode fazer isso com um type.
 
@@ -1912,6 +1935,204 @@ type Pessoa = {
 }
 
 >>> ERRO
+
+------------------------------- ###
+
+type URL = string                                      // OK
+const google: URL = "https://google.com"
+
+interface URL = string                                // Não pode
+interface URL { string }                              // Não pode
+const google: URL = "https://google.com"
+
+¨¨¨¨
+Interfaces podem apenas descrever objetos.
+
+interface URL {                                       // OK
+  tipo: string 
+}              
+
+const google: URL = {
+  tipo: "https://google.com"
+}
+
+¨¨¨¨
+-O mesmo vale para union types:
+
+type Colors = "red" | "blue" | "green"
+
+interface Colors {
+  color: "red" | "blue" | "green"
+}
+
+//////////////////////////////////////////////////////////////// &&&
+USE REF NO TYPESCRIPT:
+
+***
+
+//////////////////////////////////////////////////////////////// &&&
+COMPONENT PROPS COM E SEM REF    React.ComponentProps<...>
+VIDEO: https://www.youtube.com/embed/TPACABQTHvM
+
+-Arquivo Button.tsx:
+
+import React from 'react'
+
+type ButtonProps = React.ComponentProps<'button'>             //OU type ButtonProps = React.ComponentPropsWithoutRef<'button'>
+
+export default function Button({type, style, onClick}: ButtonProps) {
+
+  return (
+    <button type={type} style={style} onClick={onClick}>
+      Clique aqui 
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  function handleClick(): void {
+    alert("Clicou");
+  }
+
+  return (
+    <>
+      <Button 
+        type="submit" 
+        style={{backgroundColor: "red", color: "white"}} 
+        onClick={handleClick} 
+      />
+    </>
+  )
+}
+
+---------------------- %%%
+
+-Arquiv Teste.tsx:
+
+import React from 'react'
+
+type TextoProps = React.ComponentProps<'h1'>               //OU type ButtonProps = React.ComponentPropsWithoutRef<'button'>
+
+export default function Teste({className, style, id}: TextoProps) {
+
+  return (
+    <h1 style={style} className={className} id={id} >
+      Clique aqui 
+    </h1>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+import "../src/index.css"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste 
+        style={{color: "red"}}
+        className={"texto"}
+        id={"textoID"}
+      />
+    </>
+  )
+}
+
+¨¨¨¨
+-Arquivo index.css:
+
+.texto {
+  font-size: 30px;
+}
+
+#textoID {
+  font-family: 'Inter', sans-serif;
+}
+
+-------------------------------- ###
+Usando Ref:
+
+
+-Arquivo Button.tsx:
+
+import React from 'react'
+
+type ButtonProps = React.ComponentPropsWithRef<'button'>           //Ao invés de React.ComponentPropsWithoutRef<'button'> 
+
+export default function Button({style}: ButtonProps) {
+
+  return (
+    <button style={style}>
+      Clique aqui 
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+import { useRef } from 'react';
+
+export default function App() {
+  
+  const ref = useRef(null);
+
+  return (
+    <>
+      <Button 
+        ref={ref}
+        style={{backgroundColor: "yellow", color: "red"}} 
+      />
+    </>
+  )
+}
+
+------------------------------------------- ###
+COM PROPS REST  ...rest
+
+-Arquivo Teste.tsx:
+
+import React from 'react'
+
+type InputProps = React.ComponentProps<'input'>             //OU type InputProps = React.ComponentPropsWithoutRef<'input'>
+
+export default function FormInput({type, ...rest}: InputProps) {
+
+  return (
+    <input type={type} {...rest} />
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import FormInput from "./components/Teste"
+
+export default function App() {
+
+  return ( 
+    <FormInput 
+      type="text"
+      placeholder="Digite algo" 
+      autoFocus={true}
+      maxLength={10}
+      required={true}
+    />
+  )
+}
+
+
+
 
 //////////////////////////////////////////////// &&&
 FUSÃO DE TYPE COM INTERFACE (HERANÇA)
@@ -3004,6 +3225,78 @@ export default function App() {
 }
 
 >>> 20       (7 + 11 + 42 dividido por 3)
+
+////////////////////////////////////////////////////////////////////// &&&
+ARRAYS COM PROPS
+
+-Arquivo Teste.tsx:
+
+interface Pessoa {                        //OU type Pessoa = {nomes: string[]}          
+  nomes: string[];
+}
+
+export default function Teste({nomes}: Pessoa) {
+  return (
+    <div>
+      {nomes[0]}, {nomes[1]}, {nomes[2]}
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nomes={["Maria", "Carlos", "João"]} />
+    </>
+  )
+}
+
+>>> Maria, Carlos, João
+
+-------------------------- %%%
+
+-Arquivo Teste.tsx:
+
+interface Pessoa {                        //OU type Pessoa = {nomes: string[]}          
+  nomes: string[];
+}
+
+export default function Teste({nomes}: Pessoa) {
+  return (
+    <div>
+      {nomes.map((nome) => (
+        <div key={nome}>
+          <p>{nome}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nomes={["Maria", "Carlos", "João"]} />
+    </>
+  )
+}
+
+>>> Maria
+>>> Carlos
+>>> João
+
 
 //////////////////////////////////////////////////// &&&
 READONLY ARRAYS (NÃO PODEM SER MODIFICADOS)
@@ -4501,6 +4794,143 @@ const alunos: Notas = ["Maria", 82, 79]
 const alunos: Notas = ["Ana", 92]
 const alunos: Notas = ["Carlos"]
 
+-------------------------------------------------- ### 
+TUPLAS COM PROPS
+
+-Arquivo Teste.tsx:
+
+interface Pessoa {                        //OU type Pessoa = {nomes: [string, string]}          
+  nomes: [string, string];
+}
+
+export default function Teste({nomes}: Pessoa) {
+  return (
+    <div>
+      {nomes[0] + ", " + nomes[1]}
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nomes={["Maria", "Carlos"]} />
+    </>
+  )
+}
+
+>>> Maria, Carlos
+
+-------------------------- %%%
+
+-Arquivo Teste.tsx:
+
+interface Pessoa {                             //OU type Pessoa = {nomes: [string, string, string, string]}          
+  nomes: [string, string, string, string];
+}
+
+export default function Teste({nomes}: Pessoa) {
+  return (
+    <div>
+      {nomes.map((nome) => (
+        <div key={nome}>
+          <p>{nome}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nomes={["Maria", "Carlos", "João", "Pedro"]} />
+    </>
+  )
+}
+
+>>> Maria
+>>> Carlos
+>>> João
+>>> Pedro
+
+---------------------------- %%%
+
+-Arquivo Teste.tsx:
+
+interface Pessoa {                             //OU type Pessoa = {nomes: [string, number, boolean]}          
+  dados: [string, number, boolean];
+}
+
+export default function Teste({dados}: Pessoa) {
+  return (
+    <div>
+      <p>{dados[0]} tem {dados[1]} anos e {dados[2] ? "é casado" : "é solteiro"}</p>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nomes={["Carlos", 31, true]} />
+    </>
+  )
+}
+
+>>> Carlos tem 31 anos e é casado
+
+------------------------------ %%%
+
+-Arquivo Teste.tsx:
+
+interface Pessoa {                             //OU type Pessoa = {nomes: [string, number, boolean][]}          
+  dados: [string, number, boolean][];
+}
+
+export default function Teste({dados}: Pessoa) {
+  return (
+    <div>
+      <p>{dados[0][0]} tem {dados[0][1]} anos e {dados[0][2] ? "é casado" : "é solteiro"}</p>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste dados={[["Carlos", 31, true],["Maria", 25, false]]} />
+    </>
+  )
+}
+
+>>> Carlos tem 31 anos e é casado
+
+
 //////////////////////////////////////////////////////////////////////////&&&  
 CLASSES
 
@@ -5654,7 +6084,7 @@ type Data = Pessoa[keyof Pessoa]
 //Data tem o valor de: type Data = string | number
 
 ////////////////////////////////////////////////////// &&&
-PARAMETERS<typeof ... > ***
+PARAMETERS<typeof ... > 
 
 Para pegar os tipos dos parametros de uma função.
 
@@ -5670,7 +6100,7 @@ type A = Parameters<typeof getPessoa>[0]     //type A = string
 type Teste<T> = Parameters<T>[0]
 
 //////////////////////////////////////////////////////////////// &&&
-TYPESCRIPT COM VITE COM REACT
+TYPESCRIPT COM VITE USANDO REACT
 Iniciando
 
 Instalação do Vite usando react na pasta do projeto:
@@ -5703,7 +6133,7 @@ Outras formas:
 Instalação do Vite como modo desenvolvimento:
 npm i -D vite
 
-Atalho para instalação do Vite usando um template Typescript com framework Vanilla (Sem React e usando tsc):
+Se quiser instalar o Vite usando um template Typescript com framework Vanilla (Sem React e usando tsc):
 
 npm create vite@latest . -- --template vanilla-ts
 
@@ -5741,7 +6171,7 @@ Extensões de arquivos:
 
 arquivo_com_componente.tsx
 ou
-arquivo_sem_componente.ts
+arquivo_sem_componente.ts    (se não tiver html dentro)
 
 ------------------- ###
 
@@ -5768,7 +6198,7 @@ export default function App() {
 
 export default function App() {
 
-  function Pessoa(nome: string) {
+  function Pessoa(nome: string): string {
     return nome;
   }
 
@@ -5779,11 +6209,26 @@ export default function App() {
   )
 }
 
+---------
+
+export default function App() {
+
+  function Pessoa(nome: string): void {
+    console.log(nome);
+  }
+
+  return (
+    <>
+      <button onClick={() => Pessoa("Maria")}>CLIQUE</button>
+    </>
+  )
+}
+
 ---------------- ###
 
 export default function App() {
 
-  const Pessoa = (dados: string | number) => {
+  const Pessoa = (dados: string | number): string => {
     return dados;
   }
 
@@ -5793,6 +6238,22 @@ export default function App() {
     </>
   )
 }
+
+------------------ ###
+
+export default function App() {
+
+  const Pessoa = (nome: string, idade: number): string => {
+    return `${nome} tem ${idade} anos`;
+  }
+
+  return (
+    <>
+      <h1>{Pessoa("Ana", 33)}</h1>
+    </>
+  )
+}
+
 
 //////////////////////////////////////////////////////////////// &&&
 Criando componente
@@ -5850,8 +6311,8 @@ export default function App() {
 }
 
 
-///////////////////////////////////////////////////////////// &&&
-PROPS E INTERFACES
+///////////////////////////////////////////////////////////////////// &&& 
+PROPS NO TYPESCRIPT
 
 -Arquivo Teste.tsx:
 
@@ -5863,9 +6324,8 @@ export default function Teste(props) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
-
-import "./App.css"
 
 import Teste from "./components/Teste"
 
@@ -5873,22 +6333,65 @@ export default function App() {
 
   return (
     <>
-      <Teste texto={"TEXTO DE EXEMPLO"}/>
-      <Teste texto={23}/>
+      <Teste texto={"TEXTO DE EXEMPLO"}/>              //OU  <Teste texto={23}/>
     </>
   )
 }
 
 OBS: O props aceitará qualquer tipo de variavel e mostrará o resultado na tela. 
 Porém, podem ocorrer problemas em alguns casos, caso o tipo da variável não seja definido. 
-Para isso é usada uma interface para definir os tipos.
+Para isso é usada uma interface ou type para definir os tipos.
 
----------- ###
-PROPS COM INTERFACES
+------------------- %%%
+Outra forma sem usar interface ou type:
 
 -Arquivo Teste.tsx:
 
-interface TxtInterface {
+export default function Button(props: {texto: string}) {
+
+  const texto = props.texto
+
+  return (
+    <button>
+      {texto}
+    </button>
+  )
+}
+
+OU
+
+export default function Button(props: {texto: string}) {
+
+  const {texto} = props
+
+  return (
+    <button>
+      {texto}
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  return (
+    <>
+      <Button texto={"CLIQUE AQUI"} />
+    </>
+  )
+}
+
+
+------------------------------------------------------ ###
+PROPS COM INTERFACES E TYPES
+
+-Arquivo Teste.tsx:
+
+interface TxtInterface {                             //OU type TxtInterface = {texto: string}
   texto: string;
 }
 
@@ -5900,6 +6403,7 @@ export default function Teste(props: TxtInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import Teste from "./components/Teste"
@@ -5913,11 +6417,11 @@ export default function App() {
   )
 }
 
------------- ###
+---------------------------- %%%
 
 -Arquivo Teste.tsx:
 
-interface PessoaInterface {
+interface PessoaInterface {                             //OU type PessoaInterface = { ... }
   nome: string;
   idade: number;
   estado: boolean;
@@ -5933,6 +6437,7 @@ export default function Teste(props: PessoaInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import Teste from "./components/Teste"
@@ -5946,17 +6451,14 @@ export default function App() {
   )
 }
 
------------- ###
-
+----------------------------------------------------- ###
 Desconstrução de props:
+
+Sem usar interface ou type:
 
 -Arquivo Teste.tsx:
 
-interface NomeInterface {
-  nome: string;
-}
-
-export default function Teste({nome}: NomeInterface) {
+export default function Teste({nome}: {nome: string}) {
   return (
     <div>
       <h1>{nome}</h1>
@@ -5964,6 +6466,7 @@ export default function Teste({nome}: NomeInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import Teste from "./components/Teste"
@@ -5977,7 +6480,126 @@ export default function App() {
   )
 }
 
--------------------
+------------------
+
+-Arquivo Teste.tsx:
+
+export default function Teste({nome, idade}: {nome: string, idade: number}) {
+  return (
+    <div>
+      <h1>{nome} tem {idade} anos</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Maria"} idade={33} />
+    </>
+  )
+}
+
+--------------------------------- %%%
+Usando interface ou type:
+
+-Arquivo Teste.tsx:
+
+interface NomeInterface {                                 //OU  type NomeInterface = { nome: string }
+  nome: string;
+}
+
+export default function Teste({nome}: NomeInterface) {
+  return (
+    <div>
+      <h1>{nome}</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Maria"} />
+    </>
+  )
+}
+
+---------------
+
+interface Pessoa {                                      //OU  type Pessoa = { nome: string, idade: number }
+  nome: string;
+  idade: number;
+}
+
+export default function Teste({nome, idade}: Pessoa) {
+  return (
+    <div>
+      <h1>{nome} tem {idade} anos</h1>
+    </div>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  return (
+    <>
+      <Teste nome={"Maria"} idade={33} />
+    </>
+  )
+}
+
+
+------------------------------- %%%
+
+-Arquivo Button.tsx:
+
+interface IButton {                                 //OU  type IButton = { texto: string }
+  texto: string;
+}
+
+export default function Button({texto}: IButton ) {
+
+  return (
+    <button>
+      {texto}
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  return (
+    <>
+      <Button texto={"CLIQUE AQUI"} />
+    </>
+  )
+}
+
+
+------------------- %%%
 
 -Arquivo teste.tsx:
 
@@ -6059,6 +6681,379 @@ export default function App() {
   )
 }
 
+--------------------------------------- ###
+Função como props:
+
+Função sem retorno:
+
+-Arquivo Button.tsx:
+
+type ButtonProps = {
+  Alerta: () => void;
+}
+
+export default function Button({Alerta}: ButtonProps) {
+  
+  return (
+    <button onClick={Alerta}>CLIQUE</button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  function Mensagem() {
+    console.log("Texto de exemplo")
+  }
+  
+  return (
+    <>
+      <Button Alerta={Mensagem} />
+    </>
+  )
+}
+
+------------------ %%%
+
+Função com retorno:
+
+-Arquivo Button.tsx:
+
+type ButtonProps = {
+  Alerta: (txt: string) => string;
+  txt: string;
+}
+
+export default function Button({Alerta, txt}: ButtonProps) {
+
+  return (
+    <button onClick={() => Alerta(txt)}>CLIQUE</button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+import { useState } from "react"
+
+export default function App() {
+
+  const [nome, setNome] = useState("Ana")
+
+  function Mensagem(nome: string) {
+    setNome("Maria")
+    return nome;
+  }
+
+  return (
+    <>
+      <Button Alerta={Mensagem} txt={nome} />
+      <p>Nome: {nome}</p>
+    </>
+  )
+}
+
+------------------------- %%%
+
+-Arquivo Button.tsx:
+
+type ButtonProps = {
+  Alerta: (num: number) => number;
+  num: number;
+}
+
+export default function Button({Alerta, num}: ButtonProps) {
+
+  return (
+    <button onClick={() => Alerta(num)}>CLIQUE</button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+import { useState } from "react"
+
+export default function App() {
+
+  const [ano, setAno] = useState(0)
+
+  function Mensagem(num: number) {
+    num = 2025
+    setAno(num)
+    return ano;
+  }
+
+  return (
+    <>
+      <Button Alerta={Mensagem} num={ano} />
+      <p>Ano: {ano}</p>
+    </>
+  )
+}
+
+----------------------------------------------- ### 
+PROPS COM INTERSECTION
+
+-Arquivo Button.tsx:
+
+type ButtonProps = {                            
+  type: "button" | "submit" | "reset";
+}
+
+type SuperButtonProps = ButtonProps & {
+  style: {
+    color: "red" | "blue" | "green";
+    fontSize: "12px" | "14px" | "16px";
+  }
+}
+
+export default function Button({type, style}: SuperButtonProps ) {
+
+  return (
+    <button type={type} style={style}>
+      Clique aqui
+    </button>
+  )
+}
+
+OU
+
+interface ButtonProps {                            
+  type: "button" | "submit" | "reset";
+}
+
+interface SuperButtonProps extends ButtonProps {
+  style: {
+    color: "red" | "blue" | "green";
+    fontSize: "12px" | "14px" | "16px";
+  }
+}
+
+export default function Button({type, style}: SuperButtonProps ) {
+
+  return (
+    <button type={type} style={style}>
+      Clique aqui
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  return (
+    <>
+      <Button type={"submit"} style={{color: "red", fontSize: "16px"}} />
+    </>
+  )
+}
+
+
+//////////////////////////////////////////////////////////////// &&&
+CHILDREN / React.ReactNode
+
+-Arquivo Button.tsx:
+
+import React from 'react';                   //opcional
+
+type ButtonProps = {
+  children: React.ReactNode;
+}
+
+export default function Button({children}: ButtonProps) {
+
+  return (
+    <button>
+      {children}
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  return (
+    <>
+      <Button>
+        Clique aqui
+      </Button>
+    </>
+  )
+}
+
+-O texto "Clique aqui" é o elemento children e será o texto que aparecerá dentro do botão.
+
+---------------
+
+Dentro do componente pode haver várias coisas como children:
+
+<Button>{nome}</Button>                       //variavel
+<Button>{true}</Button>                       //boolean
+<Button><div><h1>Texto</h1></div></Button>    //tags com conteúdo
+<Button><div></div></Button>                  //tags sem conteúdo
+
+---------------------%%%
+
+Atenção!!!
+Deve-se usar o nome children para a variavel pra que o Typescript entenda que é o elemento filho.
+Portanto, o exemplo abaixo não daria erro, mas o Typescript reclamaria:
+
+-Arquivo Button.tsx:
+
+import React from 'react';                   
+
+type ButtonProps = {
+  txt: React.ReactNode;                      //OU txt: string;                   
+}
+
+export default function Teste({txt}: ButtonProps) {
+
+  return (
+    <button>
+      {txt}                                 //txt sendo usado como o elemento children
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  return (
+    <>
+      <Button>                               //Typescript apontará erro pois não está sendo passado a variavel children
+        Clique aqui
+      </Button>
+    </>
+  )
+}
+
+OU
+
+import Button from "./components/Button"
+
+export default function App() {
+
+  const texto = "Clique aqui"
+
+  return (
+    <>
+      <Button txt={texto}>                   //Typescript apontará erro pois não está sendo passado a variavel children
+        {texto}
+      </Button>
+    </>
+  )
+}
+
+--------------------------------------------------- ###
+JSX.Element vs ReactNode
+
+É possível usar elementos JSX como, por exemplo, tags HTML como conteúdo de children:
+
+-Arquivo Teste.tsx:
+
+import React from 'react';                 
+
+type TextoProps = {
+  children: React.ReactNode;                   //OU children: JSX.Element;                     
+}
+
+export default function Teste({children}: TextoProps) {
+
+  return (
+    <h1>
+      {children}                                
+    </h1>
+  )
+}
+
+¨¨¨¨
+-Arquivo Teste.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  const texto = <span style={{color: "red"}}>Texto vermelho</span>
+
+  return (
+    <>
+      <Teste>                   
+        {texto}
+      </Teste>
+    </>
+  )
+}
+
+------------
+
+-Muito útil se quiser passar um ícone, por exemplo:
+
+const icon = <i>...</i>
+
+  <Icone>                   
+    {icon}
+  </Icone>
+
+------------
+
+Atenção!!
+Se for usar JSX.Element, o tipo passado tem que possuir elementos JSX, como tags HTML, por exemplo. 
+JSX.Element é mais restritivo do que React.ReactNode
+Portanto, o exemplo abaixo daria erro no typescript:
+
+-Arquivo Teste.tsx:
+
+import React from 'react';                 
+
+type TextoProps = {
+  children: JSX.Element;                            //Tipo elemento JSX  
+}
+
+export default function Teste({children}: TextoProps) {
+
+  return (
+    <h1>
+      {children}                                
+    </h1>
+  )
+}
+
+¨¨¨¨
+-Arquivo Teste.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+
+  const texto = "Texto vermelho"                  //Não é elemento JSX
+
+  return (
+    <>
+      <Teste>                   
+        {texto}                                   //Typescript apontará o erro aqui
+      </Teste>
+    </>
+  )
+}
 
 //////////////////////////////////////////////////////////////// &&&
 USESTATE
@@ -6079,7 +7074,7 @@ export default function App() {
 
 ---------
 
-Modo explícito: (Mais correto)
+Modo explícito: (Não é necessário, mas pode evitar erros)
 
 import {useState} from 'react'
 
@@ -6093,8 +7088,180 @@ export default function App() {
   )
 }
 
---------------- ###
+--------------------------------------- ###
+TIPOS COM USESTATE:
 
+const [pessoa, setPessoa] = useState<string>("Maria")
+
+const [numero, setNumero] = useState<number>(10)
+
+const [status, setStatus] = useState<boolean>(true)
+
+------------------ %%%
+USANDO ARRAYS:
+
+const [array, setArray] = useState<string[]>(["A", "B", "C"])
+
+const [array, setArray] = useState<number[]>([0, 1, 2])
+
+----------
+
+export default function App() {
+
+  const [count, setCount] = useState<number[]>([1, 2, 3])
+
+  const handleClick = (): void => {
+    setCount([...count, count[count.length - 1] + 1])
+  }
+
+  return (
+    <>
+      <button onClick={handleClick}>
+        Clique aqui
+      </button>
+      
+      {count.map((item) => (
+        <p key={item}>
+          {item}
+        </p>
+      ))}
+    </>
+  )
+}
+
+-----------
+
+import {useState} from 'react'
+
+export default function App() {
+
+  const [nome, setNome] = useState<string[]>(["João", "Pedro"])
+
+  const handleClick = (): void => {
+    setNome([...nome, "Maria"])
+  }
+
+  return (
+    <>
+      <button onClick={handleClick}>
+        Clique aqui
+      </button>
+      
+      {nome.map((item, index) => (
+        <p key={index}>
+          {item}
+        </p>
+      ))}
+    </>
+  )
+}
+
+----------------- %%%
+USANDO OBJETOS (sem usar interface ou type):
+
+const [objeto, setObjeto] = useState<Array<{campo1: string, campo2: number, campo3: boolean}>>([{
+  campo1: "",
+  campo2: 0,
+  campo3: false,
+}])
+
+OBS: Geralmente usa-se interface ou type para lidar com objetos
+
+----------
+
+import {useState} from 'react'
+
+export default function App() {
+
+  const [pessoa, setPessoa] = useState<Array<{nome: string, idade: number}>>([{
+    nome: "Pedro",
+    idade: 18
+  }])
+
+  const handleClick = (): void => {
+    setPessoa([{nome: "Maria", idade: 20}])
+  }
+
+  return (
+    <>
+      <button onClick={handleClick}>
+        Clique aqui
+      </button>
+
+      <p>{pessoa[0].nome} tem {pessoa[0].idade} anos.</p>
+    </>
+  )
+}
+
+----------
+
+import {useState, ChangeEvent} from 'react'
+
+export default function App() {
+
+  const [pessoa, setPessoa] = useState<Array<{nome: string, idade: string}>>([])      //Ou useState(null)
+  
+  const [novapessoa, setNovaPessoa] = useState<{nome: string, idade: string}>({nome: '', idade: ''})
+
+  const handleClick = (): void => {
+    setPessoa([...pessoa, novapessoa])
+    setNovaPessoa({nome: '', idade: ''})
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setNovaPessoa({...novapessoa, [e.target.name]: e.target.value})
+  }
+
+  return (
+    <>
+      <input type="text" name="nome" value={novapessoa.nome} onChange={handleChange} placeholder="Digite o nome" />
+      <input type="number" name="idade" value={novapessoa.idade} onChange={handleChange} placeholder="Digite a idade"/>
+      
+      <button onClick={handleClick}>
+        Adicionar pessoa
+      </button>
+      
+      {pessoa.map((item, index) => (
+        <div key={index}>
+          <p>{item.nome} tem {item.idade} anos.</p>
+        </div>
+      ))}
+    </>
+  )
+}
+
+---------------------------------------------- ###
+USANDO OBJETOS (com interface ou type):
+
+Usando type com useState:
+
+import {useState} from 'react'
+
+type User = {
+  id: number;
+  name: string;
+  age: number;
+}
+
+export default function App() {
+
+  const [user, setUser] = useState<User | null>(null);
+
+  return (
+    <>
+      <button onClick={() => setUser({id: 1, name: "Maria", age: 23})}>Adicionar Usuário</button>
+
+      {user && (
+        <div key={user.id}>
+          <p>Nome: {user.name}</p>
+          <p>Idade: {user.age} anos</p>    
+        </div>
+      )}
+    </>
+  )
+}
+***
+--------------------- %%%
 Usando interfaces com useState:
 
 interface NomeInterface {
@@ -6113,13 +7280,61 @@ export default function App() {
   )
 }
 
+---------------------------------------------- ### &&&
+USESTATE COM OBJETOS COM VALOR NULL
 
--------------- ###
-UseState com Props: (exemplo 1)
+Caso uma variavel useState tenha como valor inicial null, para acessar uma propriedade deste objeto, é necessario usar ? para não dar problema com o Typescript:
+
+import {useState} from 'react'
+
+type User = {
+  id: number;
+  name: string;
+  age: number;
+}
+
+export default function App() {
+
+  const [user, setUser] = useState<User | null>(null);
+
+  const nome = user?.name                    //Se não colocar o ?, dará erro no Typescript
+
+  return (
+    <>
+      ...
+    </>
+  )
+}
+
+--------------------------- %%%
+
+import {useState} from 'react'
+
+type User = {
+  name: string;
+}
+
+export default function App() {
+
+   const [pessoa, setPessoa] = useState<User | null>(null)
+
+  return (
+    <>
+      <button onClick={() => setPessoa({name: "Maria"})}>CLIQUE</button>
+
+      {pessoa?.name}
+    </>
+  )
+}
+
+---------------------------------------------- ### &&&
+PROPS COM USESTATE:
+
+UseState com Props e interface/type: (exemplo 1)
 
 -Arquivo teste.tsx:
 
-interface NomeInterface {
+interface NomeInterface {                             //OU type NomeInterface = {nome: string}
   nome: string;
 }
 
@@ -6132,10 +7347,10 @@ export default function Teste({nome}:NomeInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import {useState} from 'react'
-
 import Teste from "./components/Teste"
 
 export default function App() {
@@ -6150,8 +7365,8 @@ export default function App() {
   )
 }
 
------------- ###
-UseState com Props: (exemplo 2)
+--------------------------- %%%
+UseState com Props e interface/type: (exemplo 2)
 
 -Arquivo teste.tsx:
 
@@ -6171,6 +7386,7 @@ export default function Teste({nome}: NomeInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import Teste from "./components/Teste"
@@ -6184,8 +7400,8 @@ export default function App() {
   )
 }
 
------------------------- ###
-UseState com Props: (exemplo 3)
+------------------------ %%%
+UseState com Props e interface/type: (exemplo 3)
 
 -Arquivo teste.tsx:
 
@@ -6207,6 +7423,7 @@ export default function Teste(props: PessoaInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import Teste from "./components/Teste"
@@ -6241,8 +7458,8 @@ export default function Teste({nome, estado}: PessoaInterface) {
   )
 }
 
-------------------------- ###
-UseState com props: (exemplo 4)
+---------------------------- %%%
+UseState com props e interface/type: (exemplo 4)
 
 -Arquivo teste.tsx:
 
@@ -6263,6 +7480,7 @@ export default function Teste({nome, idade}: PessoaInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import Teste from "./components/Teste"
@@ -6276,9 +7494,9 @@ export default function App() {
   )
 }
 
------------------------ ###
+----------------------- %%%
 
-UseState com props: (exemplo 5)
+UseState com props com interface/type: (exemplo 5)
 
 -Arquivo teste.tsx:
 
@@ -6299,6 +7517,7 @@ export default function Teste({nome}: PessoaInterface) {
   )
 }
 
+¨¨¨¨
 -Arquivo App.tsx:
 
 import Teste from "./components/Teste"
@@ -6308,6 +7527,90 @@ export default function App() {
   return (
     <>
       <Teste nome={"Carlos"} />
+    </>
+  )
+}
+
+------------------------------------------- ### &&&
+USESTATE COM PROPS E SETTERS
+VIDEO: https://www.youtube.com/embed/TPACABQTHvM
+
+-Arquivo Button.tsx:
+
+import React from 'react';                 
+
+type ButtonProps = {
+  setTexto: React.Dispatch<React.SetStateAction<string>>;       //valor do tipo string
+}
+
+export default function Button({setTexto}: ButtonProps) {
+
+  const handleClick = () => {
+    setTexto("Novo texto");
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Clique aqui
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+import {useState} from 'react'
+
+export default function App() {
+
+  const [texto, setTexto] = useState("Texto inicial")
+
+  return (
+    <>
+      <Button setTexto={setTexto} />
+      <p>{texto}</p>
+    </>
+  )
+}
+
+--------------------------- %%%
+
+-Arquivo Button.tsx:
+
+import React from 'react';                 
+
+type ButtonProps = {
+  setCount: React.Dispatch<React.SetStateAction<number>>;       //valor do tipo number
+}
+
+export default function Button({setCount}: ButtonProps) {
+
+  const Add = () => {
+    setCount(prev => prev + 10);
+  }
+
+  return (
+    <button onClick={Add}>
+      Adicionar 10
+    </button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+import {useState} from 'react'
+
+export default function App() {
+
+  const [count, setCount] = useState(0)
+
+  return (
+    <>
+      <Button setCount={setCount} />
+      <p>Contagem: {count}</p>
     </>
   )
 }
@@ -6383,6 +7686,91 @@ export default function App() {
   return (
     <>
       <Teste nome={"Carlos"} />
+    </>
+  )
+}
+
+//////////////////////////////////////////////////////////////// &&&
+EVENT HANDLERS
+
+export default function App() {
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    console.log(event.currentTarget.innerHTML)
+  }
+
+  return (
+    <>
+      <button onClick={handleClick}>
+        Clique aqui
+      </button>
+    </>
+  )
+}
+
+>>> Clique aqui
+
+----------------------- %%%
+
+import {useState} from  'react'
+
+export default function App() {
+
+  const [valor, setValor] = useState<string>('')
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement> ): void => {
+    setValor(event.target.value)
+  }
+
+  const handleSubmit = (valor: string): void => {
+    console.log(valor)
+  }
+
+  return (
+    <>
+      <input type="text" onChange={handleChange} value={valor} />
+      
+      <button onClick={() => handleSubmit(valor)}>Enviar</button>
+      
+      <p>{valor}</p>
+    </>
+  )
+}
+
+------------------------- %%%
+
+import React from "react"
+
+export default function App() {
+
+  const handleMouse = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if(event.currentTarget.style.color === 'black') {
+      event.currentTarget.style.color='red'
+    } else {
+      event.currentTarget.style.color='black'
+    }
+  }
+
+  return (
+    <>
+      <button onMouseEnter={handleMouse}>
+        Passe o mouse
+      </button>
+    </>
+  )
+}
+
+------------------------ %%%
+
+export default function App() {
+
+  const handleChange = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    console.log(event.key)
+  }
+
+  return (
+    <>
+      <input type="text" onKeyDown={handleChange} />
     </>
   )
 }
@@ -7284,6 +8672,38 @@ export default function App() {
   )
 }
 
+////////////////////////////////////////////////////////////////// &&&
+JSX.Element
+
+export default function Componente() {
+  return (
+    <>
+      <div>
+        <h1>Texto</h1>
+      </div>
+    </>
+  )
+}
+
+O tipo de saída de uma função de Componente é React.JSX.Element pois dentro do return há elementos de JSX (nas tags HTML).
+Mas não é preciso especificá-lo pois o Typescript já assume o tipo.
+Portanto o código acima é o mesmo que:
+
+export default function Componente(): React.JSX.Element {
+  return (
+    <>
+      <div>
+        <h1>Texto</h1>
+      </div>
+    </>
+  )
+}
+
+Se remover os elementos JSX dentro da função, o tipo de saída passará a ser any:
+
+export default function Teste(): any {
+  return ()
+}
 
 //////////////////////////////////////////////////////////////// &&&
 REACT.FC COM PROPS E INTERFACES
@@ -7365,7 +8785,155 @@ export function Teste({nome}: React.FC<Props>) {
   ...
 }
 
-//////////////////////////////////////////////////////////////// &&&
+//////////////////////////////////////////////////////////////// &&& 
+STYLES CSS COM PROPS EM TYPESCRIPT
+
+
+-Arquivo Teste.tsx:
+
+interface TextoProps {
+  txt: {
+    fontSize: number;
+    textColor: string;
+  }
+}
+
+export default function Button({txt}: TextoProps) {
+  return (
+    <h1 style={txt}>TEXTO VERMELHO</h1>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Teste from "./components/Teste"
+
+export default function App() {
+  return (
+    <>
+      <Teste txt={{fontSize: 18, textColor: "red"}} />
+    </>
+  )
+}
+
+--------------------------- ###
+
+-Arquivo Button.tsx:
+
+type ButtonProps = {
+  estilo: {
+    backgroundColor: string;
+    fontSize: number;
+    textColor: string;
+  }
+}
+
+export default function Button({estilo}: ButtonProps) {
+  return (
+    <button style={estilo}>CLIQUE</button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+  return (
+    <>
+      <Button 
+        estilo={{
+          backgroundColor: "red",
+          fontSize: 24,
+          textColor: "white",         
+        }}
+      />
+    </>
+  )
+}
+
+------------------------------------------ ### &&&
+React.CSSProperties 
+
+Serve para passar propriedades CSS. Utiliza o mesmo linguajar do CSS, portanto possui algumas mudanças, como:
+color: "red";                     (e não textColor: "red";) 
+borderColor: "black";       (só aceita strings e não numbers)
+
+---------------- %%%
+
+-Arquivo Button.tsx:
+
+type ButtonProps = {
+  estilo: React.CSSProperties;
+}
+
+export default function Button({estilo}: ButtonProps) {
+  return (
+    <button style={estilo}>CLIQUE</button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+  return (
+    <>
+      <Button 
+        estilo={{
+          backgroundColor: "red",
+          fontSize: 24,
+          color: "white",  
+          padding: "1rem 2rem",
+          borderRadius: 8,
+          borderColor: "transparent", 
+        }}
+      />
+    </>
+  )
+}
+
+------------------------------------------ ###
+
+-Arquivo Button.tsx:
+
+type ButtonProps = {
+  borderRadius: Record<string, number>
+}
+
+export default function Button({borderRadius}: ButtonProps) {
+  return (
+    <button style={borderRadius}>CLIQUE</button>
+  )
+}
+
+¨¨¨¨
+-Arquivo App.tsx:
+
+import Button from "./components/Button"
+
+export default function App() {
+  return (
+    <>
+      <Button 
+        borderRadius={{                //Só aceita padrão <string, number>
+          topLeft: 5,                  
+          topRight: 5,
+          bottomLeft: 10,
+          bottomRight: 10,
+          fontSize: 19,
+        }}
+      />
+    </>
+  )
+}
+
+
+//////////////////////////////////////////////////////////////// &&& 
 TAILWIND
 
 Instalação:
