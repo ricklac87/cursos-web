@@ -7329,7 +7329,7 @@ O useRef guarda um valor, assim como o useState, mas quando é atualizado, o com
 
 useState() = Renderiza novamente o componente quando o state é alterado
 
-useRef() = Não renderiza novamente o componente quando o state é alterado. Usado para quando quisermos que um componente memorize uma informação, mas que queira que cause uma re-renderização.
+useRef() = Não renderiza novamente o componente quando o state é alterado. Usado para quando quisermos que um componente memorize uma informação, mas que queira que não cause uma re-renderização.
 
 Mais usado quando:
 -Acessar/Interagir com elementos do DOM
@@ -7429,7 +7429,7 @@ VIDEO: https://www.youtube.com/embed/MA3Ngo32qiI?autoplay=1
 import { useState, useEffect, useRef } from "react";
 
 const App = () => {
-  const [name, setName] = usestate("");
+  const [name, setName] = useState("");
 
   const renders = useRef(0)
 
@@ -7460,7 +7460,7 @@ Neste exemplo, o useRef vai guardar a quantidade de vezes que houver alguma alte
 import { useState, useRef } from "react";
 
 const App = () => {
-  const [name, setName] = usestate("");
+  const [name, setName] = useState("");
 
   const inputRef = useRef()
 
@@ -7490,7 +7490,7 @@ Ao clicar no botão, o focus irá para o input
 import { useState, useEffect, useRef } from "react";
 
 const App = () => {
-  const [name, setName] = usestate("");
+  const [name, setName] = useState("");
 
   const nomeAntigo = useRef()
 
