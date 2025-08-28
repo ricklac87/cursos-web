@@ -6543,7 +6543,7 @@ export default function App() {
 
 
 ////////////////////////////////////////////////////////////////// &&& ***
-FETCH / AXIOS
+FETCH / AXIOS PARA CONSUMIR DADOS DE UMA API
 
 
 --------------------------------- ###
@@ -6829,7 +6829,7 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchData = async () => {
       try {
         const response = await axios.get<Post[]>('https://jsonplaceholder.typicode.com/todos/');
         setPosts(response.data);
@@ -6841,8 +6841,7 @@ const App: React.FC = () => {
         setLoading(false);
       }
     };
-
-    fetchPosts();
+    fetchData();
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -6863,9 +6862,110 @@ const App: React.FC = () => {
 
 export default App;
 
+---------------------------------------------- ###
+SEM ASYNC / AWAIT:
 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-///////////////////////////////////////////////////////////////// &&&
+interface Post {
+  id: number;
+  title: string;
+}
+
+const App: React.FC = () => {
+
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    axios.get<Post[]>('https://jsonplaceholder.typicode.com/todos/')
+      .then((response) => {
+        setPosts(response.data);
+        setLoading(false);
+      })
+      .catch ((err: unknown) => {
+        if (err instanceof Error) {
+          setError(err.message);
+          setLoading(false);
+        }
+      })
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <div>
+      <ul>
+        {posts.map((post: Post) => (
+          <li key={post.id}>
+            <p>{post.title}</p>                      
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default App;
+
+----------------%%%
+Usando fetch:
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+interface Post {
+  id: number;
+  title: string;
+}
+
+const App: React.FC = () => {
+
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = () => {
+      fetch('https://jsonplaceholder.typicode.com/todos/')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setPosts(data);
+          setLoading(false);
+        })
+        .catch((err: unknown) => {
+          if (err instanceof Error) {
+            setError(err.message);
+            setLoading(false);
+          }
+        });
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <div>
+      <p>{posts && posts[0].title}</p>                       //Versão alternativa ao invés de map
+    </div>
+  );
+};
+
+export default App;
+
+***
+
+///////////////////////////////////////////////////////////////// &&& 
 GUARD CLAUSE
 
 function proccessName(name: string | null | undefined) {
@@ -9800,6 +9900,45 @@ It makes it easier to refactor your component's props.
 For example, if you want to rename a prop, the TypeScript compiler will catch any places where that prop is used and help you update them.
 
 It makes it easier to see the expected shape of a component's props just by looking at its type definition.
+
+-----------------------
+
+Atenção!!!
+
+While it was once commonly used, it is now generally considered unnecessary and can introduce some downsides.
+
+Reasons to avoid React.FC:
+
+Implicit children prop:
+Historically, React.FC implicitly added the children prop to your component's type, even if your component didn't actually use or expect children. This could lead to confusion and unintended behavior. While this issue has been addressed in newer TypeScript versions (5.1+), it was a significant reason for its deprecation.
+
+Lack of support for generics:
+React.FC does not seamlessly support generic components, making it more cumbersome to type components that work with various data types.
+
+Issues with defaultProps:
+There have been known issues and complexities when using defaultProps in conjunction with React.FC.
+
+Unnecessary verbosity:
+Modern TypeScript's type inference and explicit prop typing offer a simpler and more direct way to define component types without the added layer of React.FC.
+
+Alternative and Recommended Approach:
+Instead of React.FC, the recommended approach is to explicitly define the props interface for your component and directly type your function component using that interface.
+
+interface MyComponentProps {
+  title: string;
+  description: string;
+}
+
+const MyComponent = ({ title, description }: MyComponentProps) => {
+  return (
+    <div>
+      <h1>{title}</h1>
+      <p>{description}</p>
+    </div>
+  );
+};
+
+export default MyComponent;
 
 ------------ ###
 
