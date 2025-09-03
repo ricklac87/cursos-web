@@ -1,5 +1,4 @@
 
-
 ////////////////////////////////////////////////////////// &&&
 SOBRE O PYTHON
 
@@ -24,6 +23,20 @@ São um conjunto de assinaturas de métodos. Ex: A minha interface para falar co
 Na interface não é implementado nada. Só é dito como se fala com esses sistema, mas não como ele faz.
 
 Python não implementa sobrecarga.
+
+/////////////////////////////////////////////////////////// &&&
+INSTALANDO E RODANDO
+VIDEO: https://www.youtube.com/embed/Zy3iaMZbPO8?autoplay=1
+
+Instale o python no computador
+https://www.python.org/
+
+Ao iniciar a instalação, marque a opção Add python.exe to PATH
+
+Instale a extensão Python no VSCode
+
+Para rodar o arquivo no VSCode, no terminal digite dentro da pasta do arquivo:
+python nome_do_arquivo.py
 
 ////////////////////////////////////////////////////////// &&&
 VARIÁVEIS
@@ -11227,16 +11240,65 @@ Neste exemplo foi utilizado o valor de posição 0 em x_teste[0] e y_teste[0].
 O load_digits possui 1796 elementos.
 
 /////////////////////////////////////////////////////////////////////////////// &&&
+ADICIONAR Depois
+
+strip() remove espaços do texto no começo e fim (não remove o espaços entre as palavras)
+O método strip() é usado para remover espaços em branco, incluindo novas linhas e tabulações, do início e do fim de uma string
+
+split() ou split(',')
+é usado para quebrar uma string em partes menores, retornando uma lista com essas partes
+
+join()
+retorna uma única string com todos os elementos da lista concatenados, utilizando determinado conector.
+
+append() = para adicionar elementos em uma lista []
+
+open / close / read = manipulação de arquivos
+remove
+rename
 
 
+modulo os = fornece funções para interagir com o sistema operacional
+os.mkdir(path)
+os.rmdir(path) = remove um diretório vazio
+os.scandir(path)
+os.listdir(path) = Lista os arquivos e diretórios no caminho especificado
+os.path.join(path, *paths) = junta componentes de caminhos de forma inteligente
 
+shutil.move
+os.makedirs()
 
+função principal main:
+def main():
+    ...
+if __name__ == "__main__":
+    main()
 
+PIL
+Image.open
 
+img.show() = Mostrar imagem
 
+np.array(imagem) = converte uma imagem em array binário
 
+np.fliplr(imagem) = inverte a imagem espelhadamente
 
+img_data.tobytes() = converte os dados do array NumPy em uma sequência binária
 
+-Os dados binários modificados são carregados de volta em um array NumPy com o mesmo formato e tipo de dados da imagem original usando np.frombuffer(data, dtype=np.uint8).reshape(img_data.shape)
+
+datetime
+
+f-strings
+
+replace(old, new) = substituição
+
+.title(frase) = Primeira letra de cada palavra em maiúscula
+
+try/exception
+tipos de exception
+
+banco de dados
 
 
 
